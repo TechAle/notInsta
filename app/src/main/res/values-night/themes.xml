@@ -1,7 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.MobileProject" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style
+        name="Base.Theme.MobileProject"
+        parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/lightblack</item>
+        <item name="colorOnPrimary">@color/lightblack</item>
+        <item name="colorPrimaryDark">@color/lightblack</item>
+        <item name="android:windowBackground">@color/lightblack</item>
+        <item name="bottomNavigationStyle">@style/Widget.Material3.BottomAppBar</item>
+        <!-- <item name="android:navigationBarColor">@color/lightblack</item> -->
     </style>
 </resources>
