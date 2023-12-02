@@ -5,7 +5,8 @@
     android:id="@+id/globalView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="#808080">>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_window_host"

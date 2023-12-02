@@ -4,4 +4,7 @@
     <string name="action2_navigation">Search</string>
     <string name="action3_navigation">User Profile</string>
     <string name="action4_navigation">Settings</string>
+    <string name="fotocamera">fotocamera</string>
+    <string name="impostazioni">impostazioni</string>
+    <string name="Insta">!Insta</string>
 </resources>
