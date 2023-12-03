@@ -1,5 +1,6 @@
 package com.example.testjava.UI.post_creation;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
@@ -10,6 +11,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.example.testjava.R;
 import android.view.View;
 
@@ -20,11 +23,12 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ImageAcquirer extends AppCompatActivity {
+public class ImageAcquirerActivity extends AppCompatActivity {
 
     private static final String TAG = "image_acquirer";
     private Camera mCamera;
-    private CameraPreviewActivity mPreview;
+    private CameraPreview mPreview;
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,10 +36,14 @@ public class ImageAcquirer extends AppCompatActivity {
         setContentView(R.layout.activity_camera_preview);
 
         // Create an instance of Camera
+        boolean hsCamera = checkCameraHardware(this);
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+        }
         mCamera = getCameraInstance();
 
         // Create our Preview view and set it as the content of our activity.
-        mPreview = new CameraPreviewActivity(this, mCamera);
+        mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
         preview.addView(mPreview);
 
@@ -73,7 +81,6 @@ public class ImageAcquirer extends AppCompatActivity {
 
     /** Handles media files */
     public static final int MEDIA_TYPE_IMAGE = 1;
-    public static final int MEDIA_TYPE_VIDEO = 2;
 
     /** Create a file Uri for saving an image or video */
     private static Uri getOutputMediaFileUri(int type){
@@ -104,9 +111,6 @@ public class ImageAcquirer extends AppCompatActivity {
         if (type == MEDIA_TYPE_IMAGE){
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "IMG_"+ timeStamp + ".jpg");
-        } else if(type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "VID_"+ timeStamp + ".mp4");
         } else {
             return null;
         }

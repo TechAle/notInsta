@@ -10,12 +10,12 @@ import java.io.IOException;
 
 
 /** A basic Camera preview class */
-public class CameraPreviewActivity extends SurfaceView implements SurfaceHolder.Callback {
+public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     private static final String TAG = "camera_preview";
     private SurfaceHolder mHolder;
     private Camera mCamera;
 
-    public CameraPreviewActivity(Context context, Camera camera) {
+    public CameraPreview(Context context, Camera camera) {
         super(context);
         mCamera = camera;
 
