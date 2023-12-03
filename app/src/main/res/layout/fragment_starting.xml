@@ -113,6 +113,16 @@
             </LinearLayout>
         </HorizontalScrollView>
 
+        <fragment
+            android:id="@+id/displayImmaginiFragment"
+            android:name="com.example.mobileproject.DisplayImmagini"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/scroll"
+            tools:layout="@layout/fragment_display_immagini" />
+
+        <!--
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -141,38 +151,7 @@
                 </androidx.recyclerview.widget.RecyclerView>
 
             </LinearLayout>
-        </ScrollView>
+        </ScrollView>-->
 
-        <!--
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/scroll"
-            tools:layout_marginTop="1dp">
-
-            <LinearLayout
-                android:id="@+id/recycleContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recycleContainer" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-
-                </androidx.recyclerview.widget.RecyclerView>
-            </LinearLayout>
-        </ScrollView>
-        -->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
