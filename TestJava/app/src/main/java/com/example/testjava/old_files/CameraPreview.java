@@ -1,4 +1,4 @@
-package com.example.testjava.UI.post_creation;
+package com.example.testjava.old_files;
 
 import android.content.Context;
 import android.hardware.Camera;

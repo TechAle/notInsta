@@ -33,7 +33,7 @@
                 android:label="@string/title_activity_image_filter"
                 android:theme="@style/Theme.TestJava"/>
         <activity
-                android:name=".UI.post_creation.ImageAcquirerActivity"
+                android:name=".old_files.ImageAcquirerActivity"
                 android:exported="true">
         </activity>
         <activity

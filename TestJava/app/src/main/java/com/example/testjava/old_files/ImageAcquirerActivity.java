@@ -1,4 +1,4 @@
-package com.example.testjava.UI.post_creation;
+package com.example.testjava.old_files;
 
 import android.Manifest;
 import android.content.Context;
@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.example.testjava.R;
 import android.view.View;
 
