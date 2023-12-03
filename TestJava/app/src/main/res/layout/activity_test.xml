@@ -7,26 +7,22 @@
         android:layout_height="match_parent"
         tools:context=".UI.post_creation.TestActivity">
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-        <Button
-                android:id="@+id/open_camera"
-                android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Open Camera">
-        </Button>
-        
-        <ImageView
-                android:id="@+id/captured_image"
-                android:layout_marginTop="20dp"
-                android:layout_width="250dp"
-                android:layout_height="320dp"
-                android:layout_gravity="center">
-        </ImageView>
-    </LinearLayout>
+    <ImageView
+            android:id="@+id/captured_image"
+            android:layout_marginTop="121dp"
+            android:layout_width="250dp"
+            android:layout_height="320dp"
+            android:layout_gravity="center" android:layout_alignParentEnd="true" android:layout_marginEnd="86dp"
+            android:layout_alignParentTop="true" android:layout_alignParentStart="true"
+            android:layout_marginStart="75dp" android:background="#C5C3C3">
+    </ImageView>
+    <Button
+            android:id="@+id/open_camera"
+            android:layout_marginBottom="44dp"
+            android:layout_width="313dp"
+            android:layout_height="wrap_content"
+            android:text="Open Camera" android:layout_alignParentBottom="true" android:layout_alignParentEnd="true"
+            android:layout_marginEnd="45dp" android:layout_alignParentStart="true" android:layout_marginStart="52dp">
+    </Button>
 
 </RelativeLayout>
