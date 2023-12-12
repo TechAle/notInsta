@@ -10,7 +10,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.os.Bundle;
+
+
 import com.example.testjava.R;
 
 import java.io.FileNotFoundException;
@@ -21,38 +27,27 @@ public class TestActivity extends AppCompatActivity {
     int SELECT_PICTURE = 200;
     int TAKE_PICTURE = 100;
     private ImageView imageView;
-    private Button button;
+    private Bitmap photo;
+    private ProcessedImageViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        imageView = findViewById(R.id.captured_image);
-        button = findViewById(R.id.open_camera);
-
-        button.setOnClickListener(new View.OnClickListener() {
+        imageView = findViewById(R.id.imageView);
+        viewModel = new ViewModelProvider(this).get(ProcessedImageViewModel.class);
+        final Observer<Bitmap> observer = new Observer<Bitmap>() {
             @Override
-            public void onClick(View view) {
-                Intent open_camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(open_camera, TAKE_PICTURE);
+            public void onChanged(Bitmap bitmap) {
+                imageView.setImageBitmap(bitmap);
             }
-        });
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent();
-                i.setType("image/*");
-                i.setAction(Intent.ACTION_GET_CONTENT);
-
-                startActivityForResult(Intent.createChooser(i, "Select Picture"), 200);
-            }
-        });
+        };
+        viewModel.getTempImage().observe(this, observer);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Bitmap photo = null;
 
         if (data != null){
             if (requestCode == SELECT_PICTURE){
@@ -70,7 +65,9 @@ public class TestActivity extends AppCompatActivity {
             } else {
                 photo = (Bitmap) data.getExtras().get("data");
             }
-            imageView.setImageBitmap(photo);
+            //imageView.setImageBitmap(photo);
+            viewModel.getProcessedImage().setValue(photo);
+            viewModel.getTempImage().setValue(photo);
         }
     }
 }

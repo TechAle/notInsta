@@ -8,7 +8,7 @@
         tools:context=".UI.post_creation.TestActivity">
 
     <ImageView
-            android:id="@+id/captured_image"
+            android:id="@+id/imageView"
             android:layout_marginTop="121dp"
             android:layout_width="250dp"
             android:layout_height="320dp"
@@ -16,13 +16,13 @@
             android:layout_alignParentTop="true" android:layout_alignParentStart="true"
             android:layout_marginStart="75dp" android:background="#C5C3C3">
     </ImageView>
-    <Button
-            android:id="@+id/open_camera"
-            android:layout_marginBottom="44dp"
-            android:layout_width="313dp"
-            android:layout_height="wrap_content"
-            android:text="Open Camera" android:layout_alignParentBottom="true" android:layout_alignParentEnd="true"
-            android:layout_marginEnd="45dp" android:layout_alignParentStart="true" android:layout_marginStart="52dp">
-    </Button>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="com.example.testjava.UI.post_creation.ImageChooserFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/imageView"
+        android:layout_marginBottom="-145dp" />
 
 </RelativeLayout>
