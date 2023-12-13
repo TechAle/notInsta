@@ -14,3 +14,10 @@
 .cxx
 local.properties
 /.idea/vcs.xml
+.idea/discord.xml
+.tmp
+android
+caches
+daemon
+native
+wrapper
