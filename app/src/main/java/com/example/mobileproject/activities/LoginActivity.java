@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean isLogged = false;
+        boolean isLogged = true;
         if (isLogged) {
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             finish();
