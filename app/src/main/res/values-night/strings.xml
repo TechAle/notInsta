@@ -3,4 +3,25 @@
     <string name="fotocamera">fotocamera</string>
     <string name="impostazioni">impostazioni</string>
     <string name="Insta">!Insta</string>
+    <string name="app_name">My Application</string>
+    <string name="loginGoogle">Continua con Google</string>
+    <string name="forgotPassword">Password dimenticata?</string>
+    <string name="username">Nome utente</string>
+    <string name="passwordRepeat">Ripeti password</string>
+    <string name="or">Oppure</string>
+    <string name="login">Accedi</string>
+    <string name="signup">Registrati</string>
+    <string name="terms1">"Continuando dichiari di accettare i nostri "</string>
+    <string name="terms2">Termini e Condizioni</string>
+    <string name="error_email">E-mail non valida</string>
+    <string name="error_password">Password non valida</string>
+    <string name="error_passwordMatch">Le password non corrispondono</string>
+    <string name="error_signup">Registrazione fallita</string>
+    <string name="error_login">Accesso fallito</string>
+    <string name="success_signup">Registrazione riuscita</string>
+    <string name="error_username">Nome utente non valido</string>
+    <string name="logout">Disconnetti</string>
+    <string name="greetings">"Ciao "</string>
+    <string name="success_logout">Disconnessione riuscita</string>
+    <string name="success_login">Accesso riuscito</string>
 </resources>

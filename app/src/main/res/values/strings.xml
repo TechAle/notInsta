@@ -9,4 +9,26 @@
     <string name="Insta">!Insta</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="loginGoogle">Continue with Google</string>
+    <string name="email" translatable="false">E-mail</string>
+    <string name="password" translatable="false">Password</string>
+    <string name="forgotPassword">Forgot your password?</string>
+    <string name="username">Username</string>
+    <string name="passwordRepeat">Repeat password</string>
+    <string name="or">Or</string>
+    <string name="login">Login</string>
+    <string name="signup">Sign up</string>
+    <string name="terms1">By continuing you agree to our</string>
+    <string name="terms2">Terms and Conditions</string>
+    <string name="error_email">E-mail not valid</string>
+    <string name="error_password">Password not valid</string>
+    <string name="error_passwordMatch">The passwords do not match</string>
+    <string name="error_signup">Sign up failed</string>
+    <string name="error_login">Login failed</string>
+    <string name="success_signup">Sign up was successful</string>
+    <string name="error_username">Username not valid</string>
+    <string name="logout">Log out</string>
+    <string name="greetings">"Hi "</string>
+    <string name="success_logout">Log out successful</string>
+    <string name="success_login">Log in successful</string>
 </resources>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartingFragment">
+    tools:context=".fragments.home.StartingFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -115,7 +115,7 @@
 
         <fragment
             android:id="@+id/displayImmaginiFragment"
-            android:name="com.example.mobileproject.DisplayImmagini"
+            android:name="com.example.mobileproject.fragments.home.DisplayImmagini"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
