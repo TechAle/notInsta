@@ -13,6 +13,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileproject.R;
+import com.example.mobileproject.fragments.camera.ImageChooserFragment;
+import com.example.mobileproject.fragments.camera.ImageViewerFragment;
 import com.example.mobileproject.models.ProcessedImageViewModel;
 
 import java.io.FileNotFoundException;
@@ -30,6 +32,11 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainerView, ImageChooserFragment.class, null)
+                .commit();
+
         imageView = findViewById(R.id.imageView);
         viewModel = new ViewModelProvider(this).get(ProcessedImageViewModel.class);
         final Observer<Bitmap> observer = new Observer<Bitmap>() {
