@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/hue" android:id="@+id/test"/>
+    <item android:title="@string/brightness"/>
+    <item android:title="@string/contrast"/>
+    <item android:title="@string/saturation"/>
+    <item android:title="@string/pixelate"/>
+</menu>

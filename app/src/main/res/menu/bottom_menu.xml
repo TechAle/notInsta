@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/startingFragment"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:title="@string/action1_navigation" />
+    <item
+        android:id="@+id/searchFragment"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_dialog_email"
+        android:title="@string/action2_navigation" />
+    <item
+        android:id="@+id/profileFragment"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_dialog_alert"
+        android:title="@string/action3_navigation" />
+    <item
+        android:id="@+id/settingsFragment"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="@string/action4_navigation" />
+</menu>
