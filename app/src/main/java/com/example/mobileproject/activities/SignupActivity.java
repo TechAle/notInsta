@@ -1,5 +1,6 @@
 package com.example.mobileproject.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,12 +9,19 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.mobileproject.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
-public class SingupActivity extends AppCompatActivity {
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-    //private FirebaseAuth mAuth;
+import com.example.mobileproject.R;
+
+public class SignupActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
 
     private Button buttonBack;
     private TextInputLayout inputUsername;
@@ -26,18 +34,18 @@ public class SingupActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        /*FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            // startActivity(new Intent(LoginActivity.this, <HOMEPAGE>.class));
-        }*/
+            startActivity(new Intent(SignupActivity.this, HomeActivity.class));
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_singup);
+        setContentView(R.layout.activity_signup);
 
-        //mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         buttonBack = findViewById(R.id.buttonBack);
         inputUsername = findViewById(R.id.textInputUsername);
@@ -50,7 +58,7 @@ public class SingupActivity extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(SingupActivity.this, LoginActivity.class));
+                startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                 finish();
             }
         });
@@ -100,17 +108,17 @@ public class SingupActivity extends AppCompatActivity {
                     inputPasswordRepeat.setError(null);
                 }
 
-                /*mAuth.createUserWithEmailAndPassword(email, password)
+                mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                                     Snackbar.make(
                                             findViewById(android.R.id.content),
                                             getString(R.string.success_signup),
                                             Snackbar.LENGTH_SHORT);
-                                    startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                                     finish();
                                 } else {
                                     Snackbar.make(
@@ -119,7 +127,7 @@ public class SingupActivity extends AppCompatActivity {
                                             Snackbar.LENGTH_SHORT);
                                 }
                             }
-                        });*/
+                        });
             }
         });
 
