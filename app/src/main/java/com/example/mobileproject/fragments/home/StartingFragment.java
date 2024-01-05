@@ -2,11 +2,17 @@ package com.example.mobileproject.fragments.home;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import com.example.mobileproject.R;
 
@@ -62,5 +68,20 @@ public class StartingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_starting, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        RecyclerView tags = view.findViewById(R.id.tags);
+        RecyclerView.LayoutManager lmt = new LinearLayoutManager(requireContext(),
+                LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView posts = view.findViewById(R.id.posts);
+        RecyclerView.LayoutManager lmp = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        ArrayAdapter<String> aas = new ArrayAdapter<>(requireContext(), R.layout.taglist_item);
+
+        tags.setLayoutManager(lmt);
+        posts.setLayoutManager(lmp);
     }
 }

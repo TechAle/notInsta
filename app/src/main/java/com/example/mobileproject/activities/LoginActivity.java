@@ -60,22 +60,15 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = inputEmail.getEditText().getText().toString();
                 String password = inputPassword.getEditText().getText().toString();
-
-                if(TextUtils.isEmpty(email)) {
+                if (TextUtils.isEmpty(email)) {
                     inputEmail.setError(getString(R.string.error_email));
-                    Snackbar.make(
-                            findViewById(android.R.id.content),
-                            getString(R.string.error_email),
-                            Snackbar.LENGTH_SHORT);
+                    return;
                 } else {
                     inputEmail.setError(null);
                 }
-                if(TextUtils.isEmpty(password)) {
+                if (TextUtils.isEmpty(password)) {
                     inputPassword.setError(getString(R.string.error_password));
-                    Snackbar.make(
-                            findViewById(android.R.id.content),
-                            getString(R.string.error_password),
-                            Snackbar.LENGTH_SHORT);
+                    return;
                 } else {
                     inputPassword.setError(null);
                 }
@@ -96,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Snackbar.make(
                                             findViewById(android.R.id.content),
                                             getString(R.string.error_login),
-                                            Snackbar.LENGTH_SHORT);
+                                            Snackbar.LENGTH_SHORT).show();
                                 }
                             }
                         });*/
