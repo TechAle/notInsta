@@ -1,4 +1,4 @@
-package com.example.mobileproject.activities;
+package com.example.mobileproject.UI.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,8 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.fragments.camera.ImageChooserFragment;
-import com.example.mobileproject.fragments.camera.ImageViewerFragment;
+import com.example.mobileproject.UI.fragments.camera.ImageChooserFragment;
 import com.example.mobileproject.models.ProcessedImageViewModel;
 
 import java.io.FileNotFoundException;

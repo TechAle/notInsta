@@ -1,4 +1,4 @@
-package com.example.mobileproject.fragments.camera;
+package com.example.mobileproject.UI.fragments.camera;
 
 import android.content.Intent;
 import android.os.Bundle;

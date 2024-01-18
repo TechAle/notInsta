@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.models.Post;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -34,17 +35,36 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         @Override
         public void onClick(View v) {
-            Snackbar.make()
+            //TODO: sistemare questa funzione
+            Snackbar.make(v, "Item clicked", BaseTransientBottomBar.LENGTH_SHORT).show();
         }
     }
     public PostAdapter(List<Post> pl){
         this.postSet = pl;
     }
 
+    //TODO: uncomment these lines
+/*    @Override
+    public int getItemViewType(int position){
+        if (postSet.get(position) == null){
+            return *****;
+        }
+        return *****;
+    }*/
+
     @NonNull
     @Override
     public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.postlist_item, parent, false);
+        View v;
+/*        if(viewType == *****){
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.postlist_item, parent, false);
+            return new PostViewHolder(v);
+        } else{
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.postlist_item, parent, false);
+            return new LoadingPostViewHolder(v);
+        }*/
+        //TODO: uncomment previous lines and comment nexts; returning type: RecyclerView.ViewHolder
+        v = LayoutInflater.from(parent.getContext()).inflate(R.layout.postlist_item, parent, false);
         return new PostViewHolder(v);
     }
 
@@ -59,5 +79,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             return postSet.size();
         }
         return 0;
+    }
+
+    public static class LoadingPostViewHolder extends RecyclerView.ViewHolder {
+        private final ProgressBar pb;
+
+        LoadingPostViewHolder(View view){
+            super(view);
+            ProgressBar = 
+        }
     }
 }
