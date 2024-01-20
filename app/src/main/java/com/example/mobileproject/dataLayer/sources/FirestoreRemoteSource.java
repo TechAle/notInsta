@@ -1,16 +1,18 @@
 package com.example.mobileproject.dataLayer.sources;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
-
-import com.example.mobileproject.utils.Result;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.mobileproject.models.Post;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Classe per il recupero remoto
+ */
 
 public class FirestoreRemoteSource extends GeneralPostRemoteSource{
 
@@ -20,33 +22,47 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     }
 
     @Override
-    public MutableLiveData<Result> retrievePosts(){
-        db.collection("post")
-                .orderBy("data")
-                .get()
+    public void retrievePosts(){
+        db.collection("post").orderBy("data").get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
-                        c.onSuccess(task.getResult());
-                        /*for(QueryDocumentSnapshot i : task.getResult()){
-                            //TODO: fai qualcosa qui
-                        }*/
+                        List<Post> results = new ArrayList<>();
+                        for(QueryDocumentSnapshot i : task.getResult()){
+                            Post p = new Post();
+                            Map<String, Object> m = i.getData();
+                            p.descrizione = (String) m.get("descrizione");
+                            p.pubblicazione = (Date) m.get("data");
+                            p.autore = (String) m.get("autoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
+                            p.photo = (URL) m.get("immagine");
+                            p.tags = new ArrayList<>(); //TODO: definire i tags (ed inserirli)
+                            p.id = (int) m.get("idPost"); //TODO: rivedere gestione degli ID
+                        }
+                        c.onSuccess(results);
                     }
                     else{
                         c.onFailure(task.getException());
-                        //Log.d("NET_ERR","In loading infos: ", task.getException());
                     }
                 });
     }
 
     @Override
-    public MutableLiveData<Result> retrievePosts(String tag){
-        db.collection("post")
-                .whereEqualTo("tag", tag)
-                .orderBy("data")
+    public void retrievePosts(String tag){
+        db.collection("post").whereEqualTo("tag", tag).orderBy("data")
                 .get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
-                        c.onSuccess(task.getResult());
+                        List<Post> results = new ArrayList<>();
+                        for(QueryDocumentSnapshot i : task.getResult()){
+                            Post p = new Post();
+                            Map<String, Object> m = i.getData();
+                            p.descrizione = (String) m.get("descrizione");
+                            p.pubblicazione = (Date) m.get("data");
+                            p.autore = (String) m.get("autoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
+                            p.photo = (URL) m.get("immagine");
+                            p.tags = new ArrayList<>(); //TODO: definire i tags (ed inserirli)
+                            p.id = (int) m.get("idPost"); //TODO: rivedere gestione degli ID
+                        }
+                        c.onSuccess(results);
                     }
                     else{
                         c.onFailure(task.getException());
@@ -56,6 +72,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
 
     @Override
     public void postPost() {
+        c.onUploadSuccess();
         //TODO: Funzione vuota. Modificarla o eliminarla
     }
 }

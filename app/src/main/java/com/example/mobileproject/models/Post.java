@@ -1,13 +1,20 @@
 package com.example.mobileproject.models;
 
-import android.graphics.drawable.Drawable;
-
+import java.net.URL;
 import java.util.Date;
+import java.util.List;
 
 //@Entity
 public class Post {
-    public Drawable photo;
+    public URL photo;
     public int id;
+    public String autore;
     public String descrizione;
     public Date pubblicazione;
+    public List<String> tags;
+
+    public URL getPhoto() {
+        return photo;
+    }
+
 }

@@ -5,19 +5,30 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public class postResp implements Parcelable {
-    protected postResp(Parcel in) {
+import java.util.List;
+
+public class PostResp implements Parcelable {
+    private boolean is_loading;
+    private List<Post> l;
+    protected PostResp(Parcel in) {
     }
 
-    public static final Creator<postResp> CREATOR = new Creator<postResp>() {
+    public PostResp(){}
+    public PostResp(List<Post> l){
+        this.l = l;
+    }
+    public List<Post> getPostList(){
+        return l;
+    }
+    public static final Creator<PostResp> CREATOR = new Creator<PostResp>() {
         @Override
-        public postResp createFromParcel(Parcel in) {
-            return new postResp(in);
+        public PostResp createFromParcel(Parcel in) {
+            return new PostResp(in);
         }
 
         @Override
-        public postResp[] newArray(int size) {
-            return new postResp[size];
+        public PostResp[] newArray(int size) {
+            return new PostResp[size];
         }
     };
 
