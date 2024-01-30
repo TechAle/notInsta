@@ -8,7 +8,7 @@ import com.example.mobileproject.models.Users.UsersResp;
 public abstract class Result {
     private Result() {}
     public boolean successful(){
-        return this instanceof PostResponseSuccess;
+        return this instanceof PostResponseSuccess || this instanceof UserResponseSuccess;
     }
 
     public static final class PostResponseSuccess extends Result {
@@ -22,12 +22,12 @@ public abstract class Result {
     }
 
     public static final class UserResponseSuccess extends Result {
-        private final UsersResp user;
+        private final UsersResp resp;
         public UserResponseSuccess(UsersResp user) {
-            this.user = user;
+            this.resp = user;
         }
         public UsersResp getData() {
-            return user;
+            return resp;
         }
     }
 

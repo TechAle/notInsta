@@ -23,7 +23,7 @@ public class UsersViewModel extends ViewModel {
     }
 
     //getters & setters
-    public MutableLiveData<Result> getPosts(){
+    public MutableLiveData<Result> getUsers(){
         if(posts == null){
             posts = repo.retrieveUsers();
         }

@@ -2,6 +2,8 @@ package com.example.mobileproject.UI.fragments.home;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -10,11 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.ViewModels.Posts.PostsVMFactory;
-import com.example.mobileproject.ViewModels.Posts.PostsViewModel;
+import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
+import com.example.mobileproject.ViewModels.Users.UsersViewModel;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Post.PostResp;
+import com.example.mobileproject.models.Users.Users;
+import com.example.mobileproject.models.Users.UsersResp;
 import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 
@@ -61,28 +66,35 @@ public class ProfileFragment extends Fragment {
         return fragment;
     }
 
-    private PostsViewModel PVM;
+    private UsersViewModel PVM;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PostRepository pr = ServiceLocator.getInstance().getPostRepo();
+        UserRepository pr = ServiceLocator.getInstance().getUserRepo();
         if(pr != null){
-            PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);
+            PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(pr)).get(UsersViewModel.class);
         }
+
+
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         String id = "vbOIyyr9jIrwQSRbHn0f";
 
-        PVM.getPosts().observe(getViewLifecycleOwner(), result -> {
+        PVM.getUsers().observe(getViewLifecycleOwner(), result -> {
             if(result.successful()) {
-                PostResp resp = ((Result.PostResponseSuccess) result).getData();
-                List<Post> res = resp.getPostList();
+                UsersResp resp = ((Result.UserResponseSuccess) result).getData();
+                List<Users> res = resp.getUsersList();
                 int a = 0;
             }
         });
     }
 
-    @Override
+        @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment

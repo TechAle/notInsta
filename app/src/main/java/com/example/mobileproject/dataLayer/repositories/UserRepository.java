@@ -25,16 +25,14 @@ public class UserRepository implements CallbackUsers {
 
     //assegnamento in callback
     public MutableLiveData<Result> retrieveUsers(){
-        /*rem.retrievePosts(this);
-        return users;*/
-        return null;
+        rem.retrieveUsers(this);
+        return users;
     }
 
     //assegnamento in callback
     public MutableLiveData<Result> retrieveUsers(String tag){
-        /*rem.retrievePostByDocumentId(tag, this);
-        return users;*/
-        return null;
+        rem.retrieveUserByDocumentId(tag, this);
+        return users;
     }
 
 

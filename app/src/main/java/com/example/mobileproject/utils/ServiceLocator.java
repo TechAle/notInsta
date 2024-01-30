@@ -3,6 +3,7 @@ package com.example.mobileproject.utils;
 import android.app.Application;
 
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.dataLayer.sources.FirestoreRemoteSource;
 
 public class ServiceLocator {
@@ -25,6 +26,10 @@ public class ServiceLocator {
 //    public PostRepository getPostRepo(Application a){
     public PostRepository getPostRepo(){
         return new PostRepository(new FirestoreRemoteSource());
+    }
+
+    public UserRepository getUserRepo(){
+        return new UserRepository(new FirestoreRemoteSource());
     }
 }
 //TODO: completarlo

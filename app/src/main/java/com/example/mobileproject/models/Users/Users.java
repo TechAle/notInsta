@@ -24,6 +24,7 @@ public class Users {
         this.username = (String) m.get("username");
         this.following = (ArrayList<String>) m.get("following");
         this.followers = (ArrayList<String>) m.get("followers");
+        this.dataNascita = ((Timestamp) m.get("dataNascita")).toDate();
     }
 
 

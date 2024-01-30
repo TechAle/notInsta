@@ -1,6 +1,7 @@
 package com.example.mobileproject.dataLayer.sources;
 
 import com.example.mobileproject.models.Post.Post;
+import com.example.mobileproject.models.Users.Users;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -45,6 +46,25 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     }
 
     @Override
+    public void retrieveUsers(CallbackUsers c){
+        db.collection("utenti").get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        List<Users> results = new ArrayList<>();
+                        for(QueryDocumentSnapshot i : task.getResult()){
+                            Map<String, Object> m = i.getData();
+                            Users p = new Users(m);
+                            results.add(p);
+                        }
+                        c.onSuccess(results);
+                    }
+                    else{
+                        c.onFailure(task.getException());
+                    }
+                });
+    }
+
+    @Override
     public void retrievePostsWithTags(String[] tags, CallbackPosts c) {
         db.collection("post").get()
                 .addOnCompleteListener(task -> {
@@ -77,6 +97,24 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                         Map<String, Object> m = task.getResult().getData();
                         Post p = new Post(m);
                         ArrayList<Post> results = new ArrayList<>();
+                        results.add(p);
+                        c.onSuccess(results);
+                    }
+                    else{
+                        c.onFailure(task.getException());
+                    }
+                });
+    }
+
+    @Override
+    public void retrieveUserByDocumentId(String tag, CallbackUsers c){
+        db.collection("utenti").document(tag)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        Map<String, Object> m = task.getResult().getData();
+                        Users p = new Users(m);
+                        ArrayList<Users> results = new ArrayList<>();
                         results.add(p);
                         c.onSuccess(results);
                     }
