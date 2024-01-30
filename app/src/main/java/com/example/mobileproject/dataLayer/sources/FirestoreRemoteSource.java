@@ -34,7 +34,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                         List<Post> results = new ArrayList<>();
                         for(QueryDocumentSnapshot i : task.getResult()){
                             Map<String, Object> m = i.getData();
-                            Post p = new Post(m);
+                            Post p = new Post(m, i.getId());
                             results.add(p);
                         }
                         c.onSuccess(results);
@@ -53,7 +53,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                         List<Users> results = new ArrayList<>();
                         for(QueryDocumentSnapshot i : task.getResult()){
                             Map<String, Object> m = i.getData();
-                            Users p = new Users(m);
+                            Users p = new Users(m, i.getId());
                             results.add(p);
                         }
                         c.onSuccess(results);
@@ -72,7 +72,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                         List<Post> results = new ArrayList<>();
                         for(QueryDocumentSnapshot i : task.getResult()){
                             Map<String, Object> m = i.getData();
-                            Post p = new Post(m);
+                            Post p = new Post(m, i.getId());
                             for (String tag: tags) {
                                 if (p.tags.contains(tag)) {
                                     results.add(p);
@@ -95,7 +95,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         Map<String, Object> m = task.getResult().getData();
-                        Post p = new Post(m);
+                        Post p = new Post(m, tag);
                         ArrayList<Post> results = new ArrayList<>();
                         results.add(p);
                         c.onSuccess(results);
@@ -113,7 +113,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         Map<String, Object> m = task.getResult().getData();
-                        Users p = new Users(m);
+                        Users p = new Users(m, tag);
                         ArrayList<Users> results = new ArrayList<>();
                         results.add(p);
                         c.onSuccess(results);

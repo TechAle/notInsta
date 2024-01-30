@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
@@ -89,7 +90,9 @@ public class ProfileFragment extends Fragment {
             if(result.successful()) {
                 UsersResp resp = ((Result.UserResponseSuccess) result).getData();
                 List<Users> res = resp.getUsersList();
-                int a = 0;
+                Users target = res.get(0);
+                TextView t = view.findViewById(R.id.Nome);
+                t.setText(target.getNome());
             }
         });
     }
