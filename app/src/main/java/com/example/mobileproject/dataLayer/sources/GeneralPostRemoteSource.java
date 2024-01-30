@@ -1,8 +1,14 @@
 package com.example.mobileproject.dataLayer.sources;
 
+import java.util.ArrayList;
+
 public abstract class GeneralPostRemoteSource {
 
     protected CallbackPosts c;
+
+
+    public abstract void retrievePostsSponsor(CallbackPosts c);
+
     public abstract void retrievePostByDocumentId(String tag, CallbackPosts c);
     public abstract void retrievePosts(CallbackPosts c);
 

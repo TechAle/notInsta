@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.utils.Result;
 
+import java.util.ArrayList;
+
 public class PostsViewModel extends ViewModel {
     private final PostRepository repo;
     private int page;
@@ -23,6 +25,7 @@ public class PostsViewModel extends ViewModel {
     }
 
     //getters & setters
+    // TODO non sono sicuro se ne vale la pena fare il caching....
     public MutableLiveData<Result> getPosts(){
         if(posts == null){
             posts = repo.retrievePosts();
@@ -35,6 +38,11 @@ public class PostsViewModel extends ViewModel {
         }
         return selectedPosts;
     }
+
+    public MutableLiveData<Result> getSponsodedPosts(){
+        return repo.retrieveSponsoredPosts();
+    }
+
     public int getPage() {
         return page;
     }

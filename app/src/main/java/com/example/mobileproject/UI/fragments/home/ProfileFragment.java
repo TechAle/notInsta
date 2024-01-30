@@ -92,24 +92,14 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String id = "vbOIyyr9jIrwQSRbHn0f";
+        String id = "0pMsk9FHWko1c7wXy4Io";
 
         PVM.getUserById(id).observe(getViewLifecycleOwner(), result -> {
             if(result.successful()) {
                 UsersResp resp = ((Result.UserResponseSuccess) result).getData();
                 List<Users> res = resp.getUsersList();
                 Users target = res.get(0);
-                StorageReference imageRef = storageRef.child("PFP/" + target.getId() + ".png");
-                imageRef.getDownloadUrl().addOnCompleteListener(image -> {
-                    if (image.isSuccessful()) {
-                        Uri URLImage = image.getResult();
-                        // Find the ImageView in your layout
-                        ImageView imageView = view.findViewById(R.id.pfp);
-
-                        // Use Glide to load the image from the URL into the ImageView
-                        Glide.with(this).load(URLImage).into(imageView);
-                    }
-                });
+                FragmentUtils.loadImage(storageRef, "PFP/" + target.getId() + ".png", view, R.id.pfp);
 
                 FragmentUtils.updateTextById(view, R.id.Nome, target.getNome());
                 FragmentUtils.updateTextById(view, R.id.username, "@" + target.getUsername());

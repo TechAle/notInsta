@@ -14,16 +14,21 @@ import java.util.Map;
 
 //@Entity
 public class Post {
-    public String photo;
-    public String id;
-    public DocumentReference autore;
-    public String descrizione;
-    public Date pubblicazione;
-    public List<String> tags;
-    public List<DocumentReference> likes;
+    private String photo;
+    private String id;
+    private DocumentReference autore;
+    private String descrizione;
+    private Date pubblicazione;
+    private List<String> tags;
+    private List<DocumentReference> likes;
+    private boolean promozionale;
 
     public Post() {
 
+    }
+
+    public List<String> getTags() {
+        return tags;
     }
 
     public Post(Map<String, Object> m, String id) {
@@ -34,6 +39,7 @@ public class Post {
         this.likes = (ArrayList<DocumentReference>) m.get("likes");
         this.photo = "POSTS/" + m.get("immagine");
         this.id = id;
+        this.promozionale = (Boolean) m.get("promozionale");
         /* Per luchino che dovrà gestire le immagini
         StorageReference imageRef = storageRef.child(nameImage);
         imageRef.getDownloadUrl().addOnCompleteListener(image -> {
@@ -43,5 +49,31 @@ public class Post {
         });*/
     }
 
+    public String getPhoto() {
+        return photo;
+    }
 
+    public String getId() {
+        return id;
+    }
+
+    public DocumentReference getAutore() {
+        return autore;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    public Date getPubblicazione() {
+        return pubblicazione;
+    }
+
+    public List<DocumentReference> getLikes() {
+        return likes;
+    }
+
+    public boolean isPromozionale() {
+        return promozionale;
+    }
 }

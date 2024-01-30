@@ -74,7 +74,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                             Map<String, Object> m = i.getData();
                             Post p = new Post(m, i.getId());
                             for (String tag: tags) {
-                                if (p.tags.contains(tag)) {
+                                if (p.getTags().contains(tag)) {
                                     results.add(p);
                                     break;
                                 }
@@ -87,6 +87,32 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                     }
                 });
     }
+
+    @Override
+    public void retrievePostsSponsor(CallbackPosts c) {
+        ArrayList<Post> sponsors = new ArrayList<>();
+        db.collection("post")
+                .whereEqualTo("promozionale", true)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        for(QueryDocumentSnapshot i : task.getResult()){
+                            Map<String, Object> m = i.getData();
+                            Post p = new Post(m, i.getId());
+                            sponsors.add(p);
+                        }
+                        if (sponsors.size() > 0) {
+                            ArrayList<Post> output = new ArrayList<>();
+                            output.add(sponsors.get((int)(Math.random() * sponsors.size())));
+                            c.onSuccess(output);
+                            return;
+                        }
+                    }
+                    c.onFailure(new Exception("No sponsor"));
+                });
+
+    }
+
 
     @Override
     public void retrievePostByDocumentId(String tag, CallbackPosts c){

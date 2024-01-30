@@ -13,7 +13,8 @@ public class Users {
 
     String cognome, nome, username, descrizione, id;
     Date dataNascita;
-    ArrayList<String> followers, following;
+    ArrayList<DocumentReference> followers, following;
+    ArrayList<String> tags;
 
     public Users() {}
 
@@ -22,8 +23,9 @@ public class Users {
         this.cognome = (String) m.get("cognome");
         this.nome = (String) m.get("nome");
         this.username = (String) m.get("username");
-        this.following = (ArrayList<String>) m.get("following");
-        this.followers = (ArrayList<String>) m.get("followers");
+        this.following = (ArrayList<DocumentReference>) m.get("following");
+        this.followers = (ArrayList<DocumentReference>) m.get("followers");
+        this.tags = (ArrayList<String>) m.get("tags");
         this.dataNascita = ((Timestamp) m.get("dataNascita")).toDate();
         this.id = id;
     }
@@ -52,11 +54,15 @@ public class Users {
         return dataNascita;
     }
 
-    public ArrayList<String> getFollowers() {
+    public ArrayList<DocumentReference> getFollowers() {
         return followers;
     }
 
-    public ArrayList<String> getFollowing() {
+    public ArrayList<DocumentReference> getFollowing() {
         return following;
+    }
+
+    public ArrayList<String> getTags() {
+        return tags;
     }
 }
