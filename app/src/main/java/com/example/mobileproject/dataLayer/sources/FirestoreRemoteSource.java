@@ -1,8 +1,14 @@
 package com.example.mobileproject.dataLayer.sources;
 
+import android.net.Uri;
+
 import com.example.mobileproject.models.Post;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,8 +23,12 @@ import java.util.Map;
 public class FirestoreRemoteSource extends GeneralPostRemoteSource{
 
     FirebaseFirestore db;
+    FirebaseStorage storage;
+    StorageReference storageRef;
     public FirestoreRemoteSource(){
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
     }
 
     @Override
@@ -31,11 +41,21 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                             Post p = new Post();
                             Map<String, Object> m = i.getData();
                             p.descrizione = (String) m.get("descrizione");
-                            p.pubblicazione = (Date) m.get("data");
-                            p.autore = (String) m.get("autoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
-                            p.photo = (URL) m.get("immagine");
-                            p.tags = new ArrayList<>(); //TODO: definire i tags (ed inserirli)
-                            p.id = (int) m.get("idPost"); //TODO: rivedere gestione degli ID
+                            p.pubblicazione = ((Timestamp) m.get("data")).toDate();
+                            p.autore = (DocumentReference) m.get("creatoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
+                            p.id = (Long) m.get("idPost"); //TODO: rivedere gestione degli ID
+                            p.tags = (ArrayList<String>) m.get("tag");
+                            String nameImage = "POSTS/" + m.get("immagine");
+                            StorageReference imageRef = storageRef.child(nameImage);
+                            imageRef.getDownloadUrl().addOnCompleteListener(image -> {
+                                if (image.isSuccessful()) {
+                                    p.photo = image.getResult();
+                                } else {
+                                    p.photo = null;
+                                }
+                               p.isReady = true;
+                            });
+                            results.add(p);
                         }
                         c.onSuccess(results);
                     }
@@ -55,12 +75,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                         for(QueryDocumentSnapshot i : task.getResult()){
                             Post p = new Post();
                             Map<String, Object> m = i.getData();
-                            p.descrizione = (String) m.get("descrizione");
-                            p.pubblicazione = (Date) m.get("data");
-                            p.autore = (String) m.get("autoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
-                            p.photo = (URL) m.get("immagine");
-                            p.tags = new ArrayList<>(); //TODO: definire i tags (ed inserirli)
-                            p.id = (int) m.get("idPost"); //TODO: rivedere gestione degli ID
+                            p.id = (Long) m.get("idPost"); //TODO: rivedere gestione degli ID
                         }
                         c.onSuccess(results);
                     }
