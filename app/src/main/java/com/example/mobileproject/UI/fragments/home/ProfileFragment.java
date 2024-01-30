@@ -1,5 +1,6 @@
 package com.example.mobileproject.UI.fragments.home;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,19 +11,21 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
 import com.example.mobileproject.ViewModels.Users.UsersViewModel;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
-import com.example.mobileproject.models.Post.Post;
-import com.example.mobileproject.models.Post.PostResp;
 import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.models.Users.UsersResp;
+import com.example.mobileproject.utils.FragmentUtils;
 import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -68,6 +71,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private UsersViewModel PVM;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +81,9 @@ public class ProfileFragment extends Fragment {
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(pr)).get(UsersViewModel.class);
         }
+
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
 
 
     }
@@ -91,8 +99,23 @@ public class ProfileFragment extends Fragment {
                 UsersResp resp = ((Result.UserResponseSuccess) result).getData();
                 List<Users> res = resp.getUsersList();
                 Users target = res.get(0);
-                TextView t = view.findViewById(R.id.Nome);
-                t.setText(target.getNome());
+                StorageReference imageRef = storageRef.child("PFP/" + target.getId() + ".png");
+                imageRef.getDownloadUrl().addOnCompleteListener(image -> {
+                    if (image.isSuccessful()) {
+                        Uri URLImage = image.getResult();
+                        // Find the ImageView in your layout
+                        ImageView imageView = view.findViewById(R.id.pfp);
+
+                        // Use Glide to load the image from the URL into the ImageView
+                        Glide.with(this).load(URLImage).into(imageView);
+                    }
+                });
+
+                FragmentUtils.updateTextById(view, R.id.Nome, target.getNome());
+                FragmentUtils.updateTextById(view, R.id.username, "@" + target.getUsername());
+                FragmentUtils.updateTextById(view, R.id.descrizione, target.getDescrizione());
+                FragmentUtils.updateTextById(view, R.id.seguaci, "Seguaci: " + target.getFollowers().size());
+                FragmentUtils.updateTextById(view, R.id.seguiti, "Seguiti: " + target.getFollowing().size());
             }
         });
     }

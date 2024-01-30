@@ -20,6 +20,7 @@ public class Post {
     public String descrizione;
     public Date pubblicazione;
     public List<String> tags;
+    public List<DocumentReference> likes;
 
     public Post() {
 
@@ -30,6 +31,7 @@ public class Post {
         this.pubblicazione = ((Timestamp) m.get("data")).toDate();
         this.autore = (DocumentReference) m.get("creatoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
         this.tags = (ArrayList<String>) m.get("tag");
+        this.likes = (ArrayList<DocumentReference>) m.get("likes");
         this.photo = "POSTS/" + m.get("immagine");
         this.id = id;
         /* Per luchino che dovrà gestire le immagini
