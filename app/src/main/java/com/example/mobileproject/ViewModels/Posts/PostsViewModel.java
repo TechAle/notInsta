@@ -31,7 +31,7 @@ public class PostsViewModel extends ViewModel {
     }
     public MutableLiveData<Result> getSelectedPosts(String tag){
         if(selectedPosts == null){
-            posts = repo.retrievePosts(tag);
+            selectedPosts = repo.retrievePosts(tag);
         }
         return selectedPosts;
     }

@@ -13,8 +13,8 @@ public class UsersViewModel extends ViewModel {
     private int totalResults;
     private boolean Loading;
     private boolean firstLoading;
-    private MutableLiveData<Result> posts;
-    private MutableLiveData<Result> selectedPosts;
+    private MutableLiveData<Result> users;
+    private MutableLiveData<Result> selectedUsers;
     public UsersViewModel(UserRepository repo) {
         this.repo = repo;
         this.page = 1;
@@ -24,16 +24,17 @@ public class UsersViewModel extends ViewModel {
 
     //getters & setters
     public MutableLiveData<Result> getUsers(){
-        if(posts == null){
-            posts = repo.retrieveUsers();
+        if(users == null){
+            users = repo.retrieveUsers();
         }
-        return posts;
+        return users;
     }
-    public MutableLiveData<Result> getSelectedPosts(String tag){
-        if(selectedPosts == null){
-            posts = repo.retrieveUsers(tag);
+
+    public MutableLiveData<Result> getUserById(String tag){
+        if(selectedUsers == null){
+            selectedUsers = repo.retrieveUsers(tag);
         }
-        return selectedPosts;
+        return selectedUsers;
     }
     public int getPage() {
         return page;

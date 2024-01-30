@@ -86,7 +86,7 @@ public class ProfileFragment extends Fragment {
 
         String id = "vbOIyyr9jIrwQSRbHn0f";
 
-        PVM.getUsers().observe(getViewLifecycleOwner(), result -> {
+        PVM.getUserById(id).observe(getViewLifecycleOwner(), result -> {
             if(result.successful()) {
                 UsersResp resp = ((Result.UserResponseSuccess) result).getData();
                 List<Users> res = resp.getUsersList();
