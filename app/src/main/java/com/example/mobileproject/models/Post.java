@@ -14,7 +14,7 @@ import java.util.Map;
 
 //@Entity
 public class Post {
-    public Uri photo;
+    public String photo;
     public Long id;
     public DocumentReference autore;
     public String descrizione;
@@ -32,7 +32,8 @@ public class Post {
         this.autore = (DocumentReference) m.get("creatoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
         this.id = (Long) m.get("idPost"); //TODO: rivedere gestione degli ID
         this.tags = (ArrayList<String>) m.get("tag");
-        String nameImage = "POSTS/" + m.get("immagine");
+        this.photo = "POSTS/" + m.get("immagine");
+        /* Per luchino che dovrà gestire le immagini
         StorageReference imageRef = storageRef.child(nameImage);
         imageRef.getDownloadUrl().addOnCompleteListener(image -> {
             if (image.isSuccessful()) {
@@ -41,7 +42,7 @@ public class Post {
                 this.photo = null;
             }
             this.isReady = true;
-        });
+        });*/
     }
 
 
