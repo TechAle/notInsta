@@ -23,13 +23,13 @@ public class PostRepository implements Callback {
 
     //assegnamento in callback
     public MutableLiveData<Result> retrievePosts(){
-        rem.retrievePosts();
+        rem.retrievePosts(this);
         return posts;
     }
 
     //assegnamento in callback
     public MutableLiveData<Result> retrievePosts(String tag){
-        rem.retrievePosts(tag);
+        rem.retrievePostByDocumentId(tag, this);
         return posts;
     }
 
