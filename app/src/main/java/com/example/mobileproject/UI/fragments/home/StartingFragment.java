@@ -148,7 +148,7 @@ public class StartingFragment extends Fragment {
                             pa.notifyItemRangeInserted(postSet.size(),postSet.size() + 1);
                             PVM.setPage(PVM.getPage() + 1); //"giro" la pagina
                             //Inizio ad andare a prendere altrii post
-                            PVM.fetchPost();//TODO: Sistemare qua
+                            //PVM.fetchPost();//TODO: Sistemare qua
                         }
                     }
                 }

@@ -10,7 +10,6 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.mobileproject.R;
 import com.example.mobileproject.models.Post;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -19,7 +18,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
+public class PostAdapter extends RecyclerView.Adapter<PostAdapter.LoadingPostViewHolder> {
 
     private static final int NORMAL_TYPE = 0;
     private static final int LOADING_TYPE = 0;
@@ -27,11 +26,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     private final Application a;
 
     public static class PostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private final ImageView iv;
+        //private final ImageView iv;
         public PostViewHolder(View item){
             super(item);
             //TODO: fare l'ID
-            iv = item.findViewById(R.id.qualcosa);
+            //iv = item.findViewById(R.id.qualcosa);
             item.setOnClickListener(this);
         }
         //TODO: sistemare il bind (e trovare un modo di caricare un Drawable)
@@ -39,7 +38,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             //iv.setImageDrawable(p.photo);
             //Caricamento immagine da URL con Glide
             //TODO: sistemare riferimento ad Application e cambiare foto di rimpiazzo (se qualcuno vuole)
-            Glide.with(a).load(p.getPhoto()).placeholder(R.drawable.baseline_photo_camera_24).into(iv);
+            //Glide.with(a).load(p.getPhoto()).placeholder(R.drawable.baseline_photo_camera_24).into(iv);
         }
 
         @Override
@@ -63,11 +62,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public LoadingPostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v;
         if(viewType == NORMAL_TYPE){
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.postlist_item, parent, false);
-            return new PostViewHolder(v);
+            //return new PostViewHolder(v);
+            return null;
         } else {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.loading_item, parent, false);
             return new LoadingPostViewHolder(v);
@@ -75,13 +75,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LoadingPostViewHolder holder, int position) {
+        /*
         if(holder instanceof PostViewHolder) {
             ((PostViewHolder) holder).bind(postSet.get(position));
         } else if (holder instanceof LoadingPostViewHolder){
             ((LoadingPostViewHolder) holder).activate();
         }
+         */
     }
+
+
 
     @Override
     public int getItemCount() {

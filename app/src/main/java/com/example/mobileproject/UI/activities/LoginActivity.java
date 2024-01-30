@@ -1,4 +1,4 @@
-package com.example.mobileproject.activities;
+package com.example.mobileproject.UI.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            //startActivity(new Intent(LoginNew.this, HomeActivity.class));
         }
     }
 
