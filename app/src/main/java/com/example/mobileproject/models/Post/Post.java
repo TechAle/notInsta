@@ -1,4 +1,4 @@
-package com.example.mobileproject.models;
+package com.example.mobileproject.models.Post;
 
 import android.net.Uri;
 
@@ -20,13 +20,12 @@ public class Post {
     public String descrizione;
     public Date pubblicazione;
     public List<String> tags;
-    public boolean isReady = false;
 
     public Post() {
 
     }
 
-    public Post(Map<String, Object> m, StorageReference storageRef) {
+    public Post(Map<String, Object> m) {
         this.descrizione = (String) m.get("descrizione");
         this.pubblicazione = ((Timestamp) m.get("data")).toDate();
         this.autore = (DocumentReference) m.get("creatoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
@@ -37,11 +36,8 @@ public class Post {
         StorageReference imageRef = storageRef.child(nameImage);
         imageRef.getDownloadUrl().addOnCompleteListener(image -> {
             if (image.isSuccessful()) {
-                this.photo = image.getResult();
-            } else {
-                this.photo = null;
+                URL = = image.getResult();
             }
-            this.isReady = true;
         });*/
     }
 

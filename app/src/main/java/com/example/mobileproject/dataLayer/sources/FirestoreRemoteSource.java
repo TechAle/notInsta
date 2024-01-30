@@ -1,6 +1,6 @@
 package com.example.mobileproject.dataLayer.sources;
 
-import com.example.mobileproject.models.Post;
+import com.example.mobileproject.models.Post.Post;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -26,14 +26,14 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     }
 
     @Override
-    public void retrievePosts(Callback c){
+    public void retrievePosts(CallbackPosts c){
         db.collection("post").get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         List<Post> results = new ArrayList<>();
                         for(QueryDocumentSnapshot i : task.getResult()){
                             Map<String, Object> m = i.getData();
-                            Post p = new Post(m, storageRef);
+                            Post p = new Post(m);
                             results.add(p);
                         }
                         c.onSuccess(results);
@@ -45,14 +45,14 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     }
 
     @Override
-    public void retrievePostsWithTags(String[] tags, Callback c) {
+    public void retrievePostsWithTags(String[] tags, CallbackPosts c) {
         db.collection("post").get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         List<Post> results = new ArrayList<>();
                         for(QueryDocumentSnapshot i : task.getResult()){
                             Map<String, Object> m = i.getData();
-                            Post p = new Post(m, storageRef);
+                            Post p = new Post(m);
                             for (String tag: tags) {
                                 if (p.tags.contains(tag)) {
                                     results.add(p);
@@ -69,13 +69,13 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     }
 
     @Override
-    public void retrievePostByDocumentId(String tag, Callback c){
+    public void retrievePostByDocumentId(String tag, CallbackPosts c){
         db.collection("post").document(tag)
                 .get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         Map<String, Object> m = task.getResult().getData();
-                        Post p = new Post(m, storageRef);
+                        Post p = new Post(m);
                         ArrayList<Post> results = new ArrayList<>();
                         results.add(p);
                         c.onSuccess(results);

@@ -2,15 +2,16 @@ package com.example.mobileproject.dataLayer.repositories;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.mobileproject.dataLayer.sources.Callback;
+import com.example.mobileproject.dataLayer.sources.CallbackPosts;
 import com.example.mobileproject.dataLayer.sources.GeneralPostRemoteSource;
-import com.example.mobileproject.models.Post;
-import com.example.mobileproject.models.PostResp;
+import com.example.mobileproject.models.Post.Post;
+import com.example.mobileproject.models.Post.PostResp;
+import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.utils.Result;
 
 import java.util.List;
 
-public class PostRepository implements Callback {
+public class PostRepository implements CallbackPosts {
 
     private final MutableLiveData<Result> posts;
 
@@ -45,6 +46,9 @@ public class PostRepository implements Callback {
             posts.postValue(result);
         }
     }
+
+
+
     @Override
     public void onFailure(Exception e) {
         Result.Error resultError = new Result.Error(e.getMessage());

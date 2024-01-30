@@ -1,4 +1,4 @@
-package com.example.mobileproject.ViewModels;
+package com.example.mobileproject.ViewModels.Posts;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

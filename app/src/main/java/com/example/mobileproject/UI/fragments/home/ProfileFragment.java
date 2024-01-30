@@ -3,12 +3,22 @@ package com.example.mobileproject.UI.fragments.home;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mobileproject.R;
+import com.example.mobileproject.ViewModels.Posts.PostsVMFactory;
+import com.example.mobileproject.ViewModels.Posts.PostsViewModel;
+import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.models.Post.Post;
+import com.example.mobileproject.models.Post.PostResp;
+import com.example.mobileproject.utils.Result;
+import com.example.mobileproject.utils.ServiceLocator;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +38,9 @@ public class ProfileFragment extends Fragment {
 
     public ProfileFragment() {
         // Required empty public constructor
+        PostRepository t = ServiceLocator.getInstance().getPostRepo();
+        t.retrievePosts();
+
     }
 
     /**
@@ -48,13 +61,25 @@ public class ProfileFragment extends Fragment {
         return fragment;
     }
 
+    private PostsViewModel PVM;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        PostRepository pr = ServiceLocator.getInstance().getPostRepo();
+        if(pr != null){
+            PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);
+        }
+
         String id = "vbOIyyr9jIrwQSRbHn0f";
 
-
+        PVM.getPosts().observe(getViewLifecycleOwner(), result -> {
+            if(result.successful()) {
+                PostResp resp = ((Result.PostResponseSuccess) result).getData();
+                List<Post> res = resp.getPostList();
+                int a = 0;
+            }
+        });
     }
 
     @Override
