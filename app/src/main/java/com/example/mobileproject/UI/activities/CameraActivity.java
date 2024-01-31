@@ -103,6 +103,9 @@ public class CameraActivity extends AppCompatActivity {
     // Substitutes the fragment depending on the current state
     private void changeFragment() {
         switch (currentFragment){
+            case -1:
+                // Go back (probably to main)
+                break;
             case 0:
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentContainerView, ImageChooserFragment.class, null)
@@ -120,7 +123,8 @@ public class CameraActivity extends AppCompatActivity {
                 break;
             case 3:
                 // Send post
-                nextButton.setText(viewModel.getDescription().getValue());
+                viewModel.postImage();
+                // Go back to main
         }
     }
 

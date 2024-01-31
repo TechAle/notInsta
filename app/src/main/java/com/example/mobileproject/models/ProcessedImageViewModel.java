@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.mobileproject.utils.FilterUtils;
 
+import java.io.FileOutputStream;
+
 
 public class ProcessedImageViewModel extends ViewModel {
 
@@ -78,5 +80,19 @@ public class ProcessedImageViewModel extends ViewModel {
         Bitmap image = getProcessedImage().getValue();
 
         getTempImage().setValue(FilterUtils.applyFilter(image, f, x, y, z));
+    }
+
+    // Posts the image with the description
+    public void postImage() {
+        Bitmap image = processedImage.getValue();
+        String desc = description.getValue();
+        try{
+            //FileOutputStream out = new FileOutputStream(file);
+            //image.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            //out.flush();
+            //out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
