@@ -4,10 +4,12 @@ import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Users.Users;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -158,6 +160,39 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                     }
                     else{
                         c.onFailure(task.getException());
+                    }
+                });
+    }
+
+    public void editUsername(String tag, String newUsername, CallbackUsers c) {
+        // Controllo se nessuno ha quell'username
+        db.collection("utenti")
+                .whereEqualTo("username", newUsername)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().isEmpty()) {
+                            // Allora possiamo cambiarlo
+                            updateField("utenti", tag, "username", newUsername, c);
+                        } else c.onFailure(new Exception("Someone already has this error"));
+                    } else c.onFailure(new Exception("Firebase error"));
+                });
+    }
+
+    private void updateField(String collectionName, String documentId, String fieldToUpdate, Object newValue, CallbackUsers c) {
+        // Create a map to represent the field to be updated
+        Map<String, Object> updates = new HashMap<>();
+        updates.put(fieldToUpdate, newValue);
+
+        // Update the document with the new field value
+        db.collection(collectionName)
+                .document(documentId)
+                .update(updates)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        c.onUploadSuccess();
+                    } else {
+                        c.onFailure(new Exception("Firebase errore field"));
                     }
                 });
     }
