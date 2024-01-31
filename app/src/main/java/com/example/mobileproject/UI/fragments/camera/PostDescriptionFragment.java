@@ -1,6 +1,8 @@
 package com.example.mobileproject.UI.fragments.camera;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,6 +56,23 @@ public class PostDescriptionFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_post_description, container, false);
         textInput = view.findViewById(R.id.textInput);
+
+        textInput.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                viewModel.getDescription().setValue(s.toString());
+            }
+        });
 
         return view;
     }

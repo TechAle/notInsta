@@ -117,6 +117,10 @@ public class CameraActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentContainerView, PostDescriptionFragment.class, null)
                         .commit();
+                break;
+            case 3:
+                // Send post
+                nextButton.setText(viewModel.getDescription().getValue());
         }
     }
 
