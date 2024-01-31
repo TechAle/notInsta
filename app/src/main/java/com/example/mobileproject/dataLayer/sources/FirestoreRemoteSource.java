@@ -91,25 +91,37 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     @Override
     public void retrievePostsSponsor(CallbackPosts c) {
         ArrayList<Post> sponsors = new ArrayList<>();
-        db.collection("post")
-                .whereEqualTo("promozionale", true)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
-                        for(QueryDocumentSnapshot i : task.getResult()){
-                            Map<String, Object> m = i.getData();
-                            Post p = new Post(m, i.getId());
-                            sponsors.add(p);
+        if (Math.random() * 3 == 1) {
+            // Chiamata API
+            // Prendi il titolo, l'immagine, e suppongo anche il link
+            ArrayList<Post> output = new ArrayList<>();
+            Post temp = new Post();
+
+            output.add(temp);
+            c.onSuccess(output);
+        } else
+            db.collection("post")
+                    .whereEqualTo("promozionale", true)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot i : task.getResult()){
+                                Map<String, Object> m = i.getData();
+                                Post p = new Post(m, i.getId());
+                                sponsors.add(p);
+                            }
+                            if (sponsors.size() > 0) {
+                                if (Math.random()*3!=1) {
+                                    ArrayList<Post> output = new ArrayList<>();
+                                    output.add(sponsors.get((int) (Math.random() * sponsors.size())));
+                                    c.onSuccess(output);
+
+                                }
+                            }
                         }
-                        if (sponsors.size() > 0) {
-                            ArrayList<Post> output = new ArrayList<>();
-                            output.add(sponsors.get((int)(Math.random() * sponsors.size())));
-                            c.onSuccess(output);
-                            return;
-                        }
-                    }
-                    c.onFailure(new Exception("No sponsor"));
-                });
+                        c.onFailure(new Exception("No sponsor"));
+                    });
+
 
     }
 
