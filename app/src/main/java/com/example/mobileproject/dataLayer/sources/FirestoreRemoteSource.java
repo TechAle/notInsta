@@ -1,13 +1,18 @@
 package com.example.mobileproject.dataLayer.sources;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
+
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Users.Users;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -179,6 +184,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                 });
     }
 
+
     private void updateField(String collectionName, String documentId, String fieldToUpdate, Object newValue, CallbackInterface c) {
         // Create a map to represent the field to be updated
         Map<String, Object> updates = new HashMap<>();
@@ -197,9 +203,23 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                 });
     }
 
-    private void createDocument(String collectionName, Map<String, Object> documentFields, FirebaseFirestore firestore, CallbackInterface ci) {
+    @Override
+    public void createDocument(String collectionName, Post post, CallbackPosts ci) {
+        Map<String, Object> documentFields = new HashMap<>();
+        documentFields.put("autore", post.getAutore());
+        documentFields.put("likes", post.getLikes());
+        documentFields.put("promozionale", post.getPromozionale());
+        documentFields.put("pubblicazione", post.getPubblicazione());
+        documentFields.put("tags", post.getTags());
+        documentFields.put("descrizione", post.getDescrizione());
+        createDocument(collectionName, documentFields, ci);
+    }
+
+
+    @Override
+    public void createDocument(String collectionName, Map<String, Object> documentFields, CallbackPosts ci) {
         // Add the new document to our shared collection
-        firestore.collection(collectionName)
+        db.collection(collectionName)
                 .add(documentFields)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful())
@@ -210,8 +230,37 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     }
 
     @Override
+    public void createImage(Uri imageUri, android.content.ContentResolver context, CallbackPosts ci) {
+        if (imageUri != null) {
+            try {
+                // Convert the image to PNG format
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context, imageUri);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                byte[] data = baos.toByteArray();
+                // Create a unique filename for the uploaded image
+                String fileName = System.currentTimeMillis() + ".png";
+
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference("POSTS");
+
+                StorageReference fileReference = storageReference.child(fileName);
+
+
+                fileReference.putBytes(data).addOnSuccessListener(ris -> {
+                    ci.onSuccess();
+                }).addOnFailureListener(ris -> {
+                    ci.onFailure(new Exception("Caricamento fallito"));
+                });
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
     public void postPost() {
         c.onUploadSuccess();
         //TODO: Funzione vuota. Modificarla o eliminarla
     }
+
 }

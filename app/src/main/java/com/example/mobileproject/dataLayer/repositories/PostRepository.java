@@ -1,22 +1,24 @@
 package com.example.mobileproject.dataLayer.repositories;
 
+import android.content.ContentResolver;
+import android.net.Uri;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mobileproject.dataLayer.sources.CallbackPosts;
 import com.example.mobileproject.dataLayer.sources.GeneralPostRemoteSource;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Post.PostResp;
-import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.utils.Result;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PostRepository implements CallbackPosts {
 
     private final MutableLiveData<Result> posts;
-
+    private final MutableLiveData<Result> ready;
     private final GeneralPostRemoteSource rem;
+    private Uri image;
 
     public void resetPosts() {
         this.posts.setValue(null);
@@ -25,6 +27,7 @@ public class PostRepository implements CallbackPosts {
     public PostRepository(GeneralPostRemoteSource rem){
         this.rem = rem;
         posts = new MutableLiveData<>();
+        ready = new MutableLiveData<>();
     }
 
     //assegnamento in callback
@@ -42,6 +45,11 @@ public class PostRepository implements CallbackPosts {
     public MutableLiveData<Result> retrieveSponsoredPosts(){
         rem.retrievePostsSponsor(this);
         return posts;
+    }
+
+    public MutableLiveData<Result> createDocument(String collectionName, Post post) {
+        rem.createDocument(collectionName, post, this);
+        return ready;
     }
 
     @Override
@@ -71,5 +79,10 @@ public class PostRepository implements CallbackPosts {
     @Override
     public void onUploadSuccess() {
         //TODO: Usare o eliminare (dalla interfaccia Callback)
+    }
+
+    public MutableLiveData<Result> createImage(Uri imageUri, ContentResolver contentResolver) {
+        rem.createImage(imageUri, contentResolver, this);
+        return ready;
     }
 }

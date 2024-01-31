@@ -4,10 +4,12 @@ import android.net.Uri;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,19 @@ public class Post {
 
     public Post() {
 
+    }
+
+    public Post(String autore, String descrizione, List<String> tags, boolean promozionale, FirebaseFirestore db) {
+        this.autore = db.collection("utenti").document(autore);
+        this.descrizione = descrizione;
+        this.pubblicazione = Calendar.getInstance().getTime();
+        this.tags = tags;
+        this.likes = new ArrayList<>();
+        this.promozionale = promozionale;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public List<String> getTags() {
@@ -69,5 +84,9 @@ public class Post {
 
     public boolean isPromozionale() {
         return promozionale;
+    }
+
+    public boolean getPromozionale() {
+        return this.promozionale;
     }
 }

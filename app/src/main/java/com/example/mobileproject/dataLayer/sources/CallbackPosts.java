@@ -1,7 +1,12 @@
 package com.example.mobileproject.dataLayer.sources;
 
+import android.content.ContentResolver;
+import android.net.Uri;
+
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.mobileproject.models.Post.Post;
-import com.example.mobileproject.models.Users.Users;
+import com.example.mobileproject.utils.Result;
 
 import java.util.List;
 

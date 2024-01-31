@@ -1,12 +1,14 @@
 package com.example.mobileproject.ViewModels.Posts;
 
+import android.content.ContentResolver;
+import android.net.Uri;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.utils.Result;
-
-import java.util.ArrayList;
 
 public class PostsViewModel extends ViewModel {
     private final PostRepository repo;
@@ -37,6 +39,14 @@ public class PostsViewModel extends ViewModel {
             selectedPosts = repo.retrievePosts(tag);
         }
         return selectedPosts;
+    }
+
+    public MutableLiveData<Result> createPost(Post post) {
+        return repo.createDocument("POSTS", post);
+    }
+
+    public MutableLiveData<Result>  createImage(Uri imageUri, ContentResolver contentResolver) {
+        return repo.createImage(imageUri, contentResolver);
     }
 
     public MutableLiveData<Result> getSponsodedPosts(){

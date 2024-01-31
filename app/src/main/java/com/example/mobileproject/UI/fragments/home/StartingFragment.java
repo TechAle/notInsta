@@ -1,8 +1,14 @@
 package com.example.mobileproject.UI.fragments.home;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,9 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.ViewModels.Posts.PostsVMFactory;
@@ -28,13 +36,19 @@ import com.example.mobileproject.utils.PostAdapter;
 import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link StartingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class StartingFragment extends Fragment {
@@ -47,18 +61,6 @@ public class StartingFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment StartingFragment.
-     */
-    public static StartingFragment newInstance() {
-        StartingFragment fragment = new StartingFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -151,7 +153,38 @@ public class StartingFragment extends Fragment {
                 }
             }
         });
+
+
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            Post toCreate = new Post("0TsbiPUaL5qfFQiH6572", "Bella descrizione",
+                    new ArrayList<>(Arrays.asList("tag1", "ciao")), true, FirebaseFirestore.getInstance());
+
+            PVM.createPost(toCreate).observe(getViewLifecycleOwner(), task -> {
+                if (task.successful()) {
+                    PVM.createImage(imageUri, requireActivity().getContentResolver());
+                } else {
+
+                }
+            });
+        }
+    }
+
+
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private ImageView imageView;
+    private Uri imageUri;
 
 //TODO: controllare questa funzione. Se ha problemi, decommentare le linee commentate e aggiustare gli import
     private boolean internetConnection(){
