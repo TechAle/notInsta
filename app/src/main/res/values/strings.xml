@@ -35,6 +35,22 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="changeLanguage">Change language</string>
+    <string name="changePassword">Change password</string>
+    <string name="changePic">Change picture</string>
+    <string name="changePrivacy">Private account</string>
+    <string name="changeUsername">Change username</string>
+    <string name="deleteAccount">Delete account</string>
+    <string name="enableNotifies">Enable notifies</string>
+    <string name="settingsTitle">Settings</string>
+    <string name="showLikes">Show likes</string>
+    <string name="signOut">Sign out</string>
+    <string name="insertNewPassword">Insert new password</string>
+
+    <string-array name="languages_array">
+        <item>English</item>
+        <item>Italiano</item>
+    </string-array>
 
 <!--<string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris volutpat, dolor id
@@ -74,4 +90,14 @@
     <string name="confirm_image_choice_button_text">Ok</string>
     <string name="open_camera_app_button_text">Open Camera</string>
     <string name="open_gallery_button_text">Choose from Gallery</string>
+    <string name="imagePicture">Image picture</string>
+    <string name="changeUsernameText">Insert new username</string>
+    <string name="usernameText">New username</string>
+    <string name="changePasswdTitle">Change password</string>
+    <string name="oldPasswordText">Insert old password</string>
+    <string name="username_changed">Username has been changed</string>
+    <string name="empty" />
+    <string name="password_changed">Password has been changed</string>
+    <string name="password_length">Password lentgh must be at least 6</string>
+    <string name="password_different">Passwords must be different</string>
 </resources>
