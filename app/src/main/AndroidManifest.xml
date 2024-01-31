@@ -13,15 +13,11 @@
         android:theme="@style/Theme.MobileProject"
         tools:targetApi="34">
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".UI.activities.LoginActivity"
             android:exported="true">
         </activity>
         <activity
-            android:name=".activities.HomeActivity"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".activities.CameraActivity"
+            android:name=".UI.activities.HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +26,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SingupActivity"
+            android:name=".UI.activities.CameraActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".UI.activities.SignupActivity"
             android:exported="true">
         </activity>
     </application>
