@@ -7,7 +7,7 @@
     android:background="?android:selectableItemBackground">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/post_image_bg"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

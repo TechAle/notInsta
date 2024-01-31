@@ -29,8 +29,8 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     }
 
     @Override
-    public void retrievePosts(CallbackPosts c){
-        db.collection("post").get()
+    public void retrievePosts(CallbackPosts c, int page){
+        db.collection("post").orderBy("data").startAfter(page * 20).limit(20).get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         List<Post> results = new ArrayList<>();

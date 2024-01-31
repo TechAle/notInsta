@@ -21,15 +21,12 @@ import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Post.PostResp;
-import com.example.mobileproject.models.Users.Users;
-import com.example.mobileproject.models.Users.UsersResp;
 import com.example.mobileproject.utils.FragmentUtils;
 import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,7 +73,7 @@ public class SearchFragment extends Fragment {
         LinearLayout t = view.findViewById(R.id.sponsorLayout);
         t.setVisibility(View.GONE);
 
-        PVM.getSponsodedPosts().observe(getViewLifecycleOwner(), post -> {
+        PVM.getSponsoredPosts().observe(getViewLifecycleOwner(), post -> {
             if(post.successful()) {
                 PostResp sponsoredPost = ((Result.PostResponseSuccess) post).getData();
                 List<Post> sponsored = sponsoredPost.getPostList();

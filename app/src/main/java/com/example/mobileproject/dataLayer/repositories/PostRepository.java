@@ -28,8 +28,8 @@ public class PostRepository implements CallbackPosts {
     }
 
     //assegnamento in callback
-    public MutableLiveData<Result> retrievePosts(){
-        rem.retrievePosts(this);
+    public MutableLiveData<Result> retrievePosts(int page){
+        rem.retrievePosts(this, page);
         return posts;
     }
 
@@ -46,18 +46,16 @@ public class PostRepository implements CallbackPosts {
 
     @Override
     public void onSuccess(List<Post> res) {
-        /*if (posts.getValue() != null && posts.getValue().successful()) { //Lazy Loading
+        if (posts.getValue() != null && posts.getValue().successful()) { //Lazy Loading
             List<Post> l = ((Result.PostResponseSuccess)posts.getValue()).getData().getPostList();
             l.addAll(res);
             Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(l));
             posts.postValue(result);
-        } else {*/
+        } else {
             Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(res));
             posts.postValue(result);
-        //}
+        }
     }
-
-
 
     @Override
     public void onFailure(Exception e) {

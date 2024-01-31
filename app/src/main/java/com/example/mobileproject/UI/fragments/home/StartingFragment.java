@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,10 +56,7 @@ public class StartingFragment extends Fragment {
      * @return A new instance of fragment StartingFragment.
      */
     public static StartingFragment newInstance() {
-        StartingFragment fragment = new StartingFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new StartingFragment();
     }
 
     @Override
@@ -66,10 +65,11 @@ public class StartingFragment extends Fragment {
         PostRepository pr = ServiceLocator.getInstance().getPostRepo();
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);
-        } else { //TODO: Sostituire testo con una risorsa
+        } else { //TODO: Sostituire testo con una risorsa di tipo stringa
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
         }
+        postSet = new ArrayList<>();
     }
 
     @Override
@@ -78,6 +78,7 @@ public class StartingFragment extends Fragment {
             ViewGroup container,
             Bundle savedInstanceState
     ) {
+        //TODO: bindings???
         return inflater.inflate(R.layout.fragment_starting, container, false);
     }
 
@@ -86,20 +87,40 @@ public class StartingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView tags = view.findViewById(R.id.tags);
+        Log.d("AAAA","Presente");
         RecyclerView.LayoutManager lmt = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.HORIZONTAL, false);
         RecyclerView posts = view.findViewById(R.id.posts);
         StaggeredGridLayoutManager lmp = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
 //        ArrayAdapter<String> aas = new ArrayAdapter<>(requireContext(), R.layout.taglist_item);
-
+        pa = new PostAdapter(postSet, requireActivity().getApplication(), new PostAdapter.OnItemClickListener(){
+            //Qua non metto una funzione anonima
+            @Override
+            public void onItemClicked() {
+                //Volendo si può sostituire questa linea con qualcosa di altro
+                Snackbar.make(view, "Item Clicked", Snackbar.LENGTH_SHORT).show();
+            }
+        });
         tags.setLayoutManager(lmt);
         posts.setLayoutManager(lmp);
+        posts.setAdapter(pa);
+        //bindings
         PVM.getPosts().observe(getViewLifecycleOwner(), result -> {
             if(result.successful()){
                 PostResp resp = ((Result.PostResponseSuccess) result).getData();
                 List<Post> res = resp.getPostList();
                 if(!PVM.isLoading()){
-
+                    if(PVM.isFirstLoading()){
+                        //PVM.setTotalResults(PostResp.getTotalResults());
+                        PVM.setFirstLoading(false);
+                        postSet.addAll(res);
+                        pa.notifyItemRangeInserted(0, postSet.size());
+                    } else {
+                        postSet.clear();
+                        postSet.addAll(res);
+                        pa.notifyItemRangeInserted(0, res.size());
+                    }
+                    //bindings
                 } else {
                     PVM.setLoading(false);
                     PVM.setTotalResults(postSet.size());

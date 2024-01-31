@@ -47,8 +47,8 @@ public class ProfileFragment extends Fragment {
 
     public ProfileFragment() {
         // Required empty public constructor
-        PostRepository t = ServiceLocator.getInstance().getPostRepo();
-        t.retrievePosts();
+        /*PostRepository t = ServiceLocator.getInstance().getPostRepo();
+        t.retrievePosts();*/
 
     }
 

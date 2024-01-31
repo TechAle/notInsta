@@ -10,7 +10,7 @@ public abstract class GeneralPostRemoteSource {
     public abstract void retrievePostsSponsor(CallbackPosts c);
 
     public abstract void retrievePostByDocumentId(String tag, CallbackPosts c);
-    public abstract void retrievePosts(CallbackPosts c);
+    public abstract void retrievePosts(CallbackPosts c, int page);
 
 
     public abstract void retrieveUsers(CallbackUsers c);
