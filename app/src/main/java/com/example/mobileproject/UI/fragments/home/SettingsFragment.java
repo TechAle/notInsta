@@ -64,14 +64,6 @@ public class SettingsFragment extends Fragment {
         deleteAccountButton = view.findViewById(R.id.DeleteAccountButton);
 
 
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), HomeActivity.class));
-                getActivity().finish();
-            }
-        });
-
         changeUsernameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
