@@ -156,17 +156,19 @@ public class StartingFragment extends Fragment {
 
 
 
-        Intent intent = new Intent();
+        /*Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);*/
     }
 
+    /*
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
             imageUri = data.getData();
             Post toCreate = new Post("0TsbiPUaL5qfFQiH6572", "Bella descrizione",
                     new ArrayList<>(Arrays.asList("tag1", "ciao")), true, FirebaseFirestore.getInstance());
@@ -187,7 +189,7 @@ public class StartingFragment extends Fragment {
                 }
             });
         }
-    }
+    }*/
 
 
     private static final int PICK_IMAGE_REQUEST = 1;
