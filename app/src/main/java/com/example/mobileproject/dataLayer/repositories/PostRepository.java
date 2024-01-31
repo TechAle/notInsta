@@ -58,6 +58,9 @@ public class PostRepository implements CallbackPosts {
     }
 
 
+    @Override
+    public void onSuccess() {
+    }
 
     @Override
     public void onFailure(Exception e) {

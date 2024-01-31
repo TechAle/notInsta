@@ -179,7 +179,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                 });
     }
 
-    private void updateField(String collectionName, String documentId, String fieldToUpdate, Object newValue, CallbackUsers c) {
+    private void updateField(String collectionName, String documentId, String fieldToUpdate, Object newValue, CallbackInterface c) {
         // Create a map to represent the field to be updated
         Map<String, Object> updates = new HashMap<>();
         updates.put(fieldToUpdate, newValue);
@@ -190,10 +190,22 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                 .update(updates)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        c.onUploadSuccess();
+                        c.onSuccess();
                     } else {
                         c.onFailure(new Exception("Firebase errore field"));
                     }
+                });
+    }
+
+    private void createDocument(String collectionName, Map<String, Object> documentFields, FirebaseFirestore firestore, CallbackInterface ci) {
+        // Add the new document to our shared collection
+        firestore.collection(collectionName)
+                .add(documentFields)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                        ci.onSuccess();
+                    else
+                        ci.onFailure(new Exception("Error creating document"));
                 });
     }
 
