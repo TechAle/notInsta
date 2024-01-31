@@ -100,4 +100,7 @@
     <string name="password_changed">Password has been changed</string>
     <string name="password_length">Password lentgh must be at least 6</string>
     <string name="password_different">Passwords must be different</string>
+    <string name="button_to_post_desc">Next</string>
+    <string name="prev_button">Back</string>
+    <string name="next_button">Next</string>
 </resources>

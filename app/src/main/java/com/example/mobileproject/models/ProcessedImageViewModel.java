@@ -17,6 +17,7 @@ public class ProcessedImageViewModel extends ViewModel {
     private MutableLiveData<Integer> param1;
     private MutableLiveData<Integer> param2;
     private MutableLiveData<Integer> param3;
+    private MutableLiveData<String> description;
 
     public MutableLiveData<Bitmap> getProcessedImage() {
         if (processedImage == null) {
@@ -57,6 +58,13 @@ public class ProcessedImageViewModel extends ViewModel {
             param3.setValue(0);
         }
         return param3;
+    }
+    public MutableLiveData<String> getDescription() {
+        if (description == null) {
+            description = new MutableLiveData<String>();
+            description.setValue("");
+        }
+        return description;
     }
 
 
