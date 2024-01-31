@@ -36,6 +36,11 @@ public class UsersViewModel extends ViewModel {
         }
         return selectedUsers;
     }
+
+    public MutableLiveData<Result> editUsername(String tag, String newUsername) {
+        return repo.editUsername(tag, newUsername);
+    }
+
     public int getPage() {
         return page;
     }
