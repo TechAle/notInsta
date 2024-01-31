@@ -1,11 +1,10 @@
-package com.example.mobileproject.fragments.settings;
+package com.example.mobileproject.UI.fragments.home;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import com.example.mobileproject.R;
 import com.example.mobileproject.models.SettingsViewModel;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
@@ -83,7 +81,7 @@ public class ChangeUsernameFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true)
-                        .replace(R.id.fragment_container_view_impostazioni, SettingsFragment.class, null)
+                        .replace(R.id.fragment_window_host, SettingsFragment.class, null)
                         .commit();
 
             }
