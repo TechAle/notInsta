@@ -1,5 +1,6 @@
 package com.example.mobileproject.dataLayer.sources;
 
+import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -223,14 +224,14 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                 .add(documentFields)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful())
-                        ci.onSuccess();
+                        ci.onUploadSuccess(task.getResult().getId());
                     else
                         ci.onFailure(new Exception("Error creating document"));
                 });
     }
 
     @Override
-    public void createImage(Uri imageUri, android.content.ContentResolver context, CallbackPosts ci) {
+    public void createImage(Uri imageUri, ContentResolver context, CallbackPosts ci, String id) {
         if (imageUri != null) {
             try {
                 // Convert the image to PNG format
@@ -239,9 +240,9 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] data = baos.toByteArray();
                 // Create a unique filename for the uploaded image
-                String fileName = System.currentTimeMillis() + ".png";
+                String fileName = id + ".png";
 
-                StorageReference storageReference = FirebaseStorage.getInstance().getReference("POSTS");
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference("post");
 
                 StorageReference fileReference = storageReference.child(fileName);
 
@@ -259,8 +260,6 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
 
     @Override
     public void postPost() {
-        c.onUploadSuccess();
-        //TODO: Funzione vuota. Modificarla o eliminarla
     }
 
 }

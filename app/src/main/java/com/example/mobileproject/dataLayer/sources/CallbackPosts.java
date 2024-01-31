@@ -17,5 +17,5 @@ import java.util.List;
 //Nel caso dovessero servire altre chiamate di ritorno, inseritele qua
 public interface CallbackPosts extends CallbackInterface {
     void onSuccess(List<Post> res);
-    void onUploadSuccess(); //TODO: Usare o eliminare
+    void onUploadSuccess(String id); //TODO: Usare o eliminare
 }

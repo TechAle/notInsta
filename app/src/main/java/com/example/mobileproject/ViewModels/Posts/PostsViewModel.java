@@ -45,8 +45,8 @@ public class PostsViewModel extends ViewModel {
         return repo.createDocument("POSTS", post);
     }
 
-    public MutableLiveData<Result>  createImage(Uri imageUri, ContentResolver contentResolver) {
-        return repo.createImage(imageUri, contentResolver);
+    public MutableLiveData<Result>  createImage(Uri imageUri, ContentResolver contentResolver, String id) {
+        return repo.createImage(imageUri, contentResolver, id);
     }
 
     public MutableLiveData<Result> getSponsodedPosts(){

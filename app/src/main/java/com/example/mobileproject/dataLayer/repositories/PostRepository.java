@@ -77,12 +77,13 @@ public class PostRepository implements CallbackPosts {
     }
 
     @Override
-    public void onUploadSuccess() {
-        //TODO: Usare o eliminare (dalla interfaccia Callback)
+    public void onUploadSuccess(String id) {
+        Result.PostCreationSuccess result = new Result.PostCreationSuccess(id);
+        ready.postValue(result);
     }
 
-    public MutableLiveData<Result> createImage(Uri imageUri, ContentResolver contentResolver) {
-        rem.createImage(imageUri, contentResolver, this);
+    public MutableLiveData<Result> createImage(Uri imageUri, ContentResolver contentResolver, String id) {
+        rem.createImage(imageUri, contentResolver, this, id);
         return ready;
     }
 }

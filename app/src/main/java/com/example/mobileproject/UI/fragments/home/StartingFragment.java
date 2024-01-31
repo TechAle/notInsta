@@ -173,9 +173,17 @@ public class StartingFragment extends Fragment {
 
             PVM.createPost(toCreate).observe(getViewLifecycleOwner(), task -> {
                 if (task.successful()) {
-                    PVM.createImage(imageUri, requireActivity().getContentResolver());
-                } else {
+                    PVM.createImage(imageUri, requireActivity().getContentResolver(), ((Result.PostCreationSuccess) task).getData())
+                            .observe(getViewLifecycleOwner(), imageTask -> {
+                                if (imageTask.successful()) {
+                                    int a = 0;
+                                } else {
+                                    int b = 0;
+                                }
 
+                    });
+                } else {
+                    int c = 0;
                 }
             });
         }
