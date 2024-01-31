@@ -125,6 +125,11 @@ public class CameraActivity extends AppCompatActivity {
                 // Send post
                 viewModel.postImage();
                 // Go back to main
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, ImageChooserFragment.class, null)
+                        .commit();
+                currentFragment = 0;
+                break;
         }
     }
 
