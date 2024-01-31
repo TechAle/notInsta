@@ -14,7 +14,6 @@ import java.util.Map;
 
 //@Entity
 public class Post {
-    private String photo;
     private String id;
     private DocumentReference autore;
     private String descrizione;
@@ -37,7 +36,6 @@ public class Post {
         this.autore = (DocumentReference) m.get("creatoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
         this.tags = (ArrayList<String>) m.get("tag");
         this.likes = (ArrayList<DocumentReference>) m.get("likes");
-        this.photo = "POSTS/" + m.get("immagine");
         this.id = id;
         this.promozionale = (Boolean) m.get("promozionale");
         /* Per luchino che dovrà gestire le immagini
@@ -47,10 +45,6 @@ public class Post {
                 URL = = image.getResult();
             }
         });*/
-    }
-
-    public String getPhoto() {
-        return photo;
     }
 
     public String getId() {
