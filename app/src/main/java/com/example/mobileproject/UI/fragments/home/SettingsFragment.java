@@ -18,6 +18,8 @@ import android.widget.Switch;
 import com.example.mobileproject.R;
 import com.example.mobileproject.UI.activities.HomeActivity;
 import com.example.mobileproject.UI.activities.LoginActivity;
+import com.example.mobileproject.UI.fragments.settings.ChangePasswordFragment;
+import com.example.mobileproject.UI.fragments.settings.ChangeUsernameFragment;
 import com.example.mobileproject.models.SettingsViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -55,7 +57,6 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings_main, container, false);
 
 
-        backButton = view.findViewById(R.id.backButton);
         changeUsernameButton = view.findViewById(R.id.changeUsernameText);
         changePasswordButton = view.findViewById(R.id.changePasswordText);
         languagesSpinner = view.findViewById(R.id.languagesSpinner);

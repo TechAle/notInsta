@@ -1,4 +1,4 @@
-package com.example.mobileproject.UI.fragments.home;
+package com.example.mobileproject.UI.fragments.settings;
 
 import android.os.Bundle;
 
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.mobileproject.R;
+import com.example.mobileproject.UI.fragments.home.SettingsFragment;
 import com.example.mobileproject.models.SettingsViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
