@@ -3,7 +3,6 @@ package com.example.mobileproject.UI.fragments.home;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,20 +17,18 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.ViewModels.PostsVMFactory;
-import com.example.mobileproject.ViewModels.PostsViewModel;
+import com.example.mobileproject.ViewModels.Posts.PostsVMFactory;
+import com.example.mobileproject.ViewModels.Posts.PostsViewModel;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
-import com.example.mobileproject.models.Post;
-import com.example.mobileproject.models.PostResp;
+import com.example.mobileproject.models.Post.Post;
+import com.example.mobileproject.models.Post.PostResp;
 import com.example.mobileproject.utils.PostAdapter;
 import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.net.InetAddress; //TODO: here <--------------------------------
 import java.util.Arrays;
 import java.util.List;
 
@@ -148,7 +145,7 @@ public class StartingFragment extends Fragment {
                             pa.notifyItemRangeInserted(postSet.size(),postSet.size() + 1);
                             PVM.setPage(PVM.getPage() + 1); //"giro" la pagina
                             //Inizio ad andare a prendere altrii post
-                            PVM.fetchPost();//TODO: Sistemare qua
+                            //PVM.fetchPost();//TODO: Sistemare qua
                         }
                     }
                 }

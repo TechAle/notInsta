@@ -1,21 +1,21 @@
-package com.example.mobileproject.ViewModels;
+package com.example.mobileproject.ViewModels.Users;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.utils.Result;
 
-public class PostsViewModel extends ViewModel {
-    private final PostRepository repo;
+public class UsersViewModel extends ViewModel {
+    private final UserRepository repo;
     private int page;
     private int currentResults;
     private int totalResults;
     private boolean Loading;
     private boolean firstLoading;
-    private MutableLiveData<Result> posts;
-    private MutableLiveData<Result> selectedPosts;
-    public PostsViewModel(PostRepository repo) {
+    private MutableLiveData<Result> users;
+    private MutableLiveData<Result> selectedUsers;
+    public UsersViewModel(UserRepository repo) {
         this.repo = repo;
         this.page = 1;
         this.totalResults = 0;
@@ -23,17 +23,18 @@ public class PostsViewModel extends ViewModel {
     }
 
     //getters & setters
-    public MutableLiveData<Result> getPosts(){
-        if(posts == null){
-            posts = repo.retrievePosts();
+    public MutableLiveData<Result> getUsers(){
+        if(users == null){
+            users = repo.retrieveUsers();
         }
-        return posts;
+        return users;
     }
-    public MutableLiveData<Result> getSelectedPosts(String tag){
-        if(selectedPosts == null){
-            posts = repo.retrievePosts(tag);
+
+    public MutableLiveData<Result> getUserById(String tag){
+        if(selectedUsers == null){
+            selectedUsers = repo.retrieveUsers(tag);
         }
-        return selectedPosts;
+        return selectedUsers;
     }
     public int getPage() {
         return page;

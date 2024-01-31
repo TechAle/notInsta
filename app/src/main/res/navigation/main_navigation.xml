@@ -19,7 +19,7 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.mobileproject.UI.fragments.home.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings_main" />
     <fragment
         android:id="@+id/startingFragment"
         android:name="com.example.mobileproject.UI.fragments.home.StartingFragment"

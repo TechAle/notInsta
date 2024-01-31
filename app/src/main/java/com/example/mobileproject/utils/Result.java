@@ -2,12 +2,13 @@ package com.example.mobileproject.utils;
 
 //Qualcosa per rappresentare il risultato a livello di viewmodel
 
-import com.example.mobileproject.models.PostResp;
+import com.example.mobileproject.models.Post.PostResp;
+import com.example.mobileproject.models.Users.UsersResp;
 
 public abstract class Result {
     private Result() {}
     public boolean successful(){
-        return this instanceof PostResponseSuccess;
+        return this instanceof PostResponseSuccess || this instanceof UserResponseSuccess;
     }
 
     public static final class PostResponseSuccess extends Result {
@@ -20,15 +21,15 @@ public abstract class Result {
         }
     }
 
-/*    public static final class UserResponseSuccess extends Result {
-        private final User user;
-        public UserResponseSuccess(User user) {
-            this.user = user;
+    public static final class UserResponseSuccess extends Result {
+        private final UsersResp resp;
+        public UserResponseSuccess(UsersResp user) {
+            this.resp = user;
         }
-        public User getData() {
-            return user;
+        public UsersResp getData() {
+            return resp;
         }
-    }*/
+    }
 
     public static final class Error extends Result {
         private final String message;

@@ -1,20 +1,27 @@
 package com.example.mobileproject.UI.activities;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import com.example.mobileproject.R;
-import com.google.android.material.textfield.TextInputLayout;
 
 public class LoginActivity extends AppCompatActivity {
 
-    //private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
 
     private TextInputLayout inputEmail;
     private TextInputLayout inputPassword;
@@ -27,24 +34,30 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        /*FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            // startActivity(new Intent(LoginActivity.this, <HOMEPAGE>.class));
-        }*/
+            //startActivity(new Intent(LoginNew.this, HomeActivity.class));
+        }
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // outState.putString(KEY, value);
+        // outState.putInt(KEY, value);
+        // outState.putParcelable(KEY, value); per oggetti
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean isLogged = true;
-        if (isLogged) {
-            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-            finish();
-        }
-        // Things to do at the login
         setContentView(R.layout.activity_login);
 
-        /*mAuth = FirebaseAuth.getInstance();*/
+        if (savedInstanceState != null) {
+            // Oggetto o = savedInstanceState.getParcelable("OGGETTO_SALVATO");
+        }
+
+        mAuth = FirebaseAuth.getInstance();
 
         inputEmail = findViewById(R.id.textInputEmail);
         inputPassword = findViewById(R.id.textInputPassword);
@@ -59,39 +72,46 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = inputEmail.getEditText().getText().toString();
                 String password = inputPassword.getEditText().getText().toString();
-                if (TextUtils.isEmpty(email)) {
+
+                if(TextUtils.isEmpty(email)) {
                     inputEmail.setError(getString(R.string.error_email));
-                    return;
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.error_email),
+                            Snackbar.LENGTH_SHORT);
                 } else {
                     inputEmail.setError(null);
                 }
-                if (TextUtils.isEmpty(password)) {
+                if(TextUtils.isEmpty(password)) {
                     inputPassword.setError(getString(R.string.error_password));
-                    return;
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.error_password),
+                            Snackbar.LENGTH_SHORT);
                 } else {
                     inputPassword.setError(null);
                 }
 
-                /*mAuth.signInWithEmailAndPassword(email, password)
+                mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                     Snackbar.make(
                                             findViewById(android.R.id.content),
                                             getString(R.string.success_login),
                                             Snackbar.LENGTH_SHORT);
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class)); //TODO Activity homepage
                                     finish();
                                 } else {
                                     Snackbar.make(
                                             findViewById(android.R.id.content),
                                             getString(R.string.error_login),
-                                            Snackbar.LENGTH_SHORT).show();
+                                            Snackbar.LENGTH_SHORT);
                                 }
                             }
-                        });*/
+                        });
             }
         });
 
@@ -105,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
         buttonSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this, SingupActivity.class));
+                startActivity(new Intent(LoginActivity.this, SignupActivity.class));
                 finish();
             }
         });
@@ -123,6 +143,5 @@ public class LoginActivity extends AppCompatActivity {
                 //TODO Terms and Conditions text
             }
         });
-
     }
 }

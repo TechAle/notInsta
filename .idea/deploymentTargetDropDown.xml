@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="deploymentTargetDropDown">
-    <targetSelectedWithDropDown>
-      <Target>
-        <type value="QUICK_BOOT_TARGET" />
-        <deviceKey>
-          <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\Camilla\.android\avd\Pixel_5_API_34.avd" />
-          </Key>
-        </deviceKey>
-      </Target>
-    </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2023-12-02T18:37:22.231102700Z" />
+    <value>
+      <entry key="TestJava.app">
+        <State />
+      </entry>
+      <entry key="TestJava.app.androidTest">
+        <State />
+      </entry>
+      <entry key="TestJava.app.main">
+        <State />
+      </entry>
+      <entry key="TestJava.app.unitTest">
+        <State />
+      </entry>
+      <entry key="app">
+        <State />
+      </entry>
+      <entry key="app.androidTest">
+        <State />
+      </entry>
+      <entry key="app.unitTest">
+        <State />
+      </entry>
+    </value>
   </component>
 </project>

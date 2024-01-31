@@ -1,12 +1,13 @@
 package com.example.mobileproject.dataLayer.sources;
 
-import com.example.mobileproject.models.Post;
+import com.example.mobileproject.models.Post.Post;
+import com.example.mobileproject.models.Users.Users;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,25 +18,24 @@ import java.util.Map;
 public class FirestoreRemoteSource extends GeneralPostRemoteSource{
 
     FirebaseFirestore db;
+    FirebaseStorage storage;
+    StorageReference storageRef;
     public FirestoreRemoteSource(){
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
     }
 
     @Override
-    public void retrievePosts(){
-        db.collection("post").orderBy("data").get()
+    public void retrievePosts(CallbackPosts c){
+        db.collection("post").get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         List<Post> results = new ArrayList<>();
                         for(QueryDocumentSnapshot i : task.getResult()){
-                            Post p = new Post();
                             Map<String, Object> m = i.getData();
-                            p.descrizione = (String) m.get("descrizione");
-                            p.pubblicazione = (Date) m.get("data");
-                            p.autore = (String) m.get("autoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
-                            p.photo = (URL) m.get("immagine");
-                            p.tags = new ArrayList<>(); //TODO: definire i tags (ed inserirli)
-                            p.id = (int) m.get("idPost"); //TODO: rivedere gestione degli ID
+                            Post p = new Post(m, i.getId());
+                            results.add(p);
                         }
                         c.onSuccess(results);
                     }
@@ -46,22 +46,114 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     }
 
     @Override
-    public void retrievePosts(String tag){
-        db.collection("post").whereEqualTo("tag", tag).orderBy("data")
-                .get()
+    public void retrieveUsers(CallbackUsers c){
+        db.collection("utenti").get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        List<Users> results = new ArrayList<>();
+                        for(QueryDocumentSnapshot i : task.getResult()){
+                            Map<String, Object> m = i.getData();
+                            Users p = new Users(m, i.getId());
+                            results.add(p);
+                        }
+                        c.onSuccess(results);
+                    }
+                    else{
+                        c.onFailure(task.getException());
+                    }
+                });
+    }
+
+    @Override
+    public void retrievePostsWithTags(String[] tags, CallbackPosts c) {
+        db.collection("post").get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         List<Post> results = new ArrayList<>();
                         for(QueryDocumentSnapshot i : task.getResult()){
-                            Post p = new Post();
                             Map<String, Object> m = i.getData();
-                            p.descrizione = (String) m.get("descrizione");
-                            p.pubblicazione = (Date) m.get("data");
-                            p.autore = (String) m.get("autoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
-                            p.photo = (URL) m.get("immagine");
-                            p.tags = new ArrayList<>(); //TODO: definire i tags (ed inserirli)
-                            p.id = (int) m.get("idPost"); //TODO: rivedere gestione degli ID
+                            Post p = new Post(m, i.getId());
+                            for (String tag: tags) {
+                                if (p.getTags().contains(tag)) {
+                                    results.add(p);
+                                    break;
+                                }
+                            }
                         }
+                        c.onSuccess(results);
+                    }
+                    else{
+                        c.onFailure(task.getException());
+                    }
+                });
+    }
+
+    @Override
+    public void retrievePostsSponsor(CallbackPosts c) {
+        ArrayList<Post> sponsors = new ArrayList<>();
+        if (Math.random() * 3 == 1) {
+            // Chiamata API
+            // Prendi il titolo, l'immagine, e suppongo anche il link
+            ArrayList<Post> output = new ArrayList<>();
+            Post temp = new Post();
+
+            output.add(temp);
+            c.onSuccess(output);
+        } else
+            db.collection("post")
+                    .whereEqualTo("promozionale", true)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot i : task.getResult()){
+                                Map<String, Object> m = i.getData();
+                                Post p = new Post(m, i.getId());
+                                sponsors.add(p);
+                            }
+                            if (sponsors.size() > 0) {
+                                if (Math.random()*3!=1) {
+                                    ArrayList<Post> output = new ArrayList<>();
+                                    output.add(sponsors.get((int) (Math.random() * sponsors.size())));
+                                    c.onSuccess(output);
+
+                                }
+                            }
+                        }
+                        c.onFailure(new Exception("No sponsor"));
+                    });
+
+
+    }
+
+
+    @Override
+    public void retrievePostByDocumentId(String tag, CallbackPosts c){
+        db.collection("post").document(tag)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        Map<String, Object> m = task.getResult().getData();
+                        Post p = new Post(m, tag);
+                        ArrayList<Post> results = new ArrayList<>();
+                        results.add(p);
+                        c.onSuccess(results);
+                    }
+                    else{
+                        c.onFailure(task.getException());
+                    }
+                });
+    }
+
+    @Override
+    public void retrieveUserByDocumentId(String tag, CallbackUsers c){
+        db.collection("utenti").document(tag)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        Map<String, Object> m = task.getResult().getData();
+                        Users p = new Users(m, tag);
+                        ArrayList<Users> results = new ArrayList<>();
+                        results.add(p);
                         c.onSuccess(results);
                     }
                     else{
