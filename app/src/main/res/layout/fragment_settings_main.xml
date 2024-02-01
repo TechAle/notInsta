@@ -39,7 +39,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/post_image_bg"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:contentDescription="@string/imagePicture"
@@ -66,7 +66,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                app:layout_constraintTop_toBottomOf="@+id/post_image_bg" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

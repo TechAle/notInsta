@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -54,6 +56,7 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
+ * Use the {@link StartingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class StartingFragment extends Fragment {
@@ -67,6 +70,15 @@ public class StartingFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment StartingFragment.
+     */
+    public static StartingFragment newInstance() {
+        return new StartingFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,15 +119,34 @@ public class StartingFragment extends Fragment {
         RecyclerView posts = view.findViewById(R.id.posts);
         StaggeredGridLayoutManager lmp = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
 //        ArrayAdapter<String> aas = new ArrayAdapter<>(requireContext(), R.layout.taglist_item);
-
+        pa = new PostAdapter(postSet, requireActivity().getApplication(), new PostAdapter.OnItemClickListener(){
+            //Qua non metto una funzione anonima
+            @Override
+            public void onItemClicked() {
+                //Volendo si può sostituire questa linea con qualcosa di altro
+                Snackbar.make(view, "Item Clicked", Snackbar.LENGTH_SHORT).show();
+            }
+        });
         tags.setLayoutManager(lmt);
         posts.setLayoutManager(lmp);
+        posts.setAdapter(pa);
+        //bindings
         PVM.getPosts().observe(getViewLifecycleOwner(), result -> {
             if(result.successful()){
                 PostResp resp = ((Result.PostResponseSuccess) result).getData();
                 List<Post> res = resp.getPostList();
                 if(!PVM.isLoading()){
-
+                    if(PVM.isFirstLoading()){
+                        //PVM.setTotalResults(PostResp.getTotalResults());
+                        PVM.setFirstLoading(false);
+                        postSet.addAll(res);
+                        pa.notifyItemRangeInserted(0, postSet.size());
+                    } else {
+                        postSet.clear();
+                        postSet.addAll(res);
+                        pa.notifyItemRangeInserted(0, res.size());
+                    }
+                    //bindings
                 } else {
                     PVM.setLoading(false);
                     PVM.setTotalResults(postSet.size());
@@ -125,11 +156,15 @@ public class StartingFragment extends Fragment {
                             postSet.remove(null);//TODO: esaminare qua
                         }
                     }
-                    int start_index = (PVM.getPage()-1)*20; //TODO: volendo il 20 si può sostituire con una costante
+                    int start_index = (PVM.getPage())*20; //TODO: volendo il 20 si può sostituire con una costante definita altrove
+                    for(int i = start_index; i < res.size(); i++){
+                        postSet.add(res.get(i));
+                    }
+                    pa.notifyItemRangeInserted(initial_size, postSet.size());
                 }
-                //TODO: codice relativo
             } else {
                 //TODO: codice relativo
+                //Bindings
             }
         });
         posts.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -160,8 +195,8 @@ public class StartingFragment extends Fragment {
                             postSet.add(null);
                             pa.notifyItemRangeInserted(postSet.size(),postSet.size() + 1);
                             PVM.setPage(PVM.getPage() + 1); //"giro" la pagina
-                            //Inizio ad andare a prendere altrii post
-                            //PVM.fetchPost();//TODO: Sistemare qua
+                            //Inizio ad andare a prendere altri post
+                            //PVM.findPosts();//TODO: Sistemare qua
                         }
                     }
                 }

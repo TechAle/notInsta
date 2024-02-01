@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import android.util.Log;
+
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Users.Users;
 import com.google.firebase.firestore.FirebaseFirestore;

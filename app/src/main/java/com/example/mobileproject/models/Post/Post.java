@@ -53,13 +53,6 @@ public class Post {
         this.likes = (ArrayList<DocumentReference>) m.get("likes");
         this.id = id;
         this.promozionale = (Boolean) m.get("promozionale");
-        /* Per luchino che dovrà gestire le immagini
-        StorageReference imageRef = storageRef.child(nameImage);
-        imageRef.getDownloadUrl().addOnCompleteListener(image -> {
-            if (image.isSuccessful()) {
-                URL = = image.getResult();
-            }
-        });*/
     }
 
     public String getId() {
