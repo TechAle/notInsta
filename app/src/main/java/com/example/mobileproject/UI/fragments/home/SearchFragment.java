@@ -68,17 +68,15 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String id = "vbOIyyr9jIrwQSRbHn0f";
-
         LinearLayout t = view.findViewById(R.id.sponsorLayout);
         t.setVisibility(View.GONE);
 
-        PVM.getSponsoredPosts().observe(getViewLifecycleOwner(), post -> {
+        PVM.getSponsodedPosts().observe(getViewLifecycleOwner(), post -> {
             if(post.successful()) {
                 PostResp sponsoredPost = ((Result.PostResponseSuccess) post).getData();
                 List<Post> sponsored = sponsoredPost.getPostList();
                 Post finalPost = sponsored.get(0);
-                FragmentUtils.loadImage(storageRef, finalPost.getPhoto(), view, R.id.sponsorImage);
+                FragmentUtils.loadImage(storageRef, "POSTS/" + finalPost.getId() + ".png", view, R.id.sponsorImage);
                 FragmentUtils.updateTextById(view, R.id.sponsorText, "Sponsor: " + finalPost.getDescrizione());
                 t.setVisibility(View.VISIBLE);
                 PVM.getPosts().removeObservers(getViewLifecycleOwner());

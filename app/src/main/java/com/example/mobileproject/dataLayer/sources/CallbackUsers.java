@@ -10,9 +10,7 @@ import java.util.List;
  */
 
 //Nel caso dovessero servire altre chiamate di ritorno, inseritele qua
-public interface CallbackUsers {
+public interface CallbackUsers extends CallbackInterface {
     void onSuccess(List<Users> res);
-    void onSuccess();
-    void onFailure(Exception e);
-    void onUploadSuccess(); //TODO: Usare o eliminare
+
 }

@@ -1,8 +1,14 @@
 package com.example.mobileproject.UI.fragments.home;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,24 +20,38 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.ViewModels.Posts.PostsVMFactory;
 import com.example.mobileproject.ViewModels.Posts.PostsViewModel;
+import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
+import com.example.mobileproject.ViewModels.Users.UsersViewModel;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Post.PostResp;
+import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.utils.PostAdapter;
 import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -43,6 +63,7 @@ public class StartingFragment extends Fragment {
 
     private List<Post> postSet;
     private PostsViewModel PVM;
+    private UsersViewModel UVM;
     private int nTotalItem;
     private PostAdapter pa;
     public StartingFragment() {
@@ -65,7 +86,15 @@ public class StartingFragment extends Fragment {
         PostRepository pr = ServiceLocator.getInstance().getPostRepo();
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);
-        } else { //TODO: Sostituire testo con una risorsa di tipo stringa
+
+        } else { //TODO: Sostituire testo con una risorsa
+            Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                    "Unexpected Error", Snackbar.LENGTH_SHORT).show();
+        }
+        UserRepository ur = ServiceLocator.getInstance().getUserRepo();
+        if (ur != null) {
+            UVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ur)).get(UsersViewModel.class);
+        } else {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
         }
@@ -78,7 +107,6 @@ public class StartingFragment extends Fragment {
             ViewGroup container,
             Bundle savedInstanceState
     ) {
-        //TODO: bindings???
         return inflater.inflate(R.layout.fragment_starting, container, false);
     }
 
@@ -87,7 +115,6 @@ public class StartingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView tags = view.findViewById(R.id.tags);
-        Log.d("AAAA","Presente");
         RecyclerView.LayoutManager lmt = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.HORIZONTAL, false);
         RecyclerView posts = view.findViewById(R.id.posts);
@@ -170,13 +197,72 @@ public class StartingFragment extends Fragment {
                             pa.notifyItemRangeInserted(postSet.size(),postSet.size() + 1);
                             PVM.setPage(PVM.getPage() + 1); //"giro" la pagina
                             //Inizio ad andare a prendere altri post
-                            PVM.findPosts();//TODO: Sistemare qua
+                            //PVM.findPosts();//TODO: Sistemare qua
                         }
                     }
                 }
             }
         });
+
+
+        /*Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);*/
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            imageUri = data.getData();
+
+
+            /*Post toCreate = new Post("0TsbiPUaL5qfFQiH6572", "Bella descrizione",
+                    new ArrayList<>(Arrays.asList("tag1", "ciao")), true, FirebaseFirestore.getInstance());
+
+            PVM.createPost(toCreate).observe(getViewLifecycleOwner(), task -> {
+                if (task.successful()) {
+                    PVM.createImage(imageUri, "POSTS", requireActivity().getContentResolver(), ((Result.PostCreationSuccess) task).getData())
+                            .observe(getViewLifecycleOwner(), imageTask -> {
+                                if (imageTask.successful()) {
+                                    int a = 0;
+                                } else {
+                                    int b = 0;
+                                }
+
+                    });
+                } else {
+                    int c = 0;
+                }
+            });*/
+            /*
+            Users toCreate = new Users("cognome", "nome", "username", "descrizione", Calendar.getInstance().getTime(), new ArrayList<>(Arrays.asList("lol")));
+            UVM.createUser(toCreate).observe(getViewLifecycleOwner(), task -> {
+                if (task.successful()) {
+                    PVM.createImage(imageUri, "PFP", requireActivity().getContentResolver(), ((Result.UserCreationSuccess) task).getData())
+                            .observe(getViewLifecycleOwner(), imageTask -> {
+                                if (imageTask.successful()) {
+                                    int a = 0;
+                                } else {
+                                    int b = 0;
+                                }
+
+                            });
+                } else {
+                    int c = 0;
+                }
+            });*/
+        }
+    }
+
+
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private ImageView imageView;
+    private Uri imageUri;
 
 //TODO: controllare questa funzione. Se ha problemi, decommentare le linee commentate e aggiustare gli import
     private boolean internetConnection(){

@@ -71,7 +71,14 @@ public class UserRepository implements CallbackUsers {
     }
 
     @Override
-    public void onUploadSuccess() {
-        //TODO: Usare o eliminare (dalla interfaccia Callback)
+    public void onUploadSuccess(String id) {
+        Result.UserCreationSuccess result = new Result.UserCreationSuccess(id);
+        ready.postValue(result);
+    }
+
+
+    public MutableLiveData<Result> createUser(Users toCreate) {
+        rem.createUser(toCreate, this);
+        return ready;
     }
 }

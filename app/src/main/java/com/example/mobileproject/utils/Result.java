@@ -8,7 +8,8 @@ import com.example.mobileproject.models.Users.UsersResp;
 public abstract class Result {
     private Result() {}
     public boolean successful(){
-        return this instanceof PostResponseSuccess || this instanceof UserResponseSuccess || this instanceof UserEditSuccess;
+        // TODO make superclass, this is ugly
+        return this instanceof PostResponseSuccess || this instanceof UserResponseSuccess || this instanceof UserEditSuccess || this instanceof PostCreationSuccess || this instanceof UserCreationSuccess;
     }
 
     public static final class PostResponseSuccess extends Result {
@@ -31,6 +32,16 @@ public abstract class Result {
         }
     }
 
+    public static final class PostCreationSuccess extends Result {
+        private final String id;
+        public PostCreationSuccess(String id) {
+            this.id = id;
+        }
+        public String getData() {
+            return id;
+        }
+    }
+
     public static final class UserEditSuccess extends Result {
     }
 
@@ -41,6 +52,16 @@ public abstract class Result {
         }
         public String getMessage() {
             return message;
+        }
+    }
+
+    public static class UserCreationSuccess extends Result {
+        private final String id;
+        public UserCreationSuccess(String id) {
+            this.id = id;
+        }
+        public String getData() {
+            return this.id;
         }
     }
 }
