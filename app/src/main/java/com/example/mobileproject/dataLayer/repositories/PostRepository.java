@@ -48,7 +48,7 @@ public class PostRepository implements CallbackPosts {
     }
 
     public MutableLiveData<Result> createPost(Post post) {
-        rem.createDocument(post, this);
+        rem.createPosts(post, this);
         return ready;
     }
 
@@ -82,8 +82,8 @@ public class PostRepository implements CallbackPosts {
         ready.postValue(result);
     }
 
-    public MutableLiveData<Result> createImage(Uri imageUri, ContentResolver contentResolver, String id) {
-        rem.createImage(imageUri, contentResolver, this, id);
+    public MutableLiveData<Result> createImage(Uri imageUri, String document, ContentResolver contentResolver, String id) {
+        rem.createImage(imageUri, document, contentResolver, this, id);
         return ready;
     }
 }

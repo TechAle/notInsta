@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 
 import com.example.mobileproject.models.Post.Post;
+import com.example.mobileproject.models.Users.Users;
 
 import java.util.Map;
 
@@ -25,7 +26,9 @@ public abstract class GeneralPostRemoteSource {
     public abstract void retrieveUserByDocumentId(String tag, CallbackUsers c);
     public abstract void editUsername(String tag, String newUsername, CallbackUsers c);
 
-    public abstract void createDocument(Post post, CallbackPosts ci);
+    public abstract void createPosts(Post post, CallbackPosts ci);
+
+    public abstract void createUser(Users post, CallbackUsers ci);
 
     public abstract void createDocument(String collectionName, Map<String, Object> documentFields, CallbackInterface ci);
 
@@ -33,5 +36,5 @@ public abstract class GeneralPostRemoteSource {
     //TODO: Qua io non lo sto usando, qualcuno ne faccia qualcosa o cancellatelo
     public abstract void postPost();
 
-    public abstract  void createImage(Uri imageUri, ContentResolver contentResolver, CallbackInterface postRepository, String id);
+    public abstract  void createImage(Uri imageUri, String document, ContentResolver contentResolver, CallbackInterface postRepository, String id);
 }

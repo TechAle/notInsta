@@ -205,7 +205,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     }
 
     @Override
-    public void createDocument(Post post, CallbackPosts ci) {
+    public void createPosts(Post post, CallbackPosts ci) {
         Map<String, Object> documentFields = new HashMap<>();
         documentFields.put("autore", post.getAutore());
         documentFields.put("likes", post.getLikes());
@@ -214,6 +214,20 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
         documentFields.put("tags", post.getTags());
         documentFields.put("descrizione", post.getDescrizione());
         createDocument("post", documentFields, ci);
+    }
+
+    @Override
+    public void createUser(Users post, CallbackUsers ci) {
+        Map<String, Object> documentFields = new HashMap<>();
+        documentFields.put("cognome", post.getCognome());
+        documentFields.put("nome", post.getNome());
+        documentFields.put("dataNascita", post.getDataNascita());
+        documentFields.put("descrizione", post.getDescrizione());
+        documentFields.put("followers", post.getFollowers());
+        documentFields.put("following", post.getFollowing());
+        documentFields.put("tags", post.getTags());
+        documentFields.put("username", post.getUsername());
+        createDocument("utenti", documentFields, ci);
     }
 
 
@@ -231,7 +245,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     }
 
     @Override
-    public void createImage(Uri imageUri, ContentResolver context, CallbackInterface ci, String id) {
+    public void createImage(Uri imageUri, String document, ContentResolver context, CallbackInterface ci, String id) {
         if (imageUri != null) {
             try {
                 // Convert the image to PNG format
@@ -242,7 +256,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                 // Create a unique filename for the uploaded image
                 String fileName = id + ".png";
 
-                StorageReference storageReference = FirebaseStorage.getInstance().getReference("POSTS");
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference(document);
 
                 StorageReference fileReference = storageReference.child(fileName);
 
