@@ -12,10 +12,10 @@ import android.widget.Button;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.UI.fragments.home.SettingsFragment;
+import com.example.mobileproject.ViewModels.Settings.SettingsViewModel;
 import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
 import com.example.mobileproject.ViewModels.Users.UsersViewModel;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
-import com.example.mobileproject.models.SettingsViewModel;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;

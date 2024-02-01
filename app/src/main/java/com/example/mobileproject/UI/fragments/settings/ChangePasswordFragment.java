@@ -2,6 +2,8 @@ package com.example.mobileproject.UI.fragments.settings;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -12,7 +14,7 @@ import android.widget.Button;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.UI.fragments.home.SettingsFragment;
-import com.example.mobileproject.models.SettingsViewModel;
+import com.example.mobileproject.ViewModels.Settings.SettingsViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -65,15 +67,12 @@ public class ChangePasswordFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
         settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
 
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_change_password, container, false);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         backButton = view.findViewById(R.id.backButtonChangePassword);
         changeButton = view.findViewById(R.id.changePasswordButton);
@@ -140,6 +139,14 @@ public class ChangePasswordFragment extends Fragment {
             }
         });
 
-        return view;
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        return inflater.inflate(R.layout.fragment_change_password, container, false);
+
     }
 }

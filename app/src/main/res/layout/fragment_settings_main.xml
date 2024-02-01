@@ -17,12 +17,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/material_dynamic_tertiary70"
-            tools:layout_height="100dp">
+            tools:layout_height="130dp">
 
             <TextView
                 android:id="@+id/textTitoloImpostazioni"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="20sp"
                 android:text="@string/settingsTitle"
                 android:textSize="28sp"
                 android:textStyle="bold"

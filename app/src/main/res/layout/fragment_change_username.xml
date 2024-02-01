@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/material_dynamic_tertiary70"
-            tools:layout_height="100dp">
+            tools:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/textChnageUsername"
@@ -33,7 +33,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.292"
                 app:layout_constraintStart_toEndOf="@+id/backButtonChangeUsername"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:paddingVertical="40sp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/backButtonChangeUsername"
