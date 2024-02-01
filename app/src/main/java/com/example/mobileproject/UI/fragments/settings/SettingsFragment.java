@@ -27,7 +27,8 @@ import com.example.mobileproject.UI.activities.HomeActivity;
 import com.example.mobileproject.UI.activities.LoginActivity;
 import com.example.mobileproject.UI.fragments.settings.ChangePasswordFragment;
 import com.example.mobileproject.UI.fragments.settings.ChangeUsernameFragment;
-import com.example.mobileproject.models.SettingsViewModel;
+import com.example.mobileproject.ViewModels.Settings.SettingsViewModel;
+import com.example.mobileproject.utils.FragmentUtils;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Locale;
@@ -58,16 +59,19 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         ctrl = NavHostFragment.findNavController(this);
-    }
 
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String selectedLanguage = sharedPref.getString(PREF_SELECTED_LANGUAGE, "en");
         FragmentUtils.loadLanguage(selectedLanguage, getActivity(), getResources());
 
+
     }
 
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         changeUsernameButton = view.findViewById(R.id.changeUsernameText);
         changePasswordButton = view.findViewById(R.id.changePasswordText);

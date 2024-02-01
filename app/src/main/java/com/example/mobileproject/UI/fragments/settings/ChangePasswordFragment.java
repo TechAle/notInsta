@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.models.SettingsViewModel;
+import com.example.mobileproject.ViewModels.Settings.SettingsViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
