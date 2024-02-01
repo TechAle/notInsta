@@ -169,10 +169,10 @@ public class StartingFragment extends Fragment {
         });
 
 
-        Intent intent = new Intent();
+        /*Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);*/
     }
 
 
@@ -203,6 +203,7 @@ public class StartingFragment extends Fragment {
                     int c = 0;
                 }
             });*/
+            /*
             Users toCreate = new Users("cognome", "nome", "username", "descrizione", Calendar.getInstance().getTime(), new ArrayList<>(Arrays.asList("lol")));
             UVM.createUser(toCreate).observe(getViewLifecycleOwner(), task -> {
                 if (task.successful()) {
@@ -218,7 +219,7 @@ public class StartingFragment extends Fragment {
                 } else {
                     int c = 0;
                 }
-            });
+            });*/
         }
     }
 
