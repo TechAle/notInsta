@@ -1,4 +1,4 @@
-package com.example.mobileproject.UI.fragments.home;
+package com.example.mobileproject.UI.fragments.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +18,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.UI.activities.HomeActivity;
 import com.example.mobileproject.UI.activities.LoginActivity;
-import com.example.mobileproject.UI.fragments.settings.ChangePasswordFragment;
-import com.example.mobileproject.UI.fragments.settings.ChangeUsernameFragment;
 import com.example.mobileproject.models.SettingsViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -29,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 public class SettingsFragment extends Fragment {
 
+    private NavController ctrl;
     private View backButton;
     private View changeUsernameButton;
     private View changePasswordButton;
@@ -47,6 +47,7 @@ public class SettingsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
+        ctrl = NavHostFragment.findNavController(this);
     }
 
     @Nullable
@@ -54,7 +55,7 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_settings_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
 
         changeUsernameButton = view.findViewById(R.id.changeUsernameText);
@@ -64,24 +65,13 @@ public class SettingsFragment extends Fragment {
         deleteAccountButton = view.findViewById(R.id.DeleteAccountButton);
 
 
-        changeUsernameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true)
-                        .replace(R.id.fragment_window_host, ChangeUsernameFragment.class, null)
-                        .commit();
+        changeUsernameButton.setOnClickListener(view1 ->
+                ctrl.navigate(R.id.action_settingsFragment_to_changeUsernameFragment)
+        );
 
-            }
-        });
-
-        changePasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true)
-                        .replace(R.id.fragment_window_host, ChangePasswordFragment.class, null)
-                        .commit();
-            }
-        });
+        changePasswordButton.setOnClickListener(view1 ->
+                ctrl.navigate(R.id.action_settingsFragment_to_changePasswordFragment)
+        );
 
 
         signOutButton.setOnClickListener(new View.OnClickListener() {

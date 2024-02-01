@@ -28,12 +28,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.mobileproject.R;
+import com.example.mobileproject.UI.activities.SettingsActivity;
 import com.example.mobileproject.ViewModels.Posts.PostsVMFactory;
 import com.example.mobileproject.ViewModels.Posts.PostsViewModel;
 import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
 import com.example.mobileproject.ViewModels.Users.UsersViewModel;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
+import com.example.mobileproject.databinding.FragmentStartingBinding;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Post.PostResp;
 import com.example.mobileproject.models.Users.Users;
@@ -61,6 +63,7 @@ import java.util.List;
  */
 public class StartingFragment extends Fragment {
 
+    private FragmentStartingBinding binding;
     private List<Post> postSet;
     private PostsViewModel PVM;
     private UsersViewModel UVM;
@@ -107,20 +110,36 @@ public class StartingFragment extends Fragment {
             ViewGroup container,
             Bundle savedInstanceState
     ) {
-        return inflater.inflate(R.layout.fragment_starting, container, false);
+        binding = FragmentStartingBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        binding.toolbarStartingFragment.inflateMenu(R.menu.settings_menu);
+        binding.toolbarStartingFragment.setOnMenuItemClickListener(item -> {
+            int action = item.getItemId();
+            if(action == R.id.settings_action){
+                Intent i = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(i);
+                return true;
+            }
+            /* Tip: Possibile aggiunta di elementi al menù:
+                - modificare il file settings_menu aggiungendo una voce di menu
+                - associare il comportamento voluto in questo punto con un else if (id richiesto)
+            */
+            else {
+                return false;
+            }
+        });
         RecyclerView tags = view.findViewById(R.id.tags);
         RecyclerView.LayoutManager lmt = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView posts = view.findViewById(R.id.posts);
-        StaggeredGridLayoutManager lmp = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        /*RecyclerView posts = view.findViewById(R.id.posts);
+        StaggeredGridLayoutManager lmp = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);*/
 //        ArrayAdapter<String> aas = new ArrayAdapter<>(requireContext(), R.layout.taglist_item);
-        pa = new PostAdapter(postSet, requireActivity().getApplication(), new PostAdapter.OnItemClickListener(){
+/*        pa = new PostAdapter(postSet, requireActivity().getApplication(), new PostAdapter.OnItemClickListener(){
             //Qua non metto una funzione anonima
             @Override
             public void onItemClicked() {
@@ -210,7 +229,7 @@ public class StartingFragment extends Fragment {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, PICK_IMAGE_REQUEST);*/
     }
-
+/*
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -255,7 +274,7 @@ public class StartingFragment extends Fragment {
                 } else {
                     int c = 0;
                 }
-            });*/
+            });
         }
     }
 
@@ -263,25 +282,13 @@ public class StartingFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
     private ImageView imageView;
     private Uri imageUri;
-
-//TODO: controllare questa funzione. Se ha problemi, decommentare le linee commentate e aggiustare gli import
+*/
     private boolean internetConnection(){
         ConnectivityManager cm =
                 (ConnectivityManager)requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        // <----
         NetworkCapabilities nc = cm.getNetworkCapabilities(cm.getActiveNetwork());
         return nc != null
             && nc.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             && nc.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
-        // ---->
-        /*
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnected();
-        try{
-            InetAddress ipAddr = InetAddress.getByName("google.com");
-            return !ipAddr.equals("");
-        } catch (Exception e){
-            return false;
-        }*/
     }
 }

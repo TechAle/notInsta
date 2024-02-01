@@ -15,27 +15,6 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/material_dynamic_tertiary70"
-            tools:layout_height="100dp">
-
-            <TextView
-                android:id="@+id/textTitoloImpostazioni"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/settingsTitle"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.538" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
