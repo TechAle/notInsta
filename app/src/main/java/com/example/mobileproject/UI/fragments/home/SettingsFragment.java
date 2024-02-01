@@ -24,6 +24,7 @@ import com.example.mobileproject.UI.activities.LoginActivity;
 import com.example.mobileproject.UI.fragments.settings.ChangePasswordFragment;
 import com.example.mobileproject.UI.fragments.settings.ChangeUsernameFragment;
 import com.example.mobileproject.ViewModels.Settings.SettingsViewModel;
+import com.example.mobileproject.utils.FragmentUtils;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Locale;
@@ -51,7 +52,7 @@ public class SettingsFragment extends Fragment {
 
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String selectedLanguage = sharedPref.getString(PREF_SELECTED_LANGUAGE, "en");
-        setLocale(selectedLanguage);
+        FragmentUtils.loadLanguage(selectedLanguage, getActivity(), getResources());
 
     }
 
@@ -79,10 +80,10 @@ public class SettingsFragment extends Fragment {
                 if (!firstSelected)
                     switch (position) {
                         case 0:
-                            setLocale("en");
+                            FragmentUtils.loadLanguage("en", getActivity(), getResources());
                             break;
                         case 1:
-                            setLocale("it");
+                            FragmentUtils.loadLanguage("it", getActivity(), getResources());
                             break;
                     }
                 firstSelected = false;
@@ -129,23 +130,6 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-    }
-
-    private void setLocale(String languageCode) {
-        if (!languageCode.equals(Locale.getDefault().getLanguage())) {
-
-            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(PREF_SELECTED_LANGUAGE, languageCode).apply();
-
-            Locale locale = new Locale(languageCode);
-            Locale.setDefault(locale);
-            Configuration configuration = new Configuration();
-            configuration.setLocale(locale);
-            getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
-
-            requireActivity().recreate();
-        }
     }
 
     @Nullable
