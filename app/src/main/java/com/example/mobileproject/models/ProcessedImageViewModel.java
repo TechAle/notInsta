@@ -21,6 +21,7 @@ public class ProcessedImageViewModel extends ViewModel {
     private MutableLiveData<Integer> param3;
     private MutableLiveData<String> description;
     private MutableLiveData<String[]> tags;
+    private MutableLiveData<Boolean> isPromotional;
 
     public MutableLiveData<Bitmap> getProcessedImage() {
         if (processedImage == null) {
@@ -76,6 +77,13 @@ public class ProcessedImageViewModel extends ViewModel {
         }
         return tags;
     }
+    public MutableLiveData<Boolean> getIsPromotional() {
+        if (isPromotional == null) {
+            isPromotional = new MutableLiveData<Boolean>();
+            isPromotional.setValue(false);
+        }
+        return isPromotional;
+    }
 
 
     //------- OPERATIONS ---//
@@ -95,6 +103,7 @@ public class ProcessedImageViewModel extends ViewModel {
         Bitmap image = getProcessedImage().getValue();
         String desc = getDescription().getValue();
         String[] tagArr = getTags().getValue();
+        Boolean isProm = getIsPromotional().getValue();
         try{
             //FileOutputStream out = new FileOutputStream(file);
             //image.compress(Bitmap.CompressFormat.JPEG, 100, out);
