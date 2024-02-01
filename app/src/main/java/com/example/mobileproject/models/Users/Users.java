@@ -18,6 +18,17 @@ public class Users {
 
     public Users() {}
 
+    public Users(String cognome, String nome, String username, String descrizione, Date dataNascita, ArrayList<String> tags) {
+        this.cognome = cognome;
+        this.nome = nome;
+        this.username = username;
+        this.descrizione = descrizione;
+        this.dataNascita = dataNascita;
+        this.followers = new ArrayList<>();
+        this.following = new ArrayList<>();
+        this.tags = tags;
+    }
+
     public Users(Map<String, Object> m, String id) {
         this.descrizione = (String) m.get("descrizione");
         this.cognome = (String) m.get("cognome");

@@ -1,40 +1,27 @@
 package com.example.mobileproject.UI.fragments.camera;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.models.ProcessedImageViewModel;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
+import com.example.mobileproject.ViewModels.Posts.ProcessedImageViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 
 
 /**

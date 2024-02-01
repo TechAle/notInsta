@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
@@ -15,7 +14,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.models.ProcessedImageViewModel;
+import com.example.mobileproject.ViewModels.Posts.ProcessedImageViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 

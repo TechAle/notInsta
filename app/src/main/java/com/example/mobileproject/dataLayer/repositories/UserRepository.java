@@ -18,9 +18,12 @@ public class UserRepository implements CallbackUsers {
 
     private final GeneralPostRemoteSource rem;
 
+    private final MutableLiveData<Result> ready;
+
     public UserRepository(GeneralPostRemoteSource rem){
         this.rem = rem;
         users = new MutableLiveData<>();
+        ready = new MutableLiveData<>();
     }
 
     //assegnamento in callback
@@ -33,6 +36,17 @@ public class UserRepository implements CallbackUsers {
     public MutableLiveData<Result> retrieveUsers(String tag){
         rem.retrieveUserByDocumentId(tag, this);
         return users;
+    }
+
+    public MutableLiveData<Result> editUsername(String tag, String newUsername) {
+        rem.editUsername(tag, newUsername, this);
+        return ready;
+    }
+
+
+    @Override
+    public void onSuccess() {
+        ready.postValue(new Result.UserEditSuccess());
     }
 
 
@@ -57,7 +71,14 @@ public class UserRepository implements CallbackUsers {
     }
 
     @Override
-    public void onUploadSuccess() {
-        //TODO: Usare o eliminare (dalla interfaccia Callback)
+    public void onUploadSuccess(String id) {
+        Result.UserCreationSuccess result = new Result.UserCreationSuccess(id);
+        ready.postValue(result);
+    }
+
+
+    public MutableLiveData<Result> createUser(Users toCreate) {
+        rem.createUser(toCreate, this);
+        return ready;
     }
 }

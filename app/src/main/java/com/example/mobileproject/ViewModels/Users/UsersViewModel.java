@@ -1,9 +1,11 @@
 package com.example.mobileproject.ViewModels.Users;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
+import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.utils.Result;
 
 public class UsersViewModel extends ViewModel {
@@ -36,6 +38,11 @@ public class UsersViewModel extends ViewModel {
         }
         return selectedUsers;
     }
+
+    public MutableLiveData<Result> editUsername(String tag, String newUsername) {
+        return repo.editUsername(tag, newUsername);
+    }
+
     public int getPage() {
         return page;
     }
@@ -65,5 +72,9 @@ public class UsersViewModel extends ViewModel {
     }
     public boolean isFirstLoading() {
         return firstLoading;
+    }
+
+    public MutableLiveData<Result> createUser(Users toCreate) {
+        return repo.createUser(toCreate);
     }
 }

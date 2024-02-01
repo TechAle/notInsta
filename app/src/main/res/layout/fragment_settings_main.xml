@@ -17,12 +17,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/material_dynamic_tertiary70"
-            tools:layout_height="100dp">
+            tools:layout_height="130dp">
 
             <TextView
                 android:id="@+id/textTitoloImpostazioni"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="20sp"
                 android:text="@string/settingsTitle"
                 android:textSize="28sp"
                 android:textStyle="bold"
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/post_image_bg"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:contentDescription="@string/imagePicture"
@@ -66,7 +67,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                app:layout_constraintTop_toBottomOf="@+id/post_image_bg" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

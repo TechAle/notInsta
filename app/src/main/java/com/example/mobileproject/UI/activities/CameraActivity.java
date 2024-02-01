@@ -13,13 +13,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.UI.fragments.camera.ImageChooserFragment;
 import com.example.mobileproject.UI.fragments.camera.ImageViewerFragment;
 import com.example.mobileproject.UI.fragments.camera.PostDescriptionFragment;
-import com.example.mobileproject.models.ProcessedImageViewModel;
+import com.example.mobileproject.ViewModels.Posts.ProcessedImageViewModel;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -123,7 +122,7 @@ public class CameraActivity extends AppCompatActivity {
                 break;
             case 3:
                 // Send post
-                viewModel.postImage();
+                viewModel.postImage(this);
                 // Go back to main
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentContainerView, ImageChooserFragment.class, null)
