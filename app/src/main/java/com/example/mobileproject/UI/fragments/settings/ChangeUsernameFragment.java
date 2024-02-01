@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.UI.fragments.home.SettingsFragment;
 import com.example.mobileproject.ViewModels.Settings.SettingsViewModel;
 import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
 import com.example.mobileproject.ViewModels.Users.UsersViewModel;
@@ -28,7 +27,7 @@ public class ChangeUsernameFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
-    private View backButton;
+    //private View backButton;
     private Button changeButton;
     private SettingsViewModel settingsViewModel;
     private UsersViewModel PVM;
@@ -57,11 +56,11 @@ public class ChangeUsernameFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_change_username, container, false);
 
-        backButton = view.findViewById(R.id.backButtonChangeUsername);
+        //backButton = view.findViewById(R.id.backButtonChangeUsername);
         changeButton = view.findViewById(R.id.changeUsernameButton);
 
 
-        backButton.setOnClickListener(new View.OnClickListener() {
+       /* backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true)
@@ -69,7 +68,7 @@ public class ChangeUsernameFragment extends Fragment {
                         .commit();
 
             }
-        });
+        });*/
 
         changeButton.setOnClickListener(new View.OnClickListener() {
             @Override

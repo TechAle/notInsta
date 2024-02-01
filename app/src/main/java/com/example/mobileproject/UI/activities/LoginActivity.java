@@ -3,12 +3,15 @@ package com.example.mobileproject.UI.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.mobileproject.utils.FragmentUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -56,6 +59,10 @@ public class LoginActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             // Oggetto o = savedInstanceState.getParcelable("OGGETTO_SALVATO");
         }
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        String selectedLanguage = sharedPref.getString("selected_language", "en");
+        FragmentUtils.loadLanguage(selectedLanguage, this, getResources());
 
         mAuth = FirebaseAuth.getInstance();
 

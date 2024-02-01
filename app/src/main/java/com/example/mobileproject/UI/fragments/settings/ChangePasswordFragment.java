@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.UI.fragments.home.SettingsFragment;
 import com.example.mobileproject.ViewModels.Settings.SettingsViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -33,7 +32,7 @@ public class ChangePasswordFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private View backButton;
+//    private View backButton;
     private Button changeButton;
     private SettingsViewModel settingsViewModel;
 
@@ -67,18 +66,21 @@ public class ChangePasswordFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
         settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
 
     }
 
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-        backButton = view.findViewById(R.id.backButtonChangePassword);
+        View view = inflater.inflate(R.layout.fragment_change_password, container, false);
+
+        //backButton = view.findViewById(R.id.backButtonChangePassword);
         changeButton = view.findViewById(R.id.changePasswordButton);
 
 
-        backButton.setOnClickListener(new View.OnClickListener() {
+     /*   backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true)
@@ -86,7 +88,7 @@ public class ChangePasswordFragment extends Fragment {
                         .commit();
 
             }
-        });
+        });*/
 
         changeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,14 +141,6 @@ public class ChangePasswordFragment extends Fragment {
             }
         });
 
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_change_password, container, false);
-
+        return view;
     }
 }
