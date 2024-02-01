@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.mobileproject.utils.FilterUtils;
 
+import java.io.FileOutputStream;
+
 
 public class ProcessedImageViewModel extends ViewModel {
 
@@ -17,6 +19,8 @@ public class ProcessedImageViewModel extends ViewModel {
     private MutableLiveData<Integer> param1;
     private MutableLiveData<Integer> param2;
     private MutableLiveData<Integer> param3;
+    private MutableLiveData<String> description;
+    private MutableLiveData<String[]> tags;
 
     public MutableLiveData<Bitmap> getProcessedImage() {
         if (processedImage == null) {
@@ -58,6 +62,20 @@ public class ProcessedImageViewModel extends ViewModel {
         }
         return param3;
     }
+    public MutableLiveData<String> getDescription() {
+        if (description == null) {
+            description = new MutableLiveData<String>();
+            description.setValue("");
+        }
+        return description;
+    }
+    public MutableLiveData<String[]> getTags() {
+        if (tags == null) {
+            tags = new MutableLiveData<String[]>();
+            tags.setValue(new String[0]);
+        }
+        return tags;
+    }
 
 
     //------- OPERATIONS ---//
@@ -70,5 +88,20 @@ public class ProcessedImageViewModel extends ViewModel {
         Bitmap image = getProcessedImage().getValue();
 
         getTempImage().setValue(FilterUtils.applyFilter(image, f, x, y, z));
+    }
+
+    // Posts the image with the description
+    public void postImage() {
+        Bitmap image = getProcessedImage().getValue();
+        String desc = getDescription().getValue();
+        String[] tagArr = getTags().getValue();
+        try{
+            //FileOutputStream out = new FileOutputStream(file);
+            //image.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            //out.flush();
+            //out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

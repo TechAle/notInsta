@@ -5,15 +5,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.UI.fragments.camera.ImageChooserFragment;
+import com.example.mobileproject.UI.fragments.camera.ImageViewerFragment;
+import com.example.mobileproject.UI.fragments.camera.PostDescriptionFragment;
 import com.example.mobileproject.models.ProcessedImageViewModel;
 
 import java.io.FileNotFoundException;
@@ -24,19 +29,24 @@ public class CameraActivity extends AppCompatActivity {
     int SELECT_PICTURE = 200;
     int TAKE_PICTURE = 100;
     private ImageView imageView;
+    private Button nextButton;
+    private Button prevButton;
     private Bitmap photo;
     private ProcessedImageViewModel viewModel;
+    private int currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainerView, ImageChooserFragment.class, null)
-                .commit();
+        setContentView(R.layout.activity_camera);
 
         imageView = findViewById(R.id.imageView);
+        nextButton = findViewById(R.id.next_button);
+        prevButton = findViewById(R.id.prev_button);
+        
+        currentFragment = 0;
+        changeFragment();
+
         viewModel = new ViewModelProvider(this).get(ProcessedImageViewModel.class);
         final Observer<Bitmap> observer = new Observer<Bitmap>() {
             @Override
@@ -45,6 +55,20 @@ public class CameraActivity extends AppCompatActivity {
             }
         };
         viewModel.getTempImage().observe(this, observer);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentFragment++;
+                changeFragment();
+            }
+        });
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentFragment--;
+                changeFragment();
+            }
+        });
     }
 
     @Override
@@ -70,6 +94,42 @@ public class CameraActivity extends AppCompatActivity {
             //imageView.setImageBitmap(photo);
             viewModel.getProcessedImage().setValue(photo);
             viewModel.getTempImage().setValue(photo);
+        }
+    }
+
+
+    // PRIVATE METHODS //
+
+    // Substitutes the fragment depending on the current state
+    private void changeFragment() {
+        switch (currentFragment){
+            case -1:
+                // Go back (probably to main)
+                break;
+            case 0:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, ImageChooserFragment.class, null)
+                        .commit();
+                break;
+            case 1:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, ImageViewerFragment.class, null)
+                        .commit();
+                break;
+            case 2:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, PostDescriptionFragment.class, null)
+                        .commit();
+                break;
+            case 3:
+                // Send post
+                viewModel.postImage();
+                // Go back to main
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, ImageChooserFragment.class, null)
+                        .commit();
+                currentFragment = 0;
+                break;
         }
     }
 

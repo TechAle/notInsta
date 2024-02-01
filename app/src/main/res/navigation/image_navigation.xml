@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:id="@+id/image_navigation"
+    app:startDestination="@id/imageViewerFragment">
+
+    <fragment
+        android:id="@+id/imageViewerFragment"
+        android:name="com.example.mobileproject.UI.fragments.camera.ImageViewerFragment"
+        android:label="ImageViewerFragment" />
+</navigation>
