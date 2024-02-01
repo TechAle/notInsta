@@ -47,6 +47,7 @@ public class CameraActivity extends AppCompatActivity {
         changeFragment();
 
         viewModel = new ViewModelProvider(this).get(ProcessedImageViewModel.class);
+        recover();
         final Observer<Bitmap> observer = new Observer<Bitmap>() {
             @Override
             public void onChanged(Bitmap bitmap) {
@@ -99,6 +100,14 @@ public class CameraActivity extends AppCompatActivity {
 
 
     // PRIVATE METHODS //
+
+    // Recovers from activity change
+    private void recover() {
+        if (viewModel.getProcessedImage() != null) {
+            Bitmap image = viewModel.getProcessedImage().getValue();
+            imageView.setImageBitmap(image);
+        }
+    }
 
     // Substitutes the fragment depending on the current state
     private void changeFragment() {
