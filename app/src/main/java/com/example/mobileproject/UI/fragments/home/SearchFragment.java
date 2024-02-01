@@ -71,7 +71,7 @@ public class SearchFragment extends Fragment {
         LinearLayout t = view.findViewById(R.id.sponsorLayout);
         t.setVisibility(View.GONE);
 
-        PVM.getSponsoredPosts().observe(getViewLifecycleOwner(), post -> {
+        PVM.getSponsodedPosts().observe(getViewLifecycleOwner(), post -> {
             if(post.successful()) {
                 PostResp sponsoredPost = ((Result.PostResponseSuccess) post).getData();
                 List<Post> sponsored = sponsoredPost.getPostList();

@@ -212,7 +212,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
         documentFields.put("autore", post.getAutore());
         documentFields.put("likes", post.getLikes());
         documentFields.put("promozionale", post.getPromozionale());
-        documentFields.put("pubblicazione", post.getPubblicazione());
+        documentFields.put("data", post.getPubblicazione());
         documentFields.put("tags", post.getTags());
         documentFields.put("descrizione", post.getDescrizione());
         createDocument("post", documentFields, ci);

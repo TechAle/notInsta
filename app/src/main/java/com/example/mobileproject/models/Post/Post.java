@@ -82,4 +82,8 @@ public class Post {
     public boolean getPromozionale() {
         return this.promozionale;
     }
+
+    public Date getData() {
+        return this.pubblicazione;
+    }
 }

@@ -98,6 +98,7 @@ public class StartingFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
         }
+        postSet = new ArrayList<>();
     }
 
     @Override
@@ -219,8 +220,8 @@ public class StartingFragment extends Fragment {
 
             imageUri = data.getData();
 
-            /*
-            Post toCreate = new Post("0TsbiPUaL5qfFQiH6572", "Bella descrizione",
+
+            /*Post toCreate = new Post("0TsbiPUaL5qfFQiH6572", "Bella descrizione",
                     new ArrayList<>(Arrays.asList("tag1", "ciao")), true, FirebaseFirestore.getInstance());
 
             PVM.createPost(toCreate).observe(getViewLifecycleOwner(), task -> {
