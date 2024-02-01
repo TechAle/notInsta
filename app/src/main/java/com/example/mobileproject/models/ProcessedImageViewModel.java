@@ -92,9 +92,9 @@ public class ProcessedImageViewModel extends ViewModel {
 
     // Posts the image with the description
     public void postImage() {
-        Bitmap image = processedImage.getValue();
-        String desc = description.getValue();
-        String[] tagArr = tags.getValue();
+        Bitmap image = getProcessedImage().getValue();
+        String desc = getDescription().getValue();
+        String[] tagArr = getTags().getValue();
         try{
             //FileOutputStream out = new FileOutputStream(file);
             //image.compress(Bitmap.CompressFormat.JPEG, 100, out);

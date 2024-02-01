@@ -76,6 +76,8 @@ public class PostDescriptionFragment extends Fragment {
         linearLayout = view.findViewById(R.id.tagLayout);
         tags = new HashMap<String, Button>();
 
+        recoverView(view);
+
         textInput.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -96,21 +98,8 @@ public class PostDescriptionFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String text = tagInput.getText().toString();
-                if (!text.equals("") && !tags.keySet().contains(text)){
-                    Button newTag = new Button(view.getContext());
-                    newTag.setText(text);
-                    linearLayout.addView(newTag);
-                    tags.put(text, newTag);
-                    viewModel.getTags().setValue(tags.keySet().toArray(new String[0]));
-                    newTag.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            tags.remove(((Button)view).getText().toString());
-                            view.setVisibility(View.GONE);
-                            viewModel.getTags().setValue(tags.keySet().toArray(new String[0]));
-                        }
-                    });
-                }
+                addTagButton(view, text);
+                tagInput.setText("");
             }
         });
 
@@ -120,5 +109,31 @@ public class PostDescriptionFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void recoverView(View view) {
+        String[] tagNames = viewModel.getTags().getValue();
+        for (String tag : tagNames) {
+            addTagButton(view, tag);
+        }
+        textInput.setText(viewModel.getDescription().getValue());
+    }
+
+    private void addTagButton(View view, String text) {
+        if (!text.equals("") && !tags.keySet().contains(text)){
+            Button newTag = new Button(view.getContext());
+            newTag.setText(text);
+            linearLayout.addView(newTag);
+            tags.put(text, newTag);
+            viewModel.getTags().setValue(tags.keySet().toArray(new String[0]));
+            newTag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tags.remove(((Button)view).getText().toString());
+                    view.setVisibility(View.GONE);
+                    viewModel.getTags().setValue(tags.keySet().toArray(new String[0]));
+                }
+            });
+        }
     }
 }
