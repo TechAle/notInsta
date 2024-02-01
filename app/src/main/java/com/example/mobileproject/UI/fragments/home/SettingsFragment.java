@@ -41,6 +41,7 @@ public class SettingsFragment extends Fragment {
     private Button deleteAccountButton;
     private SettingsViewModel settingsViewModel;
     private static final String PREF_SELECTED_LANGUAGE = "selected_language";
+    private boolean firstSelected = true;
 
 
     @Override
@@ -75,14 +76,16 @@ public class SettingsFragment extends Fragment {
         languagesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                switch (position) {
-                    case 0:
-                        setLocale("en");
-                        break;
-                    case 1:
-                        setLocale("it");
-                        break;
-                }
+                if (!firstSelected)
+                    switch (position) {
+                        case 0:
+                            setLocale("en");
+                            break;
+                        case 1:
+                            setLocale("it");
+                            break;
+                    }
+                firstSelected = false;
             }
 
             @Override
