@@ -10,7 +10,6 @@ import androidx.navigation.ui.NavigationUI;
 import android.os.Bundle;
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.databinding.ActivitySettingsBinding;
 public class SettingsActivity extends AppCompatActivity {
     private NavController ctrl;
 
@@ -18,18 +17,19 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        ActivitySettingsBinding bind = ActivitySettingsBinding.inflate(getLayoutInflater());
-        AppBarConfiguration config = new AppBarConfiguration.Builder(R.id.settingsFragment, R.id.changeUsernameFragment, R.id.changePasswordFragment)
-                .build();
+        Toolbar t = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(t);
+        AppBarConfiguration config = new AppBarConfiguration
+                .Builder()
+                .setFallbackOnNavigateUpListener(() -> {
+                    if(!ctrl.popBackStack()){
+                        finish();
+                    }
+                    return true;
+                }).build();
+
         NavHostFragment n = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_settings_host);
         ctrl = n.getNavController();
-        setSupportActionBar(bind.toolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            bind.toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_ios_24);
-            bind.toolbar.setNavigationOnClickListener(view -> {
-            if(!ctrl.popBackStack()){ //che bella la back stack
-                finish();
-            }
-        });
+        NavigationUI.setupWithNavController(t, ctrl, config);
     }
 }

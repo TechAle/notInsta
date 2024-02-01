@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -28,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.mobileproject.R;
+import com.example.mobileproject.UI.activities.CameraActivity;
 import com.example.mobileproject.UI.activities.SettingsActivity;
 import com.example.mobileproject.ViewModels.Posts.PostsVMFactory;
 import com.example.mobileproject.ViewModels.Posts.PostsViewModel;
@@ -117,6 +119,17 @@ public class StartingFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        AppBarConfiguration config = new AppBarConfiguration.Builder().setFallbackOnNavigateUpListener(() -> {
+            Intent i = new Intent(getActivity(), CameraActivity.class);
+            startActivity(i);
+            return true;
+        }).build();
+        // Aggiunta del titolo; commentato per il fatto che non è centrato orizzontalmente
+        //binding.toolbarStartingFragment.setTitle("!Insta");
+        binding.toolbarStartingFragment.setNavigationOnClickListener(v -> {
+            Intent i = new Intent(getActivity(), CameraActivity.class);
+            startActivity(i);
+        });
         binding.toolbarStartingFragment.inflateMenu(R.menu.settings_menu);
         binding.toolbarStartingFragment.setOnMenuItemClickListener(item -> {
             int action = item.getItemId();
