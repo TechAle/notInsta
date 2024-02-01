@@ -101,7 +101,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     @Override
     public void retrievePostsSponsor(CallbackPosts c) {
         ArrayList<Post> sponsors = new ArrayList<>();
-        if (Math.random() * 3 == 1) {
+        if ((int) (Math.random() * 3) == 1) {
             // Chiamata API
             // Prendi il titolo, l'immagine, e suppongo anche il link
             ArrayList<Post> output = new ArrayList<>();
@@ -121,11 +121,11 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                                 sponsors.add(p);
                             }
                             if (sponsors.size() > 0) {
-                                if (Math.random()*3!=1) {
+                                if ((int) (Math.random() * 3) != 1) {
                                     ArrayList<Post> output = new ArrayList<>();
                                     output.add(sponsors.get((int) (Math.random() * sponsors.size())));
                                     c.onSuccess(output);
-
+                                    return;
                                 }
                             }
                         }
