@@ -111,9 +111,23 @@ public class ProcessedImageViewModel extends ViewModel {
         getTempImage().setValue(FilterUtils.applyFilter(image, f, x, y, z));
     }
 
+    // Resets the values
+    public void reset() {
+        getFilter().setValue("hue");
+        getParam1().setValue(0);
+        getParam2().setValue(0);
+        getParam3().setValue(0);
+    }
+
+    // Overwrites the processed image (saves the changes)
+    public void saveChanges() {
+        getProcessedImage().setValue(getTempImage().getValue());
+    }
+
     // Posts the image with the description
     public void postImage(AppCompatActivity t) {
-        Bitmap image = getTempImage().getValue();
+        saveChanges();
+        Bitmap image = getProcessedImage().getValue();
         String desc = getDescription().getValue();
         String[] tagArr = getTags().getValue();
         Boolean isProm = getIsPromotional().getValue();

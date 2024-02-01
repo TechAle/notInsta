@@ -140,6 +140,7 @@ public class ImageViewerFragment extends Fragment {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 viewModel.getFilter().setValue(item.getTitle().toString().toLowerCase());
+                viewModel.saveChanges();
                 seekBar1.setProgress(0);
                 seekBar2.setProgress(0);
                 seekBar3.setProgress(0);
