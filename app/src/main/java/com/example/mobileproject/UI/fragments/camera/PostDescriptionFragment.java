@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
@@ -50,6 +52,7 @@ public class PostDescriptionFragment extends Fragment {
     private Button addTag;
     private LinearLayout linearLayout;
     private Map<String, Button> tags;
+    private CheckBox isPromotionalCheckbox;
 
     public PostDescriptionFragment() {
         // Required empty public constructor
@@ -74,6 +77,7 @@ public class PostDescriptionFragment extends Fragment {
         tagInput = view.findViewById(R.id.tagInput);
         addTag = view.findViewById(R.id.addTagButton);
         linearLayout = view.findViewById(R.id.tagLayout);
+        isPromotionalCheckbox = view.findViewById(R.id.checkBoxPromotional);
         tags = new HashMap<String, Button>();
 
         recoverView(view);
@@ -102,6 +106,13 @@ public class PostDescriptionFragment extends Fragment {
                 tagInput.setText("");
             }
         });
+        isPromotionalCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                viewModel.getIsPromotional().setValue(b);
+            }
+        });
 
         return view;
     }
@@ -117,6 +128,7 @@ public class PostDescriptionFragment extends Fragment {
             addTagButton(view, tag);
         }
         textInput.setText(viewModel.getDescription().getValue());
+        isPromotionalCheckbox.setChecked(viewModel.getIsPromotional().getValue());
     }
 
     private void addTagButton(View view, String text) {
