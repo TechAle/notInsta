@@ -205,7 +205,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     }
 
     @Override
-    public void createDocument(String collectionName, Post post, CallbackPosts ci) {
+    public void createDocument(Post post, CallbackPosts ci) {
         Map<String, Object> documentFields = new HashMap<>();
         documentFields.put("autore", post.getAutore());
         documentFields.put("likes", post.getLikes());
@@ -213,12 +213,12 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
         documentFields.put("pubblicazione", post.getPubblicazione());
         documentFields.put("tags", post.getTags());
         documentFields.put("descrizione", post.getDescrizione());
-        createDocument(collectionName, documentFields, ci);
+        createDocument("post", documentFields, ci);
     }
 
 
     @Override
-    public void createDocument(String collectionName, Map<String, Object> documentFields, CallbackPosts ci) {
+    public void createDocument(String collectionName, Map<String, Object> documentFields, CallbackInterface ci) {
         // Add the new document to our shared collection
         db.collection(collectionName)
                 .add(documentFields)
@@ -231,7 +231,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
     }
 
     @Override
-    public void createImage(Uri imageUri, ContentResolver context, CallbackPosts ci, String id) {
+    public void createImage(Uri imageUri, ContentResolver context, CallbackInterface ci, String id) {
         if (imageUri != null) {
             try {
                 // Convert the image to PNG format
@@ -242,7 +242,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                 // Create a unique filename for the uploaded image
                 String fileName = id + ".png";
 
-                StorageReference storageReference = FirebaseStorage.getInstance().getReference("post");
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference("POSTS");
 
                 StorageReference fileReference = storageReference.child(fileName);
 

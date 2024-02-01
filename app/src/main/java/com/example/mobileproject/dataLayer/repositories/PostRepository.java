@@ -47,8 +47,8 @@ public class PostRepository implements CallbackPosts {
         return posts;
     }
 
-    public MutableLiveData<Result> createDocument(String collectionName, Post post) {
-        rem.createDocument(collectionName, post, this);
+    public MutableLiveData<Result> createPost(Post post) {
+        rem.createDocument(post, this);
         return ready;
     }
 

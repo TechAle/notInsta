@@ -13,5 +13,4 @@ import java.util.List;
 public interface CallbackUsers extends CallbackInterface {
     void onSuccess(List<Users> res);
 
-    void onUploadSuccess(); //TODO: Usare o eliminare
 }

@@ -71,7 +71,9 @@ public class UserRepository implements CallbackUsers {
     }
 
     @Override
-    public void onUploadSuccess() {
-        //TODO: Usare o eliminare (dalla interfaccia Callback)
+    public void onUploadSuccess(String id) {
+
     }
+
+
 }

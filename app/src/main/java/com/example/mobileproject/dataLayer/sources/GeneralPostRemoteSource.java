@@ -25,13 +25,13 @@ public abstract class GeneralPostRemoteSource {
     public abstract void retrieveUserByDocumentId(String tag, CallbackUsers c);
     public abstract void editUsername(String tag, String newUsername, CallbackUsers c);
 
-    public abstract void createDocument(String collectionName, Post post, CallbackPosts ci);
+    public abstract void createDocument(Post post, CallbackPosts ci);
 
-    public abstract void createDocument(String collectionName, Map<String, Object> documentFields, CallbackPosts ci);
+    public abstract void createDocument(String collectionName, Map<String, Object> documentFields, CallbackInterface ci);
 
 
     //TODO: Qua io non lo sto usando, qualcuno ne faccia qualcosa o cancellatelo
     public abstract void postPost();
 
-    public abstract  void createImage(Uri imageUri, ContentResolver contentResolver, CallbackPosts postRepository, String id);
+    public abstract  void createImage(Uri imageUri, ContentResolver contentResolver, CallbackInterface postRepository, String id);
 }

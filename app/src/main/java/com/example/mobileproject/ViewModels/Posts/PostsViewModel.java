@@ -42,7 +42,7 @@ public class PostsViewModel extends ViewModel {
     }
 
     public MutableLiveData<Result> createPost(Post post) {
-        return repo.createDocument("POSTS", post);
+        return repo.createPost(post);
     }
 
     public MutableLiveData<Result>  createImage(Uri imageUri, ContentResolver contentResolver, String id) {
