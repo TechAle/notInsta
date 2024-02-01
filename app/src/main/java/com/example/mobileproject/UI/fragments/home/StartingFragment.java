@@ -130,11 +130,15 @@ public class StartingFragment extends Fragment {
                             postSet.remove(null);//TODO: esaminare qua
                         }
                     }
-                    int start_index = (PVM.getPage()-1)*20; //TODO: volendo il 20 si può sostituire con una costante
+                    int start_index = (PVM.getPage())*20; //TODO: volendo il 20 si può sostituire con una costante definita altrove
+                    for(int i = start_index; i < res.size(); i++){
+                        postSet.add(res.get(i));
+                    }
+                    pa.notifyItemRangeInserted(initial_size, postSet.size());
                 }
-                //TODO: codice relativo
             } else {
                 //TODO: codice relativo
+                //Bindings
             }
         });
         posts.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -165,8 +169,8 @@ public class StartingFragment extends Fragment {
                             postSet.add(null);
                             pa.notifyItemRangeInserted(postSet.size(),postSet.size() + 1);
                             PVM.setPage(PVM.getPage() + 1); //"giro" la pagina
-                            //Inizio ad andare a prendere altrii post
-                            //PVM.fetchPost();//TODO: Sistemare qua
+                            //Inizio ad andare a prendere altri post
+                            PVM.findPosts();//TODO: Sistemare qua
                         }
                     }
                 }

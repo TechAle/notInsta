@@ -12,7 +12,6 @@ public abstract class GeneralPostRemoteSource {
     public abstract void retrievePostByDocumentId(String tag, CallbackPosts c);
     public abstract void retrievePosts(CallbackPosts c, int page);
 
-
     public abstract void retrieveUsers(CallbackUsers c);
 
     public abstract void retrievePostsWithTags(String[] tags, CallbackPosts c);

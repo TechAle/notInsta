@@ -26,7 +26,7 @@ public class PostsViewModel extends ViewModel {
     // TODO non sono sicuro se ne vale la pena fare il caching....
     public MutableLiveData<Result> getPosts(){
         if(posts == null){
-            posts = repo.retrievePosts(page);
+            findPosts();
         }
         return posts;
     }
@@ -37,10 +37,12 @@ public class PostsViewModel extends ViewModel {
         return selectedPosts;
     }
 
+    public void findPosts(){
+        posts = repo.retrievePosts(page);
+    }
     public MutableLiveData<Result> getSponsoredPosts(){
         return repo.retrieveSponsoredPosts();
     }
-
     public int getPage() {
         return page;
     }

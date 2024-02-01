@@ -1,5 +1,7 @@
 package com.example.mobileproject.dataLayer.sources;
 
+import android.util.Log;
+
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Users.Users;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,6 +32,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
 
     @Override
     public void retrievePosts(CallbackPosts c, int page){
+        Log.w("callSource", "Calling to remote Source (Firebase)");
         db.collection("post").orderBy("data").startAfter(page * 20).limit(20).get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
@@ -75,7 +78,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource{
                         for(QueryDocumentSnapshot i : task.getResult()){
                             Map<String, Object> m = i.getData();
                             Post p = new Post(m, i.getId());
-                            for (String tag: tags) {
+                            for (String tag: tags) { //TODO: ma questo non può essere fatto a livello di database?
                                 if (p.getTags().contains(tag)) {
                                     results.add(p);
                                     break;
