@@ -1,13 +1,26 @@
-package com.example.mobileproject.models;
+package com.example.mobileproject.ViewModels.Posts;
 
+import android.content.ContentResolver;
 import android.graphics.Bitmap;
+import android.net.Uri;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.models.Post.Post;
+import com.example.mobileproject.utils.BitmapUtils;
 import com.example.mobileproject.utils.FilterUtils;
+import com.example.mobileproject.utils.Result;
+import com.example.mobileproject.utils.ServiceLocator;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.FileOutputStream;
+import java.util.Arrays;
 
 
 public class ProcessedImageViewModel extends ViewModel {
@@ -99,12 +112,39 @@ public class ProcessedImageViewModel extends ViewModel {
     }
 
     // Posts the image with the description
-    public void postImage() {
-        Bitmap image = getProcessedImage().getValue();
+    public void postImage(AppCompatActivity t) {
+        Bitmap image = getTempImage().getValue();
         String desc = getDescription().getValue();
         String[] tagArr = getTags().getValue();
         Boolean isProm = getIsPromotional().getValue();
         try{
+            Uri imageUri = BitmapUtils.getUriFromBitmap(t, image);
+            PostRepository pr = ServiceLocator.getInstance().getPostRepo();
+            if(pr != null){
+                PostsViewModel PVM = new ViewModelProvider(t, new PostsVMFactory(pr)).get(PostsViewModel.class);
+
+                Post toCreate = new Post("0TsbiPUaL5qfFQiH6572", desc,
+                                                Arrays.asList(tagArr), isProm, FirebaseFirestore.getInstance());
+
+                PVM.createPost(toCreate).observe(t, task -> {
+                    if (task.successful()) {
+                        PVM.createImage(imageUri, "POSTS", t.getContentResolver(), ((Result.PostCreationSuccess) task).getData())
+                                .observe(t, imageTask -> {
+                                    if (imageTask.successful()) {
+                                        int f = 0;
+                                    } else {
+                                        int b = 0;
+                                    }
+
+                                });
+                    } else {
+                        int c = 0;
+                    }
+                });
+
+            } else {
+                // TODO errore
+            }
             //FileOutputStream out = new FileOutputStream(file);
             //image.compress(Bitmap.CompressFormat.JPEG, 100, out);
             //out.flush();
