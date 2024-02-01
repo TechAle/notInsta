@@ -20,6 +20,7 @@ public class ProcessedImageViewModel extends ViewModel {
     private MutableLiveData<Integer> param2;
     private MutableLiveData<Integer> param3;
     private MutableLiveData<String> description;
+    private MutableLiveData<String[]> tags;
 
     public MutableLiveData<Bitmap> getProcessedImage() {
         if (processedImage == null) {
@@ -68,6 +69,13 @@ public class ProcessedImageViewModel extends ViewModel {
         }
         return description;
     }
+    public MutableLiveData<String[]> getTags() {
+        if (tags == null) {
+            tags = new MutableLiveData<String[]>();
+            tags.setValue(new String[0]);
+        }
+        return tags;
+    }
 
 
     //------- OPERATIONS ---//
@@ -86,6 +94,7 @@ public class ProcessedImageViewModel extends ViewModel {
     public void postImage() {
         Bitmap image = processedImage.getValue();
         String desc = description.getValue();
+        String[] tagArr = tags.getValue();
         try{
             //FileOutputStream out = new FileOutputStream(file);
             //image.compress(Bitmap.CompressFormat.JPEG, 100, out);

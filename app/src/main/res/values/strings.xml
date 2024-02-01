@@ -103,4 +103,7 @@
     <string name="button_to_post_desc">Next</string>
     <string name="prev_button">Back</string>
     <string name="next_button">Next</string>
+    <string name="add_tag_button">+</string>
+    <string name="description_text_hint">Write a description</string>
+    <string name="tag_text_hint">tag</string>
 </resources>
