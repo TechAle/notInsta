@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.models.ProcessedImageViewModel;
+import com.example.mobileproject.ViewModels.Posts.ProcessedImageViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -81,9 +81,27 @@ public class ImageViewerFragment extends Fragment {
         };
         viewModel.getFilter().observe(getActivity(), observer);
 
+        switch (viewModel.getFilter().getValue()) {
+            case "hue":
+                bottomNavigation.getMenu().findItem(R.id.hue).setChecked(true);
+                break;
+            case "brightness":
+                bottomNavigation.getMenu().findItem(R.id.brightness).setChecked(true);
+                break;
+            case "contrast":
+                bottomNavigation.getMenu().findItem(R.id.contrast).setChecked(true);
+                break;
+            case "saturation":
+                bottomNavigation.getMenu().findItem(R.id.saturation).setChecked(true);
+                break;
+            case "pixelate":
+                bottomNavigation.getMenu().findItem(R.id.pixelate).setChecked(true);
+                break;
+        }
         seekBar1.setProgress(viewModel.getParam1().getValue());
         seekBar2.setProgress(viewModel.getParam2().getValue());
         seekBar3.setProgress(viewModel.getParam3().getValue());
+
 
         seekBar1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -122,6 +140,9 @@ public class ImageViewerFragment extends Fragment {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 viewModel.getFilter().setValue(item.getTitle().toString().toLowerCase());
+                seekBar1.setProgress(0);
+                seekBar2.setProgress(0);
+                seekBar3.setProgress(0);
                 return true;
             }
         });

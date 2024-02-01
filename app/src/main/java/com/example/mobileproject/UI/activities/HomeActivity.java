@@ -10,11 +10,14 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 //import android.view.ViewGroup;
 
 import com.example.mobileproject.R;
+import com.example.mobileproject.utils.FragmentUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
@@ -52,5 +55,9 @@ public class HomeActivity extends AppCompatActivity {
         } catch (NullPointerException e) {
             Log.wtf("AAAA", "fkng null pointer");
         }
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        String selectedLanguage = sharedPref.getString("selected_language", "en");
+        FragmentUtils.loadLanguage(selectedLanguage, this, getResources());
     }
 }

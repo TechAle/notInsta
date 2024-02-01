@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.mobileproject.R;
+import com.example.mobileproject.UI.fragments.home.SettingsFragment;
 import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
 import com.example.mobileproject.ViewModels.Users.UsersViewModel;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
