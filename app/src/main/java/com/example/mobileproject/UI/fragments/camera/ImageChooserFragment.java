@@ -24,7 +24,6 @@ public class ImageChooserFragment extends Fragment {
     private final int TAKE_PICTURE = 100;
     private Button cameraButton;
     private Button galleryButton;
-    private Button okButton;
 
     public ImageChooserFragment() {
         // Required empty public constructor
@@ -46,7 +45,6 @@ public class ImageChooserFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_image_chooser, container, false);
         cameraButton = view.findViewById(R.id.cameraButton);
         galleryButton = view.findViewById(R.id.galleryButton);
-        okButton = view.findViewById(R.id.okButton);
 
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,14 +61,6 @@ public class ImageChooserFragment extends Fragment {
                 i.setAction(Intent.ACTION_GET_CONTENT);
 
                 getActivity().startActivityForResult(Intent.createChooser(i, "Select Picture"), 200);
-            }
-        });
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainerView, ImageViewerFragment.class, null)
-                        .commit();
             }
         });
 

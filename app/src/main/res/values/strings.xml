@@ -52,7 +52,7 @@
         <item>Italiano</item>
     </string-array>
 
-<!--<string name="lorem_ipsum">
+    <!--<string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris volutpat, dolor id
         interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus dui nec risus. Maecenas non sodales
         nisi, vel dictum dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
@@ -100,6 +100,18 @@
     <string name="password_changed">Password has been changed</string>
     <string name="password_length">Password lentgh must be at least 6</string>
     <string name="password_different">Passwords must be different</string>
+    <string name="button_to_post_desc">Next</string>
+    <string name="prev_button">Back</string>
+    <string name="next_button">Next</string>
+    <string name="add_tag_button">+</string>
+    <string name="description_text_hint">Write a description</string>
+    <string name="tag_text_hint">tag</string>
+    <string name="is_promotional_checkbox">Is Promotional?</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="error_retrieving_products">Error in retrieving the products</string>
+
     <string name="error_user_collision_message">User already exists</string>
     <string name="unexpected_error">Errore inaspettato</string>
     <string name="check_login_data_message">Dati non validi</string>
