@@ -247,7 +247,7 @@ public class LoginFragment extends Fragment {
                 .addOnSuccessListener(requireActivity(), new OnSuccessListener<BeginSignInResult>() {
                     @Override
                     public void onSuccess(BeginSignInResult result) {
-                        Log.d("TAG", "Google onSuccess");
+                        Log.d("TAG", "onSuccess from oneTapClient.beginSignIn(BeginSignInRequest)");
                         IntentSenderRequest intentSenderRequest =
                                 new IntentSenderRequest.Builder(result.getPendingIntent()).build();
                         activityResultLauncher.launch(intentSenderRequest);
@@ -256,9 +256,9 @@ public class LoginFragment extends Fragment {
                 .addOnFailureListener(requireActivity(), new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("TAG", "Google onFailure");
                         // No saved credentials found. Launch the One Tap sign-up flow, or
                         // do nothing and continue presenting the signed-out UI.
+                        Log.d("TAG", e.getLocalizedMessage());
 
                         Snackbar.make(requireActivity().findViewById(android.R.id.content),
                                 requireActivity().getString(R.string.error_no_google_account_found_message),
@@ -269,7 +269,7 @@ public class LoginFragment extends Fragment {
         buttonTerms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Terms and Conditions text
+                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_termsConditionsFragment);
             }
         });
     }

@@ -28,34 +28,14 @@
         app:layout_constraintTop_toBottomOf="@+id/imageLogo" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputUsername"
+        android:id="@+id/textInputEmail"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textSignup"
-        app:startIconDrawable="@drawable/baseline_account_circle_24">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/inputUsername"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="@string/username" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputEmail"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputUsername"
         app:startIconDrawable="@drawable/baseline_alternate_email_24">
 
         <com.google.android.material.textfield.TextInputEditText
