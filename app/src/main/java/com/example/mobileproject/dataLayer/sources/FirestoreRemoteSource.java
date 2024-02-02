@@ -57,7 +57,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
     StorageReference storageRef;
     FirebaseAuth firebaseAuth;
 
-    public FirestoreRemoteSource() {
+    public FirestoreRemoteSource(Application app) {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
@@ -124,7 +124,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
     }
 
     @Override
-    public void retrievePostsSponsor(CallbackPosts c) {
+    public void retrievePostsSponsor(CallbackPosts c, LifecycleOwner ow) {
         ArrayList<Post> sponsors = new ArrayList<>();
         if ((int) (Math.random() * 3) == 1) {
             // Chiamata API
