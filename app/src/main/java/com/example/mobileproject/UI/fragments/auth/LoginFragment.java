@@ -78,7 +78,7 @@ public class LoginFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UserRepository userRepository = ServiceLocator.getInstance().getUserRepo();
+        UserRepository userRepository = ServiceLocator.getInstance().getUserRepo(this.getActivity().getApplication());
         usersViewModel = new ViewModelProvider(
                 requireActivity(),
                 new UsersVMFactory(userRepository)).get(UsersViewModel.class);
@@ -94,7 +94,7 @@ public class LoginFragment extends Fragment {
                 .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                         .setSupported(true)
                         // Your server's client ID, not your Android client ID.
-                        .setServerClientId(getString(R.string.default_web_client_id)) // NON è un errore, stringa creata durante la compilazione in automatico
+                        //.setServerClientId(getString(R.string.default_web_client_id)) // NON è un errore, stringa creata durante la compilazione in automatico TODO rimuovere
                         // Only show accounts previously used to sign in.
                         .setFilterByAuthorizedAccounts(false)
                         .build())
@@ -238,7 +238,8 @@ public class LoginFragment extends Fragment {
         buttonSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_signupFragment);
+                //Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_signupFragment);
+                // TODO errore
             }
         });
 

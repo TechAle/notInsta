@@ -3,6 +3,7 @@ package com.example.mobileproject.dataLayer.repositories;
 import android.content.ContentResolver;
 import android.net.Uri;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mobileproject.dataLayer.sources.CallbackPosts;
@@ -42,8 +43,8 @@ public class PostRepository implements CallbackPosts {
         return posts;
     }
 
-    public MutableLiveData<Result> retrieveSponsoredPosts(){
-        rem.retrievePostsSponsor(this);
+    public MutableLiveData<Result> retrieveSponsoredPosts(LifecycleOwner ow){
+        rem.retrievePostsSponsor(this, ow);
         return posts;
     }
 

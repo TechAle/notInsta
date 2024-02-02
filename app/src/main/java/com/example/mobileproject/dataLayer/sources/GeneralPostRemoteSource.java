@@ -3,6 +3,8 @@ package com.example.mobileproject.dataLayer.sources;
 import android.content.ContentResolver;
 import android.net.Uri;
 
+import androidx.lifecycle.LifecycleOwner;
+
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Users.Users;
 
@@ -13,7 +15,7 @@ public abstract class GeneralPostRemoteSource {
     protected CallbackPosts c;
 
 
-    public abstract void retrievePostsSponsor(CallbackPosts c);
+    public abstract void retrievePostsSponsor(CallbackPosts c, LifecycleOwner ow);
 
     public abstract void retrievePostByDocumentId(String tag, CallbackPosts c);
     public abstract void retrievePosts(CallbackPosts c);

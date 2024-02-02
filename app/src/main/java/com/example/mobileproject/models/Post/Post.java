@@ -22,7 +22,21 @@ public class Post {
     private Date pubblicazione;
     private List<String> tags;
     private List<DocumentReference> likes;
+    private String image;
     private boolean promozionale;
+
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    // TODO make for null better management
+    public String getImage() {
+        return image;
+    }
 
     public Post() {
 

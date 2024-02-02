@@ -6,12 +6,15 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.models.Product;
 import com.example.mobileproject.models.StoreApiResponse;
+import com.example.mobileproject.models.Users.UsersResp;
 import com.example.mobileproject.service.StoreAPIService;
 import com.example.mobileproject.utils.ResponseCallback;
+import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 
 import java.util.List;
@@ -23,40 +26,43 @@ import retrofit2.Response;
 
 public class ProductsRepository implements IProductsRepository {
 
-    private static final String TAG = ProductsRepository.class.getSimpleName();
 
     private final Application application;
     private final StoreAPIService storeAPIService;
-    private final ResponseCallback responseCallback;
+    private final MutableLiveData<Result> data;
 
-    public ProductsRepository(Application application, ResponseCallback responseCallback) {
+    public ProductsRepository(Application application) {
         this.application = application;
         this.storeAPIService = ServiceLocator.getInstance().getProductsApiService();
-        this.responseCallback = responseCallback;
+        this.data = new MutableLiveData<>();
     }
 
     @Override
-    public void fetchProducts(int limit, long lastUpdate) {
+    public MutableLiveData<Result> fetchProducts(int limit) {
 
-        Call<StoreApiResponse> storeResponseCall = storeAPIService.getProducts(limit);
+        Call<List<Product>> storeResponseCall = storeAPIService.getProducts(10);
 
-        storeResponseCall.enqueue(new Callback<StoreApiResponse>() {
+        storeResponseCall.enqueue(new Callback<List<Product>>() {
             @Override
-            public void onResponse(@NonNull Call<StoreApiResponse> call,
-                                   @NonNull Response<StoreApiResponse> response) {
-
+            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 if (response.body() != null && response.isSuccessful()) {
-                    List<Product> productList = response.body().getProducts();
+                    List<Product> productList = response.body();
+                    Result.ProductSuccess result = new Result.ProductSuccess(productList);
+                    data.postValue(result);
                 } else {
-                    responseCallback.onFailure(application.getString(R.string.error_retrieving_products));
+                    Result.Error resultError = new Result.Error(application.getString(R.string.error_retrieving_products));
+                    data.postValue(resultError);
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<StoreApiResponse> call, @NonNull Throwable t) {
-                responseCallback.onFailure(t.getMessage());
+            public void onFailure(Call<List<Product>> call, Throwable t) {
+                Result.Error resultError = new Result.Error(t.getMessage());
+                data.postValue(resultError);
             }
+
         });
+        return data;
 
     }
 

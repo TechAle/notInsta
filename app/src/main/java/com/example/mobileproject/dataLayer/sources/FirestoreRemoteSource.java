@@ -1,5 +1,6 @@
 package com.example.mobileproject.dataLayer.sources;
 
+import android.app.Application;
 import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -8,9 +9,13 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 
+import com.example.mobileproject.dataLayer.repositories.ProductsRepository;
 import com.example.mobileproject.models.Post.Post;
+import com.example.mobileproject.models.Product;
 import com.example.mobileproject.models.Users.Users;
+import com.example.mobileproject.utils.Result;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthCredential;
@@ -46,12 +51,14 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
     FirebaseStorage storage;
     StorageReference storageRef;
     FirebaseAuth firebaseAuth;
+    Application app;
 
-    public FirestoreRemoteSource() {
+    public FirestoreRemoteSource(Application app) {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
+        this.app = app;
     }
 
     @Override
@@ -114,16 +121,10 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
     }
 
     @Override
-    public void retrievePostsSponsor(CallbackPosts c) {
+    public void retrievePostsSponsor(CallbackPosts c, LifecycleOwner ow) {
         ArrayList<Post> sponsors = new ArrayList<>();
-        if ((int) (Math.random() * 3) == 1) {
-            // Chiamata API
-            // Prendi il titolo, l'immagine, e suppongo anche il link
-            ArrayList<Post> output = new ArrayList<>();
-            Post temp = new Post();
-
-            output.add(temp);
-            c.onSuccess(output);
+        if (((int) (Math.random() * 3)) == 1) {
+            createSponsorFromApi(ow, c);
         } else
             db.collection("post")
                     .whereEqualTo("promozionale", true)
@@ -148,6 +149,25 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
                     });
 
 
+    }
+
+    private void createSponsorFromApi(LifecycleOwner life, CallbackPosts c) {
+        ProductsRepository t = new ProductsRepository(app);
+        t.fetchProducts(1).observe(life, task -> {
+            if (task.successful()) {
+                List<Product> resp = ((Result.ProductSuccess) task).getData();
+                Product pr = resp.get(0);
+                ArrayList<Post> output = new ArrayList<>();
+                Post temp = new Post();
+                temp.setDescrizione(pr.getTitle());
+                temp.setImage(pr.getImage());
+
+                output.add(temp);
+                c.onSuccess(output);
+            } else {
+                c.onFailure(new Exception("No post"));
+            }
+        });
     }
 
 

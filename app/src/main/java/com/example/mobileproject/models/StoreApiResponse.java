@@ -20,17 +20,15 @@ public class StoreApiResponse implements Parcelable {
         return products;
     }
 
+    public List<Product> getProducts(int limit) {
+        return products;
+    }
+
     public void setProducts(List<Product> products) {
         this.products = products;
     }
 
 
-    @Override
-    public String toString() {
-        return "StoreApiResponse{" +
-                "articles=" + products +
-                '}';
-    }
 
     @Override
     public int describeContents() {

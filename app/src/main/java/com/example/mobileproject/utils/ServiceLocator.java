@@ -29,12 +29,12 @@ public class ServiceLocator {
 
     //TODO: vedere la Application
 //    public PostRepository getPostRepo(Application a){
-    public PostRepository getPostRepo() {
-        return new PostRepository(new FirestoreRemoteSource());
+    public PostRepository getPostRepo(Application app) {
+        return new PostRepository(new FirestoreRemoteSource(app));
     }
 
-    public UserRepository getUserRepo() {
-        return new UserRepository(new FirestoreRemoteSource());
+    public UserRepository getUserRepo(Application app) {
+        return new UserRepository(new FirestoreRemoteSource(app));
     }
 
     public StoreAPIService getProductsApiService() {

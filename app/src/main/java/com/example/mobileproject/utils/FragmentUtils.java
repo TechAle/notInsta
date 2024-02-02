@@ -61,4 +61,11 @@ public class FragmentUtils {
             activity.recreate();
         }
     }
+
+    public static void loadImage(String image, View view, int sponsorImage) {
+        ImageView imageView = view.findViewById(sponsorImage);
+        Glide.with(view)
+                .load(image)
+                .into(imageView);
+    }
 }
