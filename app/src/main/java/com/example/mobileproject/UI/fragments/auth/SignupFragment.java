@@ -34,7 +34,6 @@ public class SignupFragment extends Fragment {
     private FirebaseAuth mAuth;
 
     private Button buttonBack;
-    private TextInputLayout inputUsername;
     private TextInputLayout inputEmail;
     private TextInputLayout inputPassword;
     private TextInputLayout inputPasswordRepeat;
@@ -73,7 +72,6 @@ public class SignupFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         buttonBack = view.findViewById(R.id.buttonBack);
-        inputUsername = view.findViewById(R.id.textInputUsername);
         inputEmail = view.findViewById(R.id.textInputEmail);
         inputPassword = view.findViewById(R.id.textInputPassword);
         inputPasswordRepeat = view.findViewById(R.id.textInputPasswordRepeat);
@@ -90,24 +88,12 @@ public class SignupFragment extends Fragment {
         buttonSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String username = inputUsername.getEditText().getText().toString().trim();
                 String email = inputEmail.getEditText().getText().toString().trim();
                 String password = inputPassword.getEditText().getText().toString().trim();
                 String passwordRepeat = inputPasswordRepeat.getEditText().getText().toString().trim();
 
                 boolean inputError = false;
 
-                if (TextUtils.isEmpty(username)) {
-                    inputError = true;
-                    usersViewModel.setAuthenticationError(true);
-                    inputUsername.setError(getString(R.string.error_username));
-                    Snackbar.make(
-                            requireView(),
-                            getString(R.string.error_username),
-                            Snackbar.LENGTH_SHORT);
-                } else {
-                    inputUsername.setError(null);
-                }
                 if (TextUtils.isEmpty(email)) {
                     inputError = true;
                     usersViewModel.setAuthenticationError(true);
@@ -173,7 +159,7 @@ public class SignupFragment extends Fragment {
         buttonTerms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Terms and Conditions text
+                Navigation.findNavController(view).navigate(R.id.action_signupFragment_to_termsConditionsFragment);
             }
         });
     }
