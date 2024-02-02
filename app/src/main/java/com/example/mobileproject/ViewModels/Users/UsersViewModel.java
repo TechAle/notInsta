@@ -1,5 +1,7 @@
 package com.example.mobileproject.ViewModels.Users;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -17,11 +19,14 @@ public class UsersViewModel extends ViewModel {
     private boolean firstLoading;
     private MutableLiveData<Result> users;
     private MutableLiveData<Result> selectedUsers;
+    private boolean authenticationError;
+
     public UsersViewModel(UserRepository repo) {
         this.repo = repo;
         this.page = 1;
         this.totalResults = 0;
         this.firstLoading = true;
+        authenticationError = false;
     }
 
     //getters & setters
@@ -76,5 +81,56 @@ public class UsersViewModel extends ViewModel {
 
     public MutableLiveData<Result> createUser(Users toCreate) {
         return repo.createUser(toCreate);
+    }
+
+
+
+    public MutableLiveData<Result> getUserMutableLiveData(
+            String email, String password, boolean isUserRegistered) {
+        if (users == null) {
+            getUserData(email, password, isUserRegistered);
+        }
+        return users;
+    }
+
+    public MutableLiveData<Result> getGoogleUserMutableLiveData(String token) {
+        if (users == null) {
+            getUserData(token);
+        }
+        return users;
+    }
+
+    public MutableLiveData<Result> logout() {
+        if (users == null) {
+            users = repo.logout();
+        } else {
+            repo.logout();
+        }
+
+        return users;
+    }
+
+    public void getUser(String email, String password, boolean isUserRegistered) {
+        repo.getUser(email, password, isUserRegistered);
+    }
+
+    public boolean isAuthenticationError() {
+        return authenticationError;
+    }
+
+    public void setAuthenticationError(boolean authenticationError) {
+        this.authenticationError = authenticationError;
+    }
+
+    private void getUserData(String email, String password, boolean isUserRegistered) {
+        users = repo.getUser(email, password, isUserRegistered);
+    }
+
+    private void getUserData(String token) {
+        users = repo.getGoogleUser(token);
+    }
+
+    public void sendPasswordReset(String email){
+        repo.passwordReset(email);
     }
 }

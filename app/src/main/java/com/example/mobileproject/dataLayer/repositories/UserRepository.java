@@ -1,11 +1,11 @@
 package com.example.mobileproject.dataLayer.repositories;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.mobileproject.dataLayer.sources.CallbackPosts;
 import com.example.mobileproject.dataLayer.sources.CallbackUsers;
 import com.example.mobileproject.dataLayer.sources.GeneralPostRemoteSource;
-import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.models.Users.UsersResp;
 import com.example.mobileproject.utils.Result;
@@ -80,5 +80,83 @@ public class UserRepository implements CallbackUsers {
     public MutableLiveData<Result> createUser(Users toCreate) {
         rem.createUser(toCreate, this);
         return ready;
+    }
+
+    @Override
+    public MutableLiveData<Result> getUser(String email, String password, boolean isUserRegistered) {
+        if (isUserRegistered) {
+            signIn(email, password);
+        } else {
+            signUp(email, password);
+        }
+        return users;
+    }
+
+    @Override
+    public MutableLiveData<Result> getGoogleUser(String idToken) {
+        signInWithGoogle(idToken);
+        return users;
+    }
+
+    @Override
+    public Users getLoggedUser() {
+        return rem.getLoggedUser();
+    }
+
+    @Override
+    public MutableLiveData<Result> logout() {
+        rem.logout(this);
+        return users;
+    }
+
+    @Override
+    public void signUp(String email, String password) {
+        rem.signUp(email, password, this);
+    }
+
+    @Override
+    public void signIn(String email, String password) {
+        rem.signIn(email, password, this);
+    }
+
+    @Override
+    public void signInWithGoogle(String token) {
+        rem.signInWithGoogle(token, this);
+    }
+
+
+    @Override
+    public void onSuccessFromAuthentication(Users user) {
+        if (user != null) {
+            createUser(user);
+        }
+    }
+
+    @Override
+    public void onFailureFromAuthentication(String message) {
+        Result.Error result = new Result.Error(message);
+        users.postValue(result);
+    }
+
+    @Override
+    public void onSuccessFromRemoteDatabase(Users user) {
+        Result.UserResponseSuccessUser result = new Result.UserResponseSuccessUser(user);
+        users.postValue(result);
+    }
+
+    @Override
+    public void onFailureFromRemoteDatabase(String message) {
+        Result.Error result = new Result.Error(message);
+        users.postValue(result);
+    }
+
+    @Override
+    public void onSuccessLogout() {
+
+    }
+
+    @Override
+    public void passwordReset(String email) {
+        rem.passwordReset(email, this);
     }
 }

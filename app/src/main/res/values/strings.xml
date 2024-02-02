@@ -109,4 +109,16 @@
     <string name="is_promotional_checkbox">Is Promotional?</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="error_retrieving_products">Error in retrieving the products</string>
+
+    <string name="error_user_collision_message">User already exists</string>
+    <string name="unexpected_error">Errore inaspettato</string>
+    <string name="check_login_data_message">Dati non validi</string>
+    <string name="error_login_password_message">Credenziali non valide</string>
+    <string name="error_login_user_message">Utente non valido</string>
+    <string name="error_no_google_account_found_message">Nessun account Google trovato</string>
+    <string name="back">Back</string>
+    <string name="termsConditions">Terms and conditions will be described here.</string>
+    <string name="passwordButton">Send email</string>
 </resources>

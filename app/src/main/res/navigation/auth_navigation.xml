@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth_navigation"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.mobileproject.UI.fragments.auth.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_signupFragment"
+            app:destination="@id/signupFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_termsConditionsFragment"
+            app:destination="@id/termsConditionsFragment" />
+        <action
+            android:id="@+id/action_loginFragment_self"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_passwordResetFragment"
+            app:destination="@id/passwordResetFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="com.example.mobileproject.UI.fragments.auth.SignupFragment"
+        android:label="fragment_signup"
+        tools:layout="@layout/fragment_signup">
+        <action
+            android:id="@+id/action_signupFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_signupFragment_to_termsConditionsFragment"
+            app:destination="@id/termsConditionsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/termsConditionsFragment"
+        android:name="com.example.mobileproject.UI.fragments.auth.TermsConditionsFragment"
+        android:label="fragment_terms_conditions"
+        tools:layout="@layout/fragment_terms_conditions" >
+        <action
+            android:id="@+id/action_termsConditionsFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/passwordResetFragment"
+        android:name="com.example.mobileproject.UI.fragments.auth.PasswordResetFragment"
+        android:label="fragment_password_reset"
+        tools:layout="@layout/fragment_password_reset" >
+        <action
+            android:id="@+id/action_passwordResetFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+</navigation>
