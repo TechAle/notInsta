@@ -80,7 +80,8 @@ public class SignupFragment extends Fragment {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.action_signupFragment_to_loginFragment);
+                //Navigation.findNavController(view).navigate(R.id.action_signupFragment_to_loginFragment);
+                // TODO errore
             }
         });
 

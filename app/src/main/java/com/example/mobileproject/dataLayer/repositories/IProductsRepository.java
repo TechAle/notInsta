@@ -1,15 +1,13 @@
 package com.example.mobileproject.dataLayer.repositories;
 
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.mobileproject.utils.Result;
+
 public interface IProductsRepository {
 
-    void fetchProducts(int limit, long lastUpdate);
+    MutableLiveData<Result> fetchProducts(int limit);
 
-    enum JsonParserType {
-        JSON_READER,
-        JSON_OBJECT_ARRAY,
-        GSON,
-        JSON_ERROR
-    }
 
 }
 

@@ -3,6 +3,7 @@ package com.example.mobileproject.ViewModels.Posts;
 import android.content.ContentResolver;
 import android.net.Uri;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -49,8 +50,8 @@ public class PostsViewModel extends ViewModel {
         return repo.createImage(imageUri, document, contentResolver, id);
     }
 
-    public MutableLiveData<Result> getSponsodedPosts(){
-        return repo.retrieveSponsoredPosts();
+    public MutableLiveData<Result> getSponsodedPosts(LifecycleOwner ow){
+        return repo.retrieveSponsoredPosts(ow);
     }
 
     public int getPage() {

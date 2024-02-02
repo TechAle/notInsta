@@ -1,5 +1,6 @@
 package com.example.mobileproject.dataLayer.sources;
 
+import android.app.Application;
 import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -8,9 +9,13 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 
+import com.example.mobileproject.dataLayer.repositories.ProductsRepository;
 import com.example.mobileproject.models.Post.Post;
+import com.example.mobileproject.models.Product;
 import com.example.mobileproject.models.Users.Users;
+import com.example.mobileproject.utils.Result;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

@@ -37,11 +37,14 @@ import com.example.mobileproject.ViewModels.Posts.PostsViewModel;
 import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
 import com.example.mobileproject.ViewModels.Users.UsersViewModel;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.ProductsRepository;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.databinding.FragmentStartingBinding;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Post.PostResp;
+import com.example.mobileproject.models.Product;
 import com.example.mobileproject.models.Users.Users;
+import com.example.mobileproject.models.Users.UsersResp;
 import com.example.mobileproject.utils.FragmentUtils;
 import com.example.mobileproject.utils.PostAdapter;
 import com.example.mobileproject.utils.Result;
@@ -90,7 +93,7 @@ public class StartingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PostRepository pr = ServiceLocator.getInstance().getPostRepo();
+        PostRepository pr = ServiceLocator.getInstance().getPostRepo(this.getActivity().getApplication());
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);
 
@@ -98,7 +101,7 @@ public class StartingFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
         }
-        UserRepository ur = ServiceLocator.getInstance().getUserRepo();
+        UserRepository ur = ServiceLocator.getInstance().getUserRepo(this.getActivity().getApplication());
         if (ur != null) {
             UVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ur)).get(UsersViewModel.class);
         } else {

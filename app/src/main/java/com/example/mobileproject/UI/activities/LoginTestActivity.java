@@ -11,6 +11,7 @@ public class LoginTestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_test);
+        //setContentView(R.layout.activity_login_test);
+        // TODO errore
     }
 }

@@ -48,12 +48,12 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PostRepository pr = ServiceLocator.getInstance().getPostRepo();
+        PostRepository pr = ServiceLocator.getInstance().getPostRepo(this.getActivity().getApplication());
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);
         }
 
-        UserRepository ps = ServiceLocator.getInstance().getUserRepo();
+        UserRepository ps = ServiceLocator.getInstance().getUserRepo(this.getActivity().getApplication());
         if(pr != null){
             PSM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ps)).get(UsersViewModel.class);
         }
@@ -71,12 +71,15 @@ public class SearchFragment extends Fragment {
         LinearLayout t = view.findViewById(R.id.sponsorLayout);
         t.setVisibility(View.GONE);
 
-        PVM.getSponsodedPosts().observe(getViewLifecycleOwner(), post -> {
+        PVM.getSponsodedPosts(getViewLifecycleOwner()).observe(getViewLifecycleOwner(), post -> {
             if(post.successful()) {
                 PostResp sponsoredPost = ((Result.PostResponseSuccess) post).getData();
                 List<Post> sponsored = sponsoredPost.getPostList();
-                Post finalPost = sponsored.get(0);
-                FragmentUtils.loadImage(storageRef, "POSTS/" + finalPost.getId() + ".png", view, R.id.sponsorImage);
+                Post finalPost = sponsored.get((int) (Math.random()*sponsored.size()));
+                if (finalPost.getImage() == null)
+                    FragmentUtils.loadImage(storageRef, "POSTS/" + finalPost.getId() + ".png", view, R.id.sponsorImage);
+                else
+                    FragmentUtils.loadImage(finalPost.getImage(), view, R.id.sponsorImage);
                 FragmentUtils.updateTextById(view, R.id.sponsorText, "Sponsor: " + finalPost.getDescrizione());
                 t.setVisibility(View.VISIBLE);
                 PVM.getPosts().removeObservers(getViewLifecycleOwner());

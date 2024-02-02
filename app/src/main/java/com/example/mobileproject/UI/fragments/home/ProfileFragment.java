@@ -77,7 +77,7 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UserRepository pr = ServiceLocator.getInstance().getUserRepo();
+        UserRepository pr = ServiceLocator.getInstance().getUserRepo(this.getActivity().getApplication());
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(pr)).get(UsersViewModel.class);
         }

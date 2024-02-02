@@ -133,7 +133,7 @@ public class ProcessedImageViewModel extends ViewModel {
         Boolean isProm = getIsPromotional().getValue();
         try{
             Uri imageUri = BitmapUtils.getUriFromBitmap(t, image);
-            PostRepository pr = ServiceLocator.getInstance().getPostRepo();
+            PostRepository pr = ServiceLocator.getInstance().getPostRepo(t.getApplication());
             if(pr != null){
                 PostsViewModel PVM = new ViewModelProvider(t, new PostsVMFactory(pr)).get(PostsViewModel.class);
 
