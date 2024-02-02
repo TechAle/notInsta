@@ -110,6 +110,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     // Substitutes the fragment depending on the current state
+    //TODO: Gestire qua un possibile NullPointerException (clicco 'avanti' senza aver selezionato un immagine)
     private void changeFragment() {
         switch (currentFragment){
             case -1:

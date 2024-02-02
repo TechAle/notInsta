@@ -20,21 +20,20 @@ import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    // click listener <------> item
     public interface OnItemClickListener{
         void onItemClicked();
     }
 
-    private static final int NORMAL_TYPE = 0;   // <------------------------
-    private static final int LOADING_TYPE = 0;  // <------------------------
+    private static final int NORMAL_TYPE = 0;
+    private static final int LOADING_TYPE = 0;
     private final List<Post> postSet;
-    private final OnItemClickListener l;
-    private final Application a;
+//    private final OnItemClickListener l; //Uncomment to use on clicking image
+    private final Application appl; //per il caricamento con Glide
 
     public PostAdapter(List<Post> pl, Application a, OnItemClickListener l){
         this.postSet = pl;
-        this.a = a;
-        this.l = l;
+        this.appl = a;
+        //this.l = l;
     }
 
     @Override
@@ -87,7 +86,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public void bind(Post p){
             //Caricamento immagine da URL con Glide
             //TODO: sistemare riferimento ad Application e cambiare foto di rimpiazzo (se qualcuno vuole)
-            Glide.with(a).load("POSTS/" + p.getId() + ".png").placeholder(R.drawable.baseline_photo_camera_24).into(iv);
+            Glide.with(appl).load("POSTS/" + p.getId() + ".png").placeholder(R.drawable.baseline_photo_camera_24).into(iv);
         }
 
         @Override
