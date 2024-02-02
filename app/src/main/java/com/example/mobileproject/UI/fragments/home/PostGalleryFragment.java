@@ -49,7 +49,6 @@ public class PostGalleryFragment extends Fragment {
     private List<Post> postList;
     private PostAdapter pa;
     private PostsViewModel PVM;
-    private boolean areAllPosts;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -108,7 +107,6 @@ public class PostGalleryFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
         }*/
-        areAllPosts = false;
         postList = new ArrayList<>();
     }
 
@@ -194,7 +192,7 @@ public class PostGalleryFragment extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (internetConnection()                //la connessione deve esserci, altrimenti nulla avrebbe senso
-                        && /*itemLoaded != PVM.getTotalResults()*/ !areAllPosts) //se non sono tutti i risultati
+                        && !PVM.areAllPosts()) //se non sono tutti i risultati
                 {
                     itemLoaded = lmp.getItemCount();
                     int pastVisiblesItems = Arrays.stream(lmp.findLastVisibleItemPositions(new int[2])).sum();
@@ -207,7 +205,7 @@ public class PostGalleryFragment extends Fragment {
                                 && dy > 0
                                 && !PVM.isLoading())
                             && PVM.getPosts().getValue() != null
-                            && !areAllPosts)
+                            && !PVM.areAllPosts())
                     {
                         MutableLiveData<Result> m = PVM.getActualPosts();
 

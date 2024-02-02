@@ -79,6 +79,10 @@ public class StartingFragment extends Fragment {
         arrayTags.add("Tag 2");
         arrayTags.add("Tag 3");
         arrayTags.add("Tag 4");
+        arrayTags.add("Tag 5");
+        arrayTags.add("Tag 6");
+        arrayTags.add("Tag 7");
+        arrayTags.add("Impariamo a usare Github");
     }
 
     @Override
