@@ -31,6 +31,15 @@ public abstract class GeneralPostRemoteSource {
 
     public abstract void createDocument(String collectionName, Map<String, Object> documentFields, CallbackInterface ci);
 
+    public abstract Users getLoggedUser();
+
+    public abstract void logout(CallbackUsers c);
+
+    public abstract void signUp(String email, String password, CallbackUsers c);
+
+    public abstract void signIn(String email, String password, CallbackUsers c);
+
+    public abstract void signInWithGoogle(String idToken, CallbackUsers c);
 
     //TODO: Qua io non lo sto usando, qualcuno ne faccia qualcosa o cancellatelo
     public abstract void postPost();

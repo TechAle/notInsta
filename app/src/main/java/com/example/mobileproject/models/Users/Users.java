@@ -5,20 +5,34 @@ import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 //@Entity
 public class Users {
 
-    String cognome, nome, username, descrizione, id;
+    String email, cognome, nome, username, descrizione, id;
     Date dataNascita;
     ArrayList<DocumentReference> followers, following;
     ArrayList<String> tags;
 
-    public Users() {}
+    public Users() {
+    }
 
-    public Users(String cognome, String nome, String username, String descrizione, Date dataNascita, ArrayList<String> tags) {
+    public Users(String id, String email) {
+        this.id = id;
+        this.email = email;
+        this.cognome = null;
+        this.nome = null;
+        this.username = id;
+        this.descrizione = null;
+        this.dataNascita = new Date();
+        this.followers = new ArrayList<DocumentReference>();
+        this.following = new ArrayList<DocumentReference>();
+        this.tags = new ArrayList<String>();
+    }
+
+    public Users(String email, String cognome, String nome, String username, String descrizione, Date dataNascita, ArrayList<String> tags) {
+        this.email = email;
         this.cognome = cognome;
         this.nome = nome;
         this.username = username;
@@ -30,6 +44,7 @@ public class Users {
     }
 
     public Users(Map<String, Object> m, String id) {
+        this.email = (String) m.get("email");
         this.descrizione = (String) m.get("descrizione");
         this.cognome = (String) m.get("cognome");
         this.nome = (String) m.get("nome");
@@ -39,6 +54,14 @@ public class Users {
         this.tags = (ArrayList<String>) m.get("tags");
         this.dataNascita = ((Timestamp) m.get("dataNascita")).toDate();
         this.id = id;
+    }
+
+    public Users getUser() {
+        return this;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getCognome() {

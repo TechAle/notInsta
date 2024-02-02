@@ -100,4 +100,11 @@
     <string name="password_changed">Password has been changed</string>
     <string name="password_length">Password lentgh must be at least 6</string>
     <string name="password_different">Passwords must be different</string>
+    <string name="error_user_collision_message">User already exists</string>
+    <string name="unexpected_error">Errore inaspettato</string>
+    <string name="check_login_data_message">Dati non validi</string>
+    <string name="error_login_password_message">Credenziali non valide</string>
+    <string name="error_login_user_message">Utente non valido</string>
+    <string name="error_no_google_account_found_message">Nessun account Google trovato</string>
+    <string name="back">Back</string>
 </resources>
