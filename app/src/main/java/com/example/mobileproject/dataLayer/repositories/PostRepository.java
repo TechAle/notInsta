@@ -19,7 +19,7 @@ public class PostRepository implements CallbackPosts {
     private final MutableLiveData<Result> posts;
     private final MutableLiveData<Result> ready;
     private final GeneralPostRemoteSource rem;
-    private Uri image;
+    private Uri image;              //Ma a cosa serve questo???
 
     public void resetPosts() {
         this.posts.setValue(null);
@@ -27,29 +27,37 @@ public class PostRepository implements CallbackPosts {
 
     public PostRepository(GeneralPostRemoteSource rem){
         this.rem = rem;
+        this.rem.setCallback(this);
         posts = new MutableLiveData<>();
         ready = new MutableLiveData<>();
     }
 
     //assegnamento in callback
     public MutableLiveData<Result> retrievePosts(){
-        rem.retrievePosts(this);
+        rem.retrievePosts();
         return posts;
     }
 
     //assegnamento in callback
     public MutableLiveData<Result> retrievePosts(String tag){
-        rem.retrievePostByDocumentId(tag, this);
+        rem.retrievePostByDocumentId(tag);
         return posts;
     }
-
+    public MutableLiveData<Result> retrievePostsLL(int page){ //Lazy Loading
+        rem.retrievePostsLL(page);
+        return posts;
+    }
+    public MutableLiveData<Result> retrievePostsWithTagsLL(String tags[], int page){ //Lazy Loading
+        rem.retrievePostsWithTagsLL(tags, page);
+        return posts;
+    }
     public MutableLiveData<Result> retrieveSponsoredPosts(LifecycleOwner ow){
         rem.retrievePostsSponsor(this, ow);
         return posts;
     }
 
     public MutableLiveData<Result> createPost(Post post) {
-        rem.createPosts(post, this);
+        rem.createPosts(post);
         return ready;
     }
 

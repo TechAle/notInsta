@@ -76,20 +76,7 @@ public class ChangePasswordFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_change_password, container, false);
 
-        //backButton = view.findViewById(R.id.backButtonChangePassword);
         changeButton = view.findViewById(R.id.changePasswordButton);
-
-
-     /*   backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true)
-                        .replace(R.id.fragment_window_host, SettingsFragment.class, null)
-                        .commit();
-
-            }
-        });*/
-
         changeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

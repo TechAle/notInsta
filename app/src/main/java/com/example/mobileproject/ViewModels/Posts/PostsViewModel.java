@@ -1,47 +1,66 @@
 package com.example.mobileproject.ViewModels.Posts;
 
-import android.content.ContentResolver;
-import android.net.Uri;
-
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
-import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.utils.Result;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class PostsViewModel extends ViewModel {
     private final PostRepository repo;
+    private Set<String> tags;       //TODO: controllare il 'final'
     private int page;
-    private int currentResults;
-    private int totalResults;
-    private boolean Loading;
+    private boolean allPosts;
+    private boolean loading; //Se ha iniziato una chiamata al server o meno
     private boolean firstLoading;
     private MutableLiveData<Result> posts;
-    private MutableLiveData<Result> selectedPosts;
     public PostsViewModel(PostRepository repo) {
         this.repo = repo;
-        this.page = 1;
-        this.totalResults = 0;
+        this.page = 0;
         this.firstLoading = true;
+        this.loading = false;
+        this.allPosts = false;
+        this.tags = new HashSet<>();
+    }
+    public boolean addTag(String tag){
+        boolean success = tags.add(tag);
+        if(success){
+            flush();
+        }
+        return success;
+    }
+    public boolean removeTag(String tag){
+        boolean success = tags.remove(tag);
+        if(success){
+            flush();
+        }
+        return success;
     }
 
     //getters & setters
-    // TODO non sono sicuro se ne vale la pena fare il caching....
     public MutableLiveData<Result> getPosts(){
-        if(posts == null){
-            posts = repo.retrievePosts();
+        if(posts == null){          //mai caricati o tag non corrispondente
+            if(tags.size() != 0){
+                //posts = repo.retrievePosts(tag); //versione "stupida"
+                posts = repo.retrievePostsWithTagsLL(tags.toArray(new String[0]), page);
+            } else {                //nessun filtro di ricerca, li prendo tutti
+                //posts = repo.retrievePosts();
+                posts = repo.retrievePostsLL(page); //versione Lazy loading
+            }
         }
         return posts;
     }
-    public MutableLiveData<Result> getSelectedPosts(String tag){
-        if(selectedPosts == null){
-            selectedPosts = repo.retrievePosts(tag);
-        }
-        return selectedPosts;
+
+    public MutableLiveData<Result> getActualPosts(){ //versione senza chiamata
+        return posts;
     }
 
+    /*
+    //TODO: Fatevi una vostra ViewModel! Ogni activity/fragment ha il suo ViewModel (e solo uno, non di più)
     public MutableLiveData<Result> createPost(Post post) {
         return repo.createPost(post);
     }
@@ -49,6 +68,7 @@ public class PostsViewModel extends ViewModel {
     public MutableLiveData<Result>  createImage(Uri imageUri, String document, ContentResolver contentResolver, String id) {
         return repo.createImage(imageUri, document, contentResolver, id);
     }
+    */
 
     public MutableLiveData<Result> getSponsodedPosts(LifecycleOwner ow){
         return repo.retrieveSponsoredPosts(ow);
@@ -60,28 +80,34 @@ public class PostsViewModel extends ViewModel {
     public void setPage(int page) {
         this.page = page;
     }
-    public void setCurrentResults(int currentResults) {
-        this.currentResults = currentResults;
-    }
-    public void setTotalResults(int totalResults) {
-        this.totalResults = totalResults;
-    }
     public void setLoading(boolean loading) {
-        Loading = loading;
+        this.loading = loading;
     }
     public void setFirstLoading(boolean firstLoading) {
         this.firstLoading = firstLoading;
     }
-    public int getCurrentResults() {
-        return currentResults;
-    }
-    public int getTotalResults() {
-        return totalResults;
-    }
     public boolean isLoading() {
-        return Loading;
+        return loading;
     }
     public boolean isFirstLoading() {
         return firstLoading;
+    }
+
+    public void findPosts(){
+        repo.retrievePostsLL(page);
+    }
+    public void setAllPosts(boolean allPosts) {
+        this.allPosts = allPosts;
+    }
+
+    public boolean areAllPosts() {
+        return allPosts;
+    }
+    private void flush(){
+        this.posts = null;
+        this.page = 0;
+        this.allPosts = false;
+        this.loading = false;
+        this.firstLoading = true;
     }
 }

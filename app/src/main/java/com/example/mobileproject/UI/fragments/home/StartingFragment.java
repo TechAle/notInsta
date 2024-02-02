@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.example.mobileproject.R;
@@ -71,8 +72,8 @@ import java.util.List;
 public class StartingFragment extends Fragment {
 
     private FragmentStartingBinding binding;
-    private List<Post> postSet;
-    private PostsViewModel PVM;
+
+    private PostsViewModel ref_underlying_fragment;
     private UsersViewModel UVM;
     private int nTotalItem;
     private PostAdapter pa;
@@ -93,9 +94,9 @@ public class StartingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PostRepository pr = ServiceLocator.getInstance().getPostRepo(this.getActivity().getApplication());
+        /*PostRepository pr = ServiceLocator.getInstance().getPostRepo();
         if(pr != null){
-            PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);
+            ref_underlying_fragment = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
 
         } else { //TODO: Sostituire testo con una risorsa
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
@@ -107,8 +108,7 @@ public class StartingFragment extends Fragment {
         } else {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
-        }
-        postSet = new ArrayList<>();
+        }*/
     }
 
     @Override
@@ -124,17 +124,17 @@ public class StartingFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        AppBarConfiguration config = new AppBarConfiguration.Builder().setFallbackOnNavigateUpListener(() -> {
-            Intent i = new Intent(getActivity(), CameraActivity.class);
-            startActivity(i);
-            return true;
-        }).build();
+        ref_underlying_fragment = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
+        // Qua altrimenti cerca qualcosa di inesistente
+
+
+        // Toolbar del fragment
         // Aggiunta del titolo; commentato per il fatto che non è centrato orizzontalmente
         //binding.toolbarStartingFragment.setTitle("!Insta");
         binding.toolbarStartingFragment.setNavigationOnClickListener(v -> {
             Intent i = new Intent(getActivity(), CameraActivity.class);
             startActivity(i);
-        });
+        }); //Ok non è proprio consono per le foto, perlomeno è intuitivo
         binding.toolbarStartingFragment.inflateMenu(R.menu.settings_menu);
         binding.toolbarStartingFragment.setOnMenuItemClickListener(item -> {
             int action = item.getItemId();
@@ -151,12 +151,25 @@ public class StartingFragment extends Fragment {
                 return false;
             }
         });
+        // RecyclerView varie
+
         RecyclerView tags = view.findViewById(R.id.tags);
         RecyclerView.LayoutManager lmt = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.HORIZONTAL, false);
-        /*RecyclerView posts = view.findViewById(R.id.posts);
+/*
+        ta = new TagsAdapter(arrayTags, requireActivity().getApplication(), new TagsAdapter.onItemClickListener(){
+            @Override
+            public void onItemClicked(){
+                ref_underlying_fragment.setTag(getText());
+            }
+        })
+*/
+//        ArrayAdapter<String> aas = new ArrayAdapter<>(requireContext(), R.layout.taglist_item); //qua devo visualizzare solamente stringhe...
+        tags.setLayoutManager(lmt);/*
+        tags.setAdapter(ta);
+        RecyclerView posts = view.findViewById(R.id.posts);
         StaggeredGridLayoutManager lmp = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);*/
-//        ArrayAdapter<String> aas = new ArrayAdapter<>(requireContext(), R.layout.taglist_item);
+
 /*        pa = new PostAdapter(postSet, requireActivity().getApplication(), new PostAdapter.OnItemClickListener(){
             //Qua non metto una funzione anonima
             @Override
@@ -165,7 +178,7 @@ public class StartingFragment extends Fragment {
                 Snackbar.make(view, "Item Clicked", Snackbar.LENGTH_SHORT).show();
             }
         });
-        tags.setLayoutManager(lmt);
+
         posts.setLayoutManager(lmp);
         posts.setAdapter(pa);
         //bindings

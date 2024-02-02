@@ -48,12 +48,12 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PostRepository pr = ServiceLocator.getInstance().getPostRepo(this.getActivity().getApplication());
+        PostRepository pr = ServiceLocator.getInstance().getPostRepo();
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);
         }
 
-        UserRepository ps = ServiceLocator.getInstance().getUserRepo(this.getActivity().getApplication());
+        UserRepository ps = ServiceLocator.getInstance().getUserRepo();
         if(pr != null){
             PSM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ps)).get(UsersViewModel.class);
         }

@@ -80,11 +80,10 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final ImageView iv;
         public PostViewHolder(View item){
             super(item);
-            //TODO: fare l'ID
             iv = item.findViewById(R.id.post_image_bg);
             item.setOnClickListener(this);
         }
-        //TODO: sistemare il bind (e trovare un modo di caricare un Drawable)
+        //TODO: sistemare il bind
         public void bind(Post p){
             //Caricamento immagine da URL con Glide
             //TODO: sistemare riferimento ad Application e cambiare foto di rimpiazzo (se qualcuno vuole)

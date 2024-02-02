@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mobileproject.dataLayer.sources.CallbackUsers;
-import com.example.mobileproject.dataLayer.sources.GeneralPostRemoteSource;
+import com.example.mobileproject.dataLayer.sources.GeneralUserRemoteSource;
 import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.models.Users.UsersResp;
 import com.example.mobileproject.utils.Result;
@@ -16,11 +16,11 @@ public class UserRepository implements CallbackUsers {
 
     private final MutableLiveData<Result> users;
 
-    private final GeneralPostRemoteSource rem;
+    private final GeneralUserRemoteSource rem;
 
     private final MutableLiveData<Result> ready;
 
-    public UserRepository(GeneralPostRemoteSource rem){
+    public UserRepository(GeneralUserRemoteSource rem){
         this.rem = rem;
         users = new MutableLiveData<>();
         ready = new MutableLiveData<>();
@@ -32,7 +32,7 @@ public class UserRepository implements CallbackUsers {
         return users;
     }
 
-    //assegnamento in callback
+    //Ma questo che senso ha?
     public MutableLiveData<Result> retrieveUsers(String tag){
         rem.retrieveUserByDocumentId(tag, this);
         return users;
