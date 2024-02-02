@@ -11,8 +11,10 @@ import androidx.annotation.NonNull;
 
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Users.Users;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -436,4 +438,18 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
     public void postPost() {
     }
 
+    @Override
+    public void passwordReset(String email, CallbackUsers c) {
+        if (email != null) {
+            firebaseAuth.sendPasswordResetEmail(email)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("TAG", "Email sent.");
+                            }
+                        }
+                    });
+        }
+    }
 }

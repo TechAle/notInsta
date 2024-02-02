@@ -41,6 +41,8 @@ public abstract class GeneralPostRemoteSource {
 
     public abstract void signInWithGoogle(String idToken, CallbackUsers c);
 
+    public abstract void passwordReset(String email, CallbackUsers c);
+
     //TODO: Qua io non lo sto usando, qualcuno ne faccia qualcosa o cancellatelo
     public abstract void postPost();
 

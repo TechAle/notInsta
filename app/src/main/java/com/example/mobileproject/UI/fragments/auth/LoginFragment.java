@@ -113,7 +113,6 @@ public class LoginFragment extends Fragment {
                         // Got an ID token from Google. Use it to authenticate with Firebase.
                         usersViewModel.getGoogleUserMutableLiveData(idToken).observe(getViewLifecycleOwner(), authenticationResult -> {
                             if (authenticationResult.successful()) {
-                                Log.d("TAG", "Google 1");
                                 Users user = ((Result.UserResponseSuccessUser) authenticationResult).getData();
                                 saveLoginData(user.getEmail(), null, user.getId());
                                 usersViewModel.setAuthenticationError(false);
@@ -122,7 +121,6 @@ public class LoginFragment extends Fragment {
                                         Snackbar.LENGTH_SHORT).show();
                                 // Navigation.findNavController(requireView()).navigate(R.id.); TODO Homepage
                             } else {
-                                Log.d("TAG", "Google 2");
                                 usersViewModel.setAuthenticationError(true);
                                 Snackbar.make(requireActivity().findViewById(android.R.id.content),
                                         getErrorMessage(((Result.Error) authenticationResult).getMessage()),
@@ -131,7 +129,6 @@ public class LoginFragment extends Fragment {
                         });
                     }
                 } catch (ApiException e) {
-                    Log.d("TAG", "Google 3");
                     Snackbar.make(requireActivity().findViewById(android.R.id.content),
                             requireActivity().getString(R.string.unexpected_error),
                             Snackbar.LENGTH_SHORT).show();
@@ -143,7 +140,15 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        /*
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null)
+            Navigation.findNavController(view).navigate(R.id.); TODO Homepage
+        */
+
+        return view;
     }
 
     @Override
@@ -231,7 +236,7 @@ public class LoginFragment extends Fragment {
         buttonForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Forgot password
+                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_passwordResetFragment);
             }
         });
 

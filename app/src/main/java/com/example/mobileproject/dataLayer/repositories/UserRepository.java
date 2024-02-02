@@ -154,4 +154,9 @@ public class UserRepository implements CallbackUsers {
     public void onSuccessLogout() {
 
     }
+
+    @Override
+    public void passwordReset(String email) {
+        rem.passwordReset(email, this);
+    }
 }

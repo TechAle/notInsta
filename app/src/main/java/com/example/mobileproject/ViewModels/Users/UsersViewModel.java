@@ -129,4 +129,8 @@ public class UsersViewModel extends ViewModel {
     private void getUserData(String token) {
         users = repo.getGoogleUser(token);
     }
+
+    public void sendPasswordReset(String email){
+        repo.passwordReset(email);
+    }
 }

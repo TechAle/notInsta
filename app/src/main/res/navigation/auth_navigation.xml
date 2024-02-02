@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_loginFragment_self"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_passwordResetFragment"
+            app:destination="@id/passwordResetFragment" />
     </fragment>
 
     <fragment
@@ -40,6 +43,15 @@
         tools:layout="@layout/fragment_terms_conditions" >
         <action
             android:id="@+id/action_termsConditionsFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/passwordResetFragment"
+        android:name="com.example.mobileproject.UI.fragments.auth.PasswordResetFragment"
+        android:label="fragment_password_reset"
+        tools:layout="@layout/fragment_password_reset" >
+        <action
+            android:id="@+id/action_passwordResetFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
 </navigation>
