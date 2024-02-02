@@ -26,7 +26,6 @@ public class ChangeUsernameFragment extends Fragment {
 
 
     private Button changeButton;
-    private SettingsViewModel settingsViewModel;
     private UsersViewModel PVM;
 
     public ChangeUsernameFragment() {
@@ -38,7 +37,7 @@ public class ChangeUsernameFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UserRepository pr = ServiceLocator.getInstance().getUserRepo();
+        UserRepository pr = ServiceLocator.getInstance().getUserRepo(this.getActivity().getApplication());
         if (pr != null) {
             PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(pr)).get(UsersViewModel.class);
         }

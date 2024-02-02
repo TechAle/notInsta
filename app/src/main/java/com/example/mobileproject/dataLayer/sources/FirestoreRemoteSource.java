@@ -14,8 +14,11 @@ import androidx.lifecycle.LifecycleOwner;
 import com.example.mobileproject.dataLayer.repositories.ProductsRepository;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Product;
+import com.example.mobileproject.models.StoreApiResponse;
 import com.example.mobileproject.models.Users.Users;
+import com.example.mobileproject.service.StoreAPIService;
 import com.example.mobileproject.utils.Result;
+import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -46,6 +49,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Classe per il recupero remoto
  */
@@ -56,12 +63,16 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
     FirebaseStorage storage;
     StorageReference storageRef;
     FirebaseAuth firebaseAuth;
+    StoreAPIService storeAPIService;
+    Application app;
 
     public FirestoreRemoteSource(Application app) {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
+        storeAPIService = ServiceLocator.getInstance().getProductsApiService();
+        this.app = app;
     }
 
     @Override
@@ -127,13 +138,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
     public void retrievePostsSponsor(CallbackPosts c, LifecycleOwner ow) {
         ArrayList<Post> sponsors = new ArrayList<>();
         if ((int) (Math.random() * 3) == 1) {
-            // Chiamata API
-            // Prendi il titolo, l'immagine, e suppongo anche il link
-            ArrayList<Post> output = new ArrayList<>();
-            Post temp = new Post();
-
-            output.add(temp);
-            c.onSuccess(output);
+            createSponsorFromApi(ow, c);
         } else
             db.collection("post")
                     .whereEqualTo("promozionale", true)
@@ -159,6 +164,26 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
 
 
     }
+
+    private void createSponsorFromApi(LifecycleOwner life, CallbackPosts c) {
+        ProductsRepository t = new ProductsRepository(app);
+        t.fetchProducts(1).observe(life, task -> {
+            if (task.successful()) {
+                List<Product> resp = ((Result.ProductSuccess) task).getData();
+                Product pr = resp.get(0);
+                ArrayList<Post> output = new ArrayList<>();
+                Post temp = new Post();
+                temp.setDescrizione(pr.getTitle());
+                temp.setImage(pr.getImage());
+
+                output.add(temp);
+                c.onSuccess(output);
+            } else {
+                c.onFailure(new Exception("No post"));
+            }
+        });
+    }
+
 
 
     @Override
