@@ -39,8 +39,8 @@ public class UserRepository implements CallbackUsers {
         return users;
     }
 
-    public MutableLiveData<Result> editUsername(String tag, String newUsername) {
-        rem.editUsername(tag, newUsername, this);
+    public MutableLiveData<Result> editUsername(String newUsername) {
+        rem.editUsername( newUsername, this);
         return ready;
     }
 

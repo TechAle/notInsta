@@ -220,7 +220,7 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
                 });
     }
 
-    public void editUsername(String tag, String newUsername, CallbackUsers c) {
+    public void editUsername( String newUsername, CallbackUsers c) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {

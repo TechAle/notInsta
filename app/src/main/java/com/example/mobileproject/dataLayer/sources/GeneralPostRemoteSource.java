@@ -28,7 +28,7 @@ public abstract class GeneralPostRemoteSource {
 
     public abstract void retrieveUserByDocumentId(String tag, CallbackUsers c);
 
-    public abstract void editUsername(String tag, String newUsername, CallbackUsers c);
+    public abstract void editUsername( String newUsername, CallbackUsers c);
 
     public abstract void editPassword(String newPassword, CallbackUsers c);
 

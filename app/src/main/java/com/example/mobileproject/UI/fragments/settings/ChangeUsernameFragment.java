@@ -37,7 +37,7 @@ public class ChangeUsernameFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UserRepository pr = ServiceLocator.getInstance().getUserRepo(this.getActivity().getApplication());
+        UserRepository pr = ServiceLocator.getInstance().getUserRepo(this.requireActivity().getApplication());
         if (pr != null) {
             PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(pr)).get(UsersViewModel.class);
         }
@@ -80,11 +80,9 @@ public class ChangeUsernameFragment extends Fragment {
                             Snackbar.LENGTH_SHORT).show();
                 } else {
 
-                    //recupero id utente
-                    String id = "0TsbiPUaL5qfFQiH6572";
 
 
-                    PVM.editUsername(id, username).observe(getViewLifecycleOwner(), output -> {
+                    PVM.editUsername(username).observe(getViewLifecycleOwner(), output -> {
                         if (output.successful()) {
                             Snackbar.make(
                                     getView().findViewById(R.id.layout),

@@ -1,6 +1,7 @@
 package com.example.mobileproject.UI.fragments.settings;
 
 import static com.example.mobileproject.utils.Constants.PICK_IMAGE_REQUEST;
+import static com.example.mobileproject.utils.Constants.PREF_SELECTED_LANGUAGE;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,8 +18,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +49,6 @@ public class SettingsFragment extends Fragment {
     private Spinner languagesSpinner;
     private Button signOutButton;
     private Button deleteAccountButton;
-    private static final String PREF_SELECTED_LANGUAGE = "selected_language";
     private boolean firstSelected = true;
 
     private UsersViewModel PVM;
@@ -63,7 +61,7 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ctrl = NavHostFragment.findNavController(this);
 
-        UserRepository pr = ServiceLocator.getInstance().getUserRepo(this.getActivity().getApplication());
+        UserRepository pr = ServiceLocator.getInstance().getUserRepo(this.requireActivity().getApplication());
         if (pr != null) {
             PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(pr)).get(UsersViewModel.class);
         }
@@ -140,7 +138,7 @@ public class SettingsFragment extends Fragment {
             public void onClick(View view) {
                 PVM.signOut();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
-                intent.putExtra("logout_message", "You have logged out successfully");
+                intent.putExtra((String) getText(R.string.success_logout), getText(R.string.success_logout));
                 startActivity(intent);
                 getActivity().finish();
             }

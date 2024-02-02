@@ -46,8 +46,8 @@ public class UsersViewModel extends ViewModel {
         return selectedUsers;
     }
 
-    public MutableLiveData<Result> editUsername(String tag, String newUsername) {
-        return repo.editUsername(tag, newUsername);
+    public MutableLiveData<Result> editUsername( String newUsername) {
+        return repo.editUsername( newUsername);
     }
 
     public MutableLiveData<Result> editPassword(String newPassword) {
