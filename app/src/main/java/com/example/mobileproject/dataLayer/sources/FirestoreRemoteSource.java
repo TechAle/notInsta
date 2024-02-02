@@ -17,6 +17,7 @@ import com.example.mobileproject.models.Product;
 import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.utils.Result;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -28,12 +29,14 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -193,18 +196,33 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
     }
 
     public void editUsername(String tag, String newUsername, CallbackUsers c) {
-        // Controllo se nessuno ha quell'username
-        db.collection("utenti")
-                .whereEqualTo("username", newUsername)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().isEmpty()) {
-                            // Allora possiamo cambiarlo
-                            updateField("utenti", tag, "username", newUsername, c);
-                        } else c.onFailure(new Exception("Someone already has this error"));
-                    } else c.onFailure(new Exception("Firebase error"));
-                });
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            db.collection("utenti")
+                    .whereEqualTo("username", newUsername)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty()) {
+                                updateField("utenti", user.getUid(), "username", newUsername, c);
+                            } else c.onFailure(new Exception("Someone already has this error"));
+                        } else c.onFailure(new Exception("Firebase error"));
+                    });
+        } else {
+            c.onFailure(new Exception("Firebase error"));
+        }
+
+
+    }
+
+    @Override
+    public void editPassword(String newPassword, CallbackUsers c) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null)
+            user.updatePassword(newPassword);
+
     }
 
 
@@ -316,6 +334,49 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @Override
+    public void signOut() {
+        FirebaseAuth.getInstance().signOut();
+    }
+
+    @Override
+    public void deleteAccount() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        user.delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("TAG", "User account deleted.");
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void changeImage(Uri uri) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(user.getDisplayName())
+                    .setPhotoUri(uri)
+                    .build();
+
+            user.updateProfile(profileUpdates)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("TAG", "User profile updated.");
+                            }
+                        }
+                    });
+        }
+
     }
 
     @Override

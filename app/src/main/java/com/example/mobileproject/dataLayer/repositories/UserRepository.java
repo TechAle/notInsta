@@ -1,5 +1,6 @@
 package com.example.mobileproject.dataLayer.repositories;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -20,20 +21,20 @@ public class UserRepository implements CallbackUsers {
 
     private final MutableLiveData<Result> ready;
 
-    public UserRepository(GeneralPostRemoteSource rem){
+    public UserRepository(GeneralPostRemoteSource rem) {
         this.rem = rem;
         users = new MutableLiveData<>();
         ready = new MutableLiveData<>();
     }
 
     //assegnamento in callback
-    public MutableLiveData<Result> retrieveUsers(){
+    public MutableLiveData<Result> retrieveUsers() {
         rem.retrieveUsers(this);
         return users;
     }
 
     //assegnamento in callback
-    public MutableLiveData<Result> retrieveUsers(String tag){
+    public MutableLiveData<Result> retrieveUsers(String tag) {
         rem.retrieveUserByDocumentId(tag, this);
         return users;
     }
@@ -43,12 +44,16 @@ public class UserRepository implements CallbackUsers {
         return ready;
     }
 
+    public MutableLiveData<Result> editPassword(String newPassword) {
+        rem.editPassword(newPassword, this);
+        return ready;
+    }
+
 
     @Override
     public void onSuccess() {
         ready.postValue(new Result.UserEditSuccess());
     }
-
 
 
     @Override
@@ -64,6 +69,7 @@ public class UserRepository implements CallbackUsers {
             users.postValue(result);
         }
     }
+
     @Override
     public void onFailure(Exception e) {
         Result.Error resultError = new Result.Error(e.getMessage());
@@ -153,6 +159,19 @@ public class UserRepository implements CallbackUsers {
     @Override
     public void onSuccessLogout() {
 
+    }
+
+
+    public void signOut() {
+        rem.signOut();
+    }
+
+    public void deleteAccount() {
+        rem.deleteAccount();
+    }
+
+    public void changeImage(Uri selectedImageUri) {
+        rem.changeImage(selectedImageUri);
     }
 
     @Override

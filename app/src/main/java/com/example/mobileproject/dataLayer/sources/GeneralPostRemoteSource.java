@@ -5,6 +5,7 @@ import android.net.Uri;
 
 import androidx.lifecycle.LifecycleOwner;
 
+import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Users.Users;
 
@@ -18,6 +19,7 @@ public abstract class GeneralPostRemoteSource {
     public abstract void retrievePostsSponsor(CallbackPosts c, LifecycleOwner ow);
 
     public abstract void retrievePostByDocumentId(String tag, CallbackPosts c);
+
     public abstract void retrievePosts(CallbackPosts c);
 
     public abstract void retrieveUsers(CallbackUsers c);
@@ -25,7 +27,10 @@ public abstract class GeneralPostRemoteSource {
     public abstract void retrievePostsWithTags(String[] tags, CallbackPosts c);
 
     public abstract void retrieveUserByDocumentId(String tag, CallbackUsers c);
+
     public abstract void editUsername(String tag, String newUsername, CallbackUsers c);
+
+    public abstract void editPassword(String newPassword, CallbackUsers c);
 
     public abstract void createPosts(Post post, CallbackPosts ci);
 
@@ -48,5 +53,12 @@ public abstract class GeneralPostRemoteSource {
     //TODO: Qua io non lo sto usando, qualcuno ne faccia qualcosa o cancellatelo
     public abstract void postPost();
 
-    public abstract  void createImage(Uri imageUri, String document, ContentResolver contentResolver, CallbackInterface postRepository, String id);
+    public abstract void createImage(Uri imageUri, String document, ContentResolver contentResolver, CallbackInterface postRepository, String id);
+
+
+    public abstract void signOut();
+
+    public abstract void deleteAccount();
+
+    public abstract void changeImage(Uri selectedImageUri);
 }
