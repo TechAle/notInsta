@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import java.util.List;
 
 public class PostResp implements Parcelable {
-    private boolean is_loading;
+    //private boolean is_loading;
     private List<Post> l;
     protected PostResp(Parcel in) {
     }

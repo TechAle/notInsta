@@ -11,6 +11,9 @@ import com.example.mobileproject.models.Users.Users;
 
 import java.util.Map;
 
+/**
+ * Classe astratta per il datasource relativo ai posts
+ */
 public abstract class GeneralPostRemoteSource {
 
     protected CallbackPosts c;
@@ -61,4 +64,18 @@ public abstract class GeneralPostRemoteSource {
     public abstract void deleteAccount();
 
     public abstract void changeImage(Uri selectedImageUri);
+    public void setCallback(CallbackPosts call){
+        this.c = call;
+    };
+    public abstract void retrievePostsSponsor();
+    public abstract void retrievePostByDocumentId(String tag);
+    public abstract void retrievePosts();
+    public abstract void retrievePostsWithTags(String[] tags);
+    public abstract void createPosts(Post post);
+    protected abstract void createDocument(String collectionName, Map<String, Object> documentFields, CallbackInterface ci);
+    public abstract void createImage(Uri imageUri, String document, ContentResolver contentResolver, CallbackInterface postRepository, String id);
+    public abstract void retrievePostsLL(int page);
+    public abstract void retrievePostsSponsor(CallbackPosts c, LifecycleOwner ow);
+    public void retrievePostsWithTagsLL(String[] tags, int page) {
+    }
 }

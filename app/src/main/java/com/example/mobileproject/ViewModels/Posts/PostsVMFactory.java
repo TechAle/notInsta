@@ -1,6 +1,7 @@
 package com.example.mobileproject.ViewModels.Posts;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 

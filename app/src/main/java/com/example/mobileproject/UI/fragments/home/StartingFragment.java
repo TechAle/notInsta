@@ -1,66 +1,32 @@
 package com.example.mobileproject.UI.fragments.home;
 
-import static android.app.Activity.RESULT_OK;
-
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.UI.activities.CameraActivity;
 import com.example.mobileproject.UI.activities.SettingsActivity;
-import com.example.mobileproject.ViewModels.Posts.PostsVMFactory;
 import com.example.mobileproject.ViewModels.Posts.PostsViewModel;
-import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
 import com.example.mobileproject.ViewModels.Users.UsersViewModel;
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
-import com.example.mobileproject.dataLayer.repositories.ProductsRepository;
-import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.databinding.FragmentStartingBinding;
-import com.example.mobileproject.models.Post.Post;
-import com.example.mobileproject.models.Post.PostResp;
-import com.example.mobileproject.models.Product;
-import com.example.mobileproject.models.Users.Users;
-import com.example.mobileproject.models.Users.UsersResp;
-import com.example.mobileproject.utils.FragmentUtils;
-import com.example.mobileproject.utils.PostAdapter;
-import com.example.mobileproject.utils.Result;
-import com.example.mobileproject.utils.ServiceLocator;
+import com.example.mobileproject.utils.TagsAdapter;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -71,11 +37,11 @@ import java.util.List;
 public class StartingFragment extends Fragment {
 
     private FragmentStartingBinding binding;
-    private List<Post> postSet;
-    private PostsViewModel PVM;
+
+    private List<String> arrayTags;
+    private PostsViewModel ref_underlying_fragment;
     private UsersViewModel UVM;
-    private int nTotalItem;
-    private PostAdapter pa;
+    private TagsAdapter ta;
     public StartingFragment() {
         // Required empty public constructor
     }
@@ -93,9 +59,9 @@ public class StartingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PostRepository pr = ServiceLocator.getInstance().getPostRepo(this.getActivity().getApplication());
+        /*PostRepository pr = ServiceLocator.getInstance().getPostRepo();
         if(pr != null){
-            PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);
+            ref_underlying_fragment = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
 
         } else { //TODO: Sostituire testo con una risorsa
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
@@ -107,8 +73,16 @@ public class StartingFragment extends Fragment {
         } else {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
-        }
-        postSet = new ArrayList<>();
+        }*/
+        arrayTags = new ArrayList<>();
+        arrayTags.add("Tag 1");
+        arrayTags.add("Tag 2");
+        arrayTags.add("Tag 3");
+        arrayTags.add("Tag 4");
+        arrayTags.add("Tag 5");
+        arrayTags.add("Tag 6");
+        arrayTags.add("Tag 7");
+        arrayTags.add("Impariamo a usare Github");
     }
 
     @Override
@@ -124,17 +98,17 @@ public class StartingFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        AppBarConfiguration config = new AppBarConfiguration.Builder().setFallbackOnNavigateUpListener(() -> {
-            Intent i = new Intent(getActivity(), CameraActivity.class);
-            startActivity(i);
-            return true;
-        }).build();
+        ref_underlying_fragment = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
+        // Qua altrimenti cerca qualcosa di inesistente
+
+
+        // Toolbar del fragment
         // Aggiunta del titolo; commentato per il fatto che non è centrato orizzontalmente
         //binding.toolbarStartingFragment.setTitle("!Insta");
         binding.toolbarStartingFragment.setNavigationOnClickListener(v -> {
             Intent i = new Intent(getActivity(), CameraActivity.class);
             startActivity(i);
-        });
+        }); //Ok non è proprio consono per le foto, perlomeno è intuitivo
         binding.toolbarStartingFragment.inflateMenu(R.menu.settings_menu);
         binding.toolbarStartingFragment.setOnMenuItemClickListener(item -> {
             int action = item.getItemId();
@@ -151,96 +125,25 @@ public class StartingFragment extends Fragment {
                 return false;
             }
         });
+
         RecyclerView tags = view.findViewById(R.id.tags);
         RecyclerView.LayoutManager lmt = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.HORIZONTAL, false);
-        /*RecyclerView posts = view.findViewById(R.id.posts);
-        StaggeredGridLayoutManager lmp = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);*/
-//        ArrayAdapter<String> aas = new ArrayAdapter<>(requireContext(), R.layout.taglist_item);
-/*        pa = new PostAdapter(postSet, requireActivity().getApplication(), new PostAdapter.OnItemClickListener(){
-            //Qua non metto una funzione anonima
+
+        ta = new TagsAdapter(arrayTags, new TagsAdapter.OnItemClickListener(){
             @Override
-            public void onItemClicked() {
-                //Volendo si può sostituire questa linea con qualcosa di altro
-                Snackbar.make(view, "Item Clicked", Snackbar.LENGTH_SHORT).show();
-            }
-        });
-        tags.setLayoutManager(lmt);
-        posts.setLayoutManager(lmp);
-        posts.setAdapter(pa);
-        //bindings
-        PVM.getPosts().observe(getViewLifecycleOwner(), result -> {
-            if(result.successful()){
-                PostResp resp = ((Result.PostResponseSuccess) result).getData();
-                List<Post> res = resp.getPostList();
-                if(!PVM.isLoading()){
-                    if(PVM.isFirstLoading()){
-                        //PVM.setTotalResults(PostResp.getTotalResults());
-                        PVM.setFirstLoading(false);
-                        postSet.addAll(res);
-                        pa.notifyItemRangeInserted(0, postSet.size());
-                    } else {
-                        postSet.clear();
-                        postSet.addAll(res);
-                        pa.notifyItemRangeInserted(0, res.size());
-                    }
-                    //bindings
+            public void onTagClicked(String s, boolean selected){
+                //Snackbar.make(view, s, Snackbar.LENGTH_SHORT).show();
+                if(selected){
+                    ref_underlying_fragment.addTag(s);
                 } else {
-                    PVM.setLoading(false);
-                    PVM.setTotalResults(postSet.size());
-                    int initial_size = postSet.size();
-                    for(int i = 0; i < postSet.size(); i++){
-                        if(postSet.get(i) == null){
-                            postSet.remove(null);//TODO: esaminare qua
-                        }
-                    }
-                    int start_index = (PVM.getPage())*20; //TODO: volendo il 20 si può sostituire con una costante definita altrove
-                    for(int i = start_index; i < res.size(); i++){
-                        postSet.add(res.get(i));
-                    }
-                    pa.notifyItemRangeInserted(initial_size, postSet.size());
-                }
-            } else {
-                //TODO: codice relativo
-                //Bindings
-            }
-        });
-        posts.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (internetConnection()                //la connessione deve esserci, altrimenti nulla avrebbe senso
-                && nTotalItem != PVM.getTotalResults()) //se non sono tutti i risultati
-                {
-                    nTotalItem = lmp.getItemCount();
-                    //TODO: controllare la seguente linea
-                    int pastVisiblesItems = Arrays.stream(lmp.findLastVisibleItemPositions(new int[2])).sum();
-
-                    int visibleItemCount = lmp.getChildCount();
-
-                    // Condition to enable the loading of other news while the user is scrolling the list
-                    if (nTotalItem == visibleItemCount
-                    || (nTotalItem <= (pastVisiblesItems + 2)
-                        && dy > 0
-                        && !PVM.isLoading())
-                    && PVM.getPosts().getValue() != null
-                    && PVM.getCurrentResults() != PVM.getTotalResults())
-                    {
-                        MutableLiveData<Result> m = PVM.getPosts();
-
-                        if (m.getValue() != null && m.getValue().successful()) {
-                            PVM.setLoading(true);
-                            postSet.add(null);
-                            pa.notifyItemRangeInserted(postSet.size(),postSet.size() + 1);
-                            PVM.setPage(PVM.getPage() + 1); //"giro" la pagina
-                            //Inizio ad andare a prendere altri post
-                            //PVM.findPosts();//TODO: Sistemare qua
-                        }
-                    }
+                    ref_underlying_fragment.removeTag(s);
                 }
             }
         });
 
+        tags.setLayoutManager(lmt);
+        tags.setAdapter(ta);
 
         /*Intent intent = new Intent();
         intent.setType("image/*");

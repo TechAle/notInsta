@@ -1,15 +1,8 @@
 package com.example.mobileproject.dataLayer.sources;
 
-import android.app.Application;
-import android.content.ContentResolver;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore;
-
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.example.mobileproject.dataLayer.repositories.ProductsRepository;
 import com.example.mobileproject.models.Post.Post;
@@ -21,7 +14,6 @@ import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -41,32 +33,19 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-/**
- * Classe per il recupero remoto
- */
-
-public class FirestoreRemoteSource extends GeneralPostRemoteSource {
+public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
 
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageRef;
     FirebaseAuth firebaseAuth;
-    StoreAPIService storeAPIService;
-    Application app;
-
-    public FirestoreRemoteSource(Application app) {
+    public FirestoreUserRemoteSource(Application app){
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
@@ -74,38 +53,20 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
         storeAPIService = ServiceLocator.getInstance().getProductsApiService();
         this.app = app;
     }
-
     @Override
-    public void retrievePosts(CallbackPosts c) {
-        db.collection("post").get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<Post> results = new ArrayList<>();
-                        for (QueryDocumentSnapshot i : task.getResult()) {
-                            Map<String, Object> m = i.getData();
-                            Post p = new Post(m, i.getId());
-                            results.add(p);
-                        }
-                        c.onSuccess(results);
-                    } else {
-                        c.onFailure(task.getException());
-                    }
-                });
-    }
-
-    @Override
-    public void retrieveUsers(CallbackUsers c) {
+    public void retrieveUsers(CallbackUsers c){
         db.collection("utenti").get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                    if(task.isSuccessful()){
                         List<Users> results = new ArrayList<>();
-                        for (QueryDocumentSnapshot i : task.getResult()) {
+                        for(QueryDocumentSnapshot i : task.getResult()){
                             Map<String, Object> m = i.getData();
                             Users p = new Users(m, i.getId());
                             results.add(p);
                         }
                         c.onSuccess(results);
-                    } else {
+                    }
+                    else{
                         c.onFailure(task.getException());
                     }
                 });
@@ -204,21 +165,49 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
     }
 
     @Override
-    public void retrieveUserByDocumentId(String tag, CallbackUsers c) {
+    public void retrieveUserByDocumentId(String tag, CallbackUsers c){
         db.collection("utenti").document(tag)
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                    if(task.isSuccessful()){
                         Map<String, Object> m = task.getResult().getData();
                         Users p = new Users(m, tag);
                         ArrayList<Users> results = new ArrayList<>();
                         results.add(p);
                         c.onSuccess(results);
-                    } else {
+                    }
+                    else{
                         c.onFailure(task.getException());
                     }
                 });
     }
+    @Override
+    public void createUser(Users post, CallbackUsers ci) {
+        Map<String, Object> documentFields = new HashMap<>();
+        documentFields.put("cognome", post.getCognome());
+        documentFields.put("nome", post.getNome());
+        documentFields.put("dataNascita", post.getDataNascita());
+        documentFields.put("descrizione", post.getDescrizione());
+        documentFields.put("followers", post.getFollowers());
+        documentFields.put("following", post.getFollowing());
+        documentFields.put("tags", post.getTags());
+        documentFields.put("username", post.getUsername());
+        createDocument("utenti", documentFields, ci);
+    }
+    @Override
+    public void editUsername(String tag, String newUsername, CallbackUsers c) {
+        // Controllo se nessuno ha quell'username
+        db.collection("utenti")
+                .whereEqualTo("username", newUsername)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().isEmpty()) {
+                            // Allora possiamo cambiarlo
+                            updateField("utenti", tag, "username", newUsername, c);
+                        } else c.onFailure(new Exception("Someone already has this error"));
+                    } else c.onFailure(new Exception("Firebase error"));
+                });
 
     public void editUsername( String newUsername, CallbackUsers c) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -250,6 +239,18 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
 
     }
 
+    @Override
+    protected void createDocument(String collectionName, Map<String, Object> documentFields, CallbackInterface ci) {
+        // Add the new document to our shared collection
+        db.collection(collectionName)
+                .add(documentFields)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                        ci.onUploadSuccess(task.getResult().getId());
+                    else
+                        ci.onFailure(new Exception("Error creating document"));
+                });
+    }
 
     private void updateField(String collectionName, String documentId, String fieldToUpdate, Object newValue, CallbackInterface c) {
         // Create a map to represent the field to be updated
@@ -512,6 +513,8 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
         }
     }
 
+
+    //WTF
     private String getErrorMessage(Exception exception) {
         if (exception instanceof FirebaseAuthWeakPasswordException) {
             return "passwordIsWeak";
@@ -523,10 +526,6 @@ public class FirestoreRemoteSource extends GeneralPostRemoteSource {
             return "userCollisionError";
         }
         return "unexpected_error";
-    }
-
-    @Override
-    public void postPost() {
     }
 
     @Override
