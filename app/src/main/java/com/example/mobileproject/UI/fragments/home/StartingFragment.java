@@ -98,7 +98,7 @@ public class StartingFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ref_underlying_fragment = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
+        ref_underlying_fragment = new ViewModelProvider(requireActivity()).get(PostsViewModel.class); //TODO: controllare qua
         // Qua altrimenti cerca qualcosa di inesistente
 
 

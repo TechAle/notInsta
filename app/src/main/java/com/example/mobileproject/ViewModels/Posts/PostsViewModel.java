@@ -24,7 +24,9 @@ public class PostsViewModel extends ViewModel {
     private boolean allPosts; //Vero se sono stati recuperati tutti i post oppure se è cambiato qualcosa nei tag
     private boolean loading; //Se ha iniziato una chiamata al server o meno
     private boolean firstLoading;
+    private String idUser;
     private MutableLiveData<Result> posts;
+
     public PostsViewModel(PostRepository repo) {
         this.repo = repo;
         this.page = 0;
@@ -33,13 +35,24 @@ public class PostsViewModel extends ViewModel {
         this.allPosts = false;
         this.tags = new HashSet<>();
     }
+
+    public void setIdUser(String id){
+        idUser = id;
+        removeTag();
+        getPosts();
+    }
     public boolean addTag(String tag){
         boolean success = tags.add(tag);
         if(success){
+            idUser = null;
             flush();
         }
         getPosts();
         return success;
+    }
+    public void removeTag(){
+        tags.clear();
+        flush();
     }
     public boolean removeTag(String tag){
         boolean success = tags.remove(tag);
@@ -54,10 +67,10 @@ public class PostsViewModel extends ViewModel {
     public MutableLiveData<Result> getPosts(){
         if(posts == null){          //mai caricati o tag non corrispondente
             if(tags.size() != 0){
-                //posts = repo.retrievePosts(tag); //versione "stupida"
                 posts = repo.retrievePostsWithTagsLL(tags.toArray(new String[tags.size()]), page);
+            } else if(idUser != null) {
+                posts = repo.retrievePostsbyAuthor(idUser, page);
             } else {                //nessun filtro di ricerca, li prendo tutti
-                //posts = repo.retrievePosts();
                 posts = repo.retrievePostsLL(page); //versione Lazy loading
             }
         }

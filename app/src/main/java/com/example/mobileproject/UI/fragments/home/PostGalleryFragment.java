@@ -53,7 +53,6 @@ public class PostGalleryFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private String tag;
     private String user;
     private int itemLoaded;
 
@@ -83,7 +82,7 @@ public class PostGalleryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         /*try{
 
-        }*/
+        }*//*
         if (getArguments() != null) {
             tag = getArguments().getString(ARG_PARAM1);
             user = getArguments().getString(ARG_PARAM2);
@@ -91,7 +90,7 @@ public class PostGalleryFragment extends Fragment {
         else {
             tag = null;
             user = null;
-        } // TODO: può darsi che questo if-else debba essere sostituito da due try-catch?
+        } // TODO: può darsi che questo if-else debba essere sostituito da due try-catch?*/
         PostRepository pr = ServiceLocator.getInstance().getPostRepo();
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);

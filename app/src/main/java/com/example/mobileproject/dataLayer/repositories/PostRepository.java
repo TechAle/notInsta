@@ -38,9 +38,14 @@ public class PostRepository implements CallbackPosts {
         return posts;
     }
 
-    //assegnamento in callback
+    //WTF
     public MutableLiveData<Result> retrievePosts(String tag){
         rem.retrievePostByDocumentId(tag);
+        return posts;
+    }
+
+    public MutableLiveData<Result> retrievePostsbyAuthor(String idUser, int page){
+        rem.retrievePostsByAuthor(idUser, page);
         return posts;
     }
     public MutableLiveData<Result> retrievePostsLL(int page){ //Lazy Loading
@@ -73,7 +78,6 @@ public class PostRepository implements CallbackPosts {
             posts.postValue(result);
         //}
     }
-
 
     @Override
     public void onSuccess() {

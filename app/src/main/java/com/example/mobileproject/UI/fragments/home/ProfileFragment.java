@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.mobileproject.R;
+import com.example.mobileproject.ViewModels.Posts.PostsViewModel;
 import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
 import com.example.mobileproject.ViewModels.Users.UsersViewModel;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
@@ -71,8 +72,10 @@ public class ProfileFragment extends Fragment {
     }
 
     private UsersViewModel PVM;
+    private PostsViewModel ref_underlying_fragment;
     private FirebaseStorage storage;
     private StorageReference storageRef;
+    private Users current_user;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +95,7 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ref_underlying_fragment = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
         String id = "0TsbiPUaL5qfFQiH6572";
 
         PVM.getUserById(id).observe(getViewLifecycleOwner(), result -> {
@@ -106,6 +110,7 @@ public class ProfileFragment extends Fragment {
                 FragmentUtils.updateTextById(view, R.id.descrizione, target.getDescrizione());
                 FragmentUtils.updateTextById(view, R.id.seguaci, "Seguaci: " + target.getFollowers().size());
                 FragmentUtils.updateTextById(view, R.id.seguiti, "Seguiti: " + target.getFollowing().size());
+                onLoadComplete(target.getId());
             }
         });
     }
@@ -115,5 +120,9 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
+    }
+
+    public void onLoadComplete(String id){
+        ref_underlying_fragment.setIdUser(id);
     }
 }

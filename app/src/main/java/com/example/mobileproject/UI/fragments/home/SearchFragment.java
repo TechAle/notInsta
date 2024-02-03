@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.example.mobileproject.R;
@@ -35,6 +37,7 @@ import java.util.List;
 public class SearchFragment extends Fragment {
 
     private PostsViewModel PVM;
+    private PostsViewModel ref_underlying_fragment;
     private UsersViewModel PSM;
     private FirebaseStorage storage;
     private StorageReference storageRef;
@@ -59,11 +62,22 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState
+    ) {
+        return inflater.inflate(R.layout.fragment_search, container, false);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        LinearLayout t = view.findViewById(R.id.sponsorLayout);
-        t.setVisibility(View.GONE);
+        ref_underlying_fragment = new ViewModelProvider(requireActivity()).get(PostsViewModel.class); //in teoria non dovrebbe funzionare...
+
+        LinearLayout ll = view.findViewById(R.id.sponsorLayout);
+        ll.setVisibility(View.GONE);
         //TODO: implementare una propria ViewModel
         //motivo: NullPointerException a riga 3 dell'if, poichè va a leggere roba non sua
         /*
@@ -80,14 +94,10 @@ public class SearchFragment extends Fragment {
                 t.setVisibility(View.VISIBLE);
                 PVM.getPosts().removeObservers(getViewLifecycleOwner());
             }});*/
-    }
-
-    @Override
-    public View onCreateView(
-            LayoutInflater inflater,
-            ViewGroup container,
-            Bundle savedInstanceState
-    ) {
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        Button b = view.findViewById(R.id.goResults);
+        EditText t = view.findViewById(R.id.input_search);
+        b.setOnClickListener(l -> {
+            ref_underlying_fragment.addTag(t.getText().toString());
+        });
     }
 }
