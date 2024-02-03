@@ -34,7 +34,6 @@ import java.util.List;
  */
 public class SearchFragment extends Fragment {
 
-
     private PostsViewModel PVM;
     private UsersViewModel PSM;
     private FirebaseStorage storage;
@@ -70,7 +69,9 @@ public class SearchFragment extends Fragment {
 
         LinearLayout t = view.findViewById(R.id.sponsorLayout);
         t.setVisibility(View.GONE);
-
+        //TODO: implementare una propria ViewModel
+        //motivo: NullPointerException a riga 3 dell'if, poichè va a leggere roba non sua
+        /*
         PVM.getSponsodedPosts(getViewLifecycleOwner()).observe(getViewLifecycleOwner(), post -> {
             if(post.successful()) {
                 PostResp sponsoredPost = ((Result.PostResponseSuccess) post).getData();
@@ -84,6 +85,8 @@ public class SearchFragment extends Fragment {
                 t.setVisibility(View.VISIBLE);
                 PVM.getPosts().removeObservers(getViewLifecycleOwner());
             }});
+
+        */
     }
 
     @Override

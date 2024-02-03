@@ -1,5 +1,7 @@
 package com.example.mobileproject.ViewModels.Posts;
 
+import android.util.Log;
+
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -10,11 +12,16 @@ import com.example.mobileproject.utils.Result;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * ViewModel associato a PostGalleryFragment
+ */
+
+//Usatelo solamente per comunicare con PostGalleryFragment, NON USATELO PER SALVARE STATI DI ALTRI FRAGMENT
 public class PostsViewModel extends ViewModel {
     private final PostRepository repo;
     private Set<String> tags;       //TODO: controllare il 'final'
     private int page;
-    private boolean allPosts;
+    private boolean allPosts; //Vero se sono stati recuperati tutti i post oppure se è cambiato qualcosa nei tag
     private boolean loading; //Se ha iniziato una chiamata al server o meno
     private boolean firstLoading;
     private MutableLiveData<Result> posts;
@@ -31,6 +38,7 @@ public class PostsViewModel extends ViewModel {
         if(success){
             flush();
         }
+        getPosts();
         return success;
     }
     public boolean removeTag(String tag){
@@ -38,6 +46,7 @@ public class PostsViewModel extends ViewModel {
         if(success){
             flush();
         }
+        //getPosts();
         return success;
     }
 
@@ -46,7 +55,7 @@ public class PostsViewModel extends ViewModel {
         if(posts == null){          //mai caricati o tag non corrispondente
             if(tags.size() != 0){
                 //posts = repo.retrievePosts(tag); //versione "stupida"
-                posts = repo.retrievePostsWithTagsLL(tags.toArray(new String[0]), page);
+                posts = repo.retrievePostsWithTagsLL(tags.toArray(new String[tags.size()]), page);
             } else {                //nessun filtro di ricerca, li prendo tutti
                 //posts = repo.retrievePosts();
                 posts = repo.retrievePostsLL(page); //versione Lazy loading
@@ -68,12 +77,11 @@ public class PostsViewModel extends ViewModel {
     public MutableLiveData<Result>  createImage(Uri imageUri, String document, ContentResolver contentResolver, String id) {
         return repo.createImage(imageUri, document, contentResolver, id);
     }
-    */
 
     public MutableLiveData<Result> getSponsodedPosts(LifecycleOwner ow){
         return repo.retrieveSponsoredPosts(ow);
     }
-
+    */
     public int getPage() {
         return page;
     }
@@ -92,14 +100,12 @@ public class PostsViewModel extends ViewModel {
     public boolean isFirstLoading() {
         return firstLoading;
     }
-
     public void findPosts(){
         repo.retrievePostsLL(page);
     }
     public void setAllPosts(boolean allPosts) {
         this.allPosts = allPosts;
     }
-
     public boolean areAllPosts() {
         return allPosts;
     }

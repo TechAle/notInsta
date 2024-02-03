@@ -9,15 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobileproject.R;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
 public class TagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     public interface OnItemClickListener{
-        void onTagClicked(String s);
+        void onTagClicked(String s, boolean selected);
     }
     private static final int SELECTED = 1;
     private static final int NORMAL = 0;
@@ -50,19 +48,22 @@ public class TagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     public class TagViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-    private final TextView tagContainer;
+        private final TextView tagContainer;
+        private boolean selected;
         public TagViewHolder(@NonNull View itemView) {
             super(itemView);
             tagContainer = itemView.findViewById(R.id.tagView);
+            itemView.setOnClickListener(this);
         }
         public void bind(String s){
             tagContainer.setText(s);
+            selected = false;
         }
 
         @Override
         public void onClick(View v) {
-            l.onTagClicked((String) tagContainer.getText());
-            //Snackbar.make(v, "Item clicked", BaseTransientBottomBar.LENGTH_SHORT).show();
+            selected = !selected;
+            l.onTagClicked((String) tagContainer.getText(), selected);
         }
     }
 }

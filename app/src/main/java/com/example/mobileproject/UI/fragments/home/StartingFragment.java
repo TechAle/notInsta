@@ -132,9 +132,13 @@ public class StartingFragment extends Fragment {
 
         ta = new TagsAdapter(arrayTags, new TagsAdapter.OnItemClickListener(){
             @Override
-            public void onTagClicked(String s){
-                Snackbar.make(view, s, Snackbar.LENGTH_SHORT).show();
-                //ref_underlying_fragment.addTag(getText());
+            public void onTagClicked(String s, boolean selected){
+                //Snackbar.make(view, s, Snackbar.LENGTH_SHORT).show();
+                if(selected){
+                    ref_underlying_fragment.addTag(s);
+                } else {
+                    ref_underlying_fragment.removeTag(s);
+                }
             }
         });
 

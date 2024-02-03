@@ -60,7 +60,7 @@ public class PostGalleryFragment extends Fragment {
     public PostGalleryFragment() {
         // Required empty public constructor
     }
-
+/*
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -69,12 +69,12 @@ public class PostGalleryFragment extends Fragment {
      * @param user Parameter 2.
      * @return A new instance of fragment PostGalleryFragment.
      */
-    public static PostGalleryFragment newInstance(String tag, String user) {
+    public static PostGalleryFragment newInstance(/*String tag, String user*/) {
         PostGalleryFragment fragment = new PostGalleryFragment();
-        Bundle args = new Bundle();
+        /*Bundle args = new Bundle();
         args.putString(ARG_PARAM1, tag);
         args.putString(ARG_PARAM2, user);
-        fragment.setArguments(args);
+        fragment.setArguments(args);*/
         return fragment;
     }
 
@@ -147,9 +147,11 @@ public class PostGalleryFragment extends Fragment {
                 List<Post> res = resp.getPostList();
 
                 if(!PVM.isLoading()){ //Se non è attiva una chiamata
-                    if(PVM.isFirstLoading()){ //Se è il primo caricamento -> lista interna vuota
-                        //PVM.setTotalResults(PostResp.getTotalResults()); // Non ho il numero di risultati totali...
+                    if(PVM.isFirstLoading()){ //Se è il primo caricamento -> lista interna vuota o aggiornamento completo
                         PVM.setFirstLoading(false);
+                        int lastSize = postList.size();
+                        postList.clear();
+                        pa.notifyItemRangeRemoved(0, lastSize);
                         postList.addAll(res);
                         pa.notifyItemRangeInserted(0, postList.size());
                         if(postList.size() < 20){ // Ho meno post di quelli possibili, allora non ne ho altri
@@ -159,7 +161,7 @@ public class PostGalleryFragment extends Fragment {
                         postList.clear();
                         postList.addAll(res);
                         pa.notifyItemRangeInserted(0, res.size());
-                        if(postList.size() < 20){ // Ho meno post di quelli possibili, allora non ne ho altri
+                        if(postList.size() < 20){
                             PVM.setAllPosts(true);
                         }
                     }
@@ -222,7 +224,6 @@ public class PostGalleryFragment extends Fragment {
             }
         });
     }
-
     private boolean internetConnection(){
         ConnectivityManager cm =
                 (ConnectivityManager)requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -231,10 +232,4 @@ public class PostGalleryFragment extends Fragment {
                 && nc.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 && nc.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
     }
-    /*private void flush(){
-
-    }
-    public void setTag(){
-
-    }*/
 }

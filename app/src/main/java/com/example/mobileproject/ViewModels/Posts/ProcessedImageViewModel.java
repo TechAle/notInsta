@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.util.Arrays;
 
 // TODO: fatevi la vostra viewModel
+//TODO: sistemare bug relativi all'applicazione dei filtri
 public class ProcessedImageViewModel extends ViewModel {
 
     // Live Data
@@ -135,7 +136,7 @@ public class ProcessedImageViewModel extends ViewModel {
             Uri imageUri = BitmapUtils.getUriFromBitmap(t, image);
             PostRepository pr = ServiceLocator.getInstance().getPostRepo();
             if(pr != null){
-                PostsViewModel PVM = new ViewModelProvider(t, new PostsVMFactory(pr)).get(PostsViewModel.class);
+                //PostsViewModel PVM = new ViewModelProvider(t, new PostsVMFactory(pr)).get(PostsViewModel.class);
 
                 Post toCreate = new Post("0TsbiPUaL5qfFQiH6572", desc,
                                                 Arrays.asList(tagArr), isProm, FirebaseFirestore.getInstance());

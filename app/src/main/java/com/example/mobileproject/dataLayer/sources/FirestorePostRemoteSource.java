@@ -83,6 +83,7 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
                         for (QueryDocumentSnapshot i : task.getResult()) {
                             Map<String, Object> m = i.getData();
                             Post p = new Post(m, i.getId());
+                            if(p.getTags() == null) continue;
                             for (String tag : tags) {
                                 if (p.getTags().contains(tag)) {
                                     results.add(p);
@@ -233,6 +234,7 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
                         for(QueryDocumentSnapshot i : task.getResult()){
                             Map<String, Object> m = i.getData();
                             Post p = new Post(m, i.getId());
+                            if(p.getTags() == null) continue;
                             for (String tag: tags) {
                                 if (p.getTags().contains(tag)) {
                                     results.add(p);
