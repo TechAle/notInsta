@@ -23,29 +23,30 @@ public class UserRepository implements CallbackUsers {
 
     public UserRepository(GeneralUserRemoteSource rem){
         this.rem = rem;
+        this.rem.setCallback(this);
         users = new MutableLiveData<>();
         ready = new MutableLiveData<>();
     }
 
     //assegnamento in callback
     public MutableLiveData<Result> retrieveUsers() {
-        rem.retrieveUsers(this);
+        rem.retrieveUsers();
         return users;
     }
 
     //assegnamento in callback
     public MutableLiveData<Result> retrieveUsers(String tag) {
-        rem.retrieveUserByDocumentId(tag, this);
+        rem.retrieveUserByDocumentId(tag);
         return users;
     }
 
     public MutableLiveData<Result> editUsername(String newUsername) {
-        rem.editUsername( newUsername, this);
+        rem.editUsername(newUsername);
         return ready;
     }
 
     public MutableLiveData<Result> editPassword(String newPassword) {
-        rem.editPassword(newPassword, this);
+        rem.editPassword(newPassword);
         return ready;
     }
 
@@ -84,7 +85,7 @@ public class UserRepository implements CallbackUsers {
 
 
     public MutableLiveData<Result> createUser(Users toCreate) {
-        rem.createUser(toCreate, this);
+        rem.createUser(toCreate);
         return ready;
     }
 
@@ -111,23 +112,23 @@ public class UserRepository implements CallbackUsers {
 
     @Override
     public MutableLiveData<Result> logout() {
-        rem.logout(this);
+        rem.logout();
         return users;
     }
 
     @Override
     public void signUp(String email, String password) {
-        rem.signUp(email, password, this);
+        rem.signUp(email, password);
     }
 
     @Override
     public void signIn(String email, String password) {
-        rem.signIn(email, password, this);
+        rem.signIn(email, password);
     }
 
     @Override
     public void signInWithGoogle(String token) {
-        rem.signInWithGoogle(token, this);
+        rem.signInWithGoogle(token);
     }
 
 
@@ -161,7 +162,6 @@ public class UserRepository implements CallbackUsers {
 
     }
 
-
     public void signOut() {
         rem.signOut();
     }
@@ -176,6 +176,6 @@ public class UserRepository implements CallbackUsers {
 
     @Override
     public void passwordReset(String email) {
-        rem.passwordReset(email, this);
+        rem.passwordReset(email);
     }
 }

@@ -39,10 +39,7 @@ public class SearchFragment extends Fragment {
     private FirebaseStorage storage;
     private StorageReference storageRef;
 
-    public SearchFragment() {
-        // Required empty public constructor
-    }
-
+    public SearchFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,15 +49,13 @@ public class SearchFragment extends Fragment {
             PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);
         }
 
-        UserRepository ps = ServiceLocator.getInstance().getUserRepo();
+        UserRepository ps = ServiceLocator.getInstance().getUserRepo(getActivity().getApplication());
         if(pr != null){
             PSM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ps)).get(UsersViewModel.class);
         }
 
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
-
-
     }
 
     @Override
@@ -84,16 +79,15 @@ public class SearchFragment extends Fragment {
                 FragmentUtils.updateTextById(view, R.id.sponsorText, "Sponsor: " + finalPost.getDescrizione());
                 t.setVisibility(View.VISIBLE);
                 PVM.getPosts().removeObservers(getViewLifecycleOwner());
-            }});
-
-        */
+            }});*/
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState
+    ) {
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
 }

@@ -32,8 +32,8 @@ public class ServiceLocator {
         return new PostRepository(new FirestorePostRemoteSource());
     }
 
-    public UserRepository getUserRepo(){
-        return new UserRepository(new FirestoreUserRemoteSource());
+    public UserRepository getUserRepo(Application app){
+        return new UserRepository(new FirestoreUserRemoteSource(app));
     }
 
     public StoreAPIService getProductsApiService() {

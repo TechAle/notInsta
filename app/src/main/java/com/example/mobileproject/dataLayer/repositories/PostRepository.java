@@ -52,7 +52,7 @@ public class PostRepository implements CallbackPosts {
         return posts;
     }
     public MutableLiveData<Result> retrieveSponsoredPosts(LifecycleOwner ow){
-        rem.retrievePostsSponsor(this, ow);
+        rem.retrievePostsSponsor(ow);
         return posts;
     }
 
