@@ -1,6 +1,5 @@
 package com.example.mobileproject.UI.fragments.home;
 
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,9 +10,10 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+//import android.widget.ImageView;
 
-import com.example.mobileproject.R;
+
+import com.example.mobileproject.R;/*
 import com.example.mobileproject.ViewModels.Posts.PostsViewModel;
 import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
 import com.example.mobileproject.ViewModels.Users.UsersViewModel;
@@ -29,6 +29,8 @@ import com.google.firebase.storage.StorageReference;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
+*/
+import com.example.mobileproject.ViewModels.Posts.PostsViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,66 +39,43 @@ import java.util.List;
  */
 public class ProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private PostsViewModel PVM;
     public ProfileFragment() {
         // Required empty public constructor
         /*PostRepository t = ServiceLocator.getInstance().getPostRepo();
         t.retrievePosts();*/
-
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment ProfileFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
+    public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
-
-    private UsersViewModel PVM;
+    /*
     private PostsViewModel ref_underlying_fragment;
     private FirebaseStorage storage;
     private StorageReference storageRef;
-    private Users current_user;
+    private Users current_user;*/
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        UserRepository pr = ServiceLocator.getInstance().getUserRepo(getActivity().getApplication());
+        PVM = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
+        /*UserRepository pr = ServiceLocator.getInstance().getUserRepo(getActivity().getApplication());
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(pr)).get(UsersViewModel.class);
         }
-
-        storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReference();
-
-
+        storageRef = FirebaseStorage.getInstance().getReference();*/
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        ref_underlying_fragment = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
-        String id = "0TsbiPUaL5qfFQiH6572";
+        super.onViewCreated(view, savedInstanceState);/*
 
         PVM.getUserById(id).observe(getViewLifecycleOwner(), result -> {
             if(result.successful()) {
@@ -112,7 +91,7 @@ public class ProfileFragment extends Fragment {
                 FragmentUtils.updateTextById(view, R.id.seguiti, "Seguiti: " + target.getFollowing().size());
                 onLoadComplete(target.getId());
             }
-        });
+        });*/
     }
 
         @Override
@@ -121,8 +100,8 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
-
+/*
     public void onLoadComplete(String id){
         ref_underlying_fragment.setIdUser(id);
-    }
+    }*/
 }

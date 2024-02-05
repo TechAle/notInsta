@@ -13,9 +13,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.example.mobileproject.dataLayer.repositories.ProductsRepository;
 import com.example.mobileproject.models.Post.Post;
 /*
-import com.example.mobileproject.models.Product;
 import com.example.mobileproject.models.Users.Users;
-import com.example.mobileproject.utils.Result;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,6 +31,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.DocumentReference;
 import com.example.mobileproject.models.Product;
 import com.example.mobileproject.utils.Result;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -271,7 +270,7 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
                     }
                 });
     }
-
+  
     private void createSponsorFromApi(LifecycleOwner life) {
         ProductsRepository t = new ProductsRepository(app);
         t.fetchProducts(1).observe(life, task -> {

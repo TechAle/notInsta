@@ -49,10 +49,11 @@ public class SearchFragment extends Fragment {
         super.onCreate(savedInstanceState);
         PostRepository pr = ServiceLocator.getInstance().getPostRepo();
         if(pr != null){
-            PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);
+            PVM = new ViewModelProvider(requireActivity()).get(PostsViewModel.class); //Prendo quello dell'Activity
         }
 
-        UserRepository ps = ServiceLocator.getInstance().getUserRepo(getActivity().getApplication());
+        UserRepository ps = ServiceLocator.getInstance().getUserRepo(requireActivity().getApplication());
+
         if(pr != null){
             PSM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ps)).get(UsersViewModel.class);
         }
@@ -73,13 +74,8 @@ public class SearchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        ref_underlying_fragment = new ViewModelProvider(requireActivity()).get(PostsViewModel.class); //in teoria non dovrebbe funzionare...
-
         LinearLayout ll = view.findViewById(R.id.sponsorLayout);
         ll.setVisibility(View.GONE);
-        //TODO: implementare una propria ViewModel
-        //motivo: NullPointerException a riga 3 dell'if, poichè va a leggere roba non sua
         /*
         PVM.getSponsodedPosts(getViewLifecycleOwner()).observe(getViewLifecycleOwner(), post -> {
             if(post.successful()) {
@@ -93,11 +89,12 @@ public class SearchFragment extends Fragment {
                 FragmentUtils.updateTextById(view, R.id.sponsorText, "Sponsor: " + finalPost.getDescrizione());
                 t.setVisibility(View.VISIBLE);
                 PVM.getPosts().removeObservers(getViewLifecycleOwner());
-            }});*/
+            }});
+
         Button b = view.findViewById(R.id.goResults);
         EditText t = view.findViewById(R.id.input_search);
         b.setOnClickListener(l -> {
             ref_underlying_fragment.addTag(t.getText().toString());
-        });
+        });*/
     }
 }

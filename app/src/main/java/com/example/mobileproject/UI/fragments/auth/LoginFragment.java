@@ -78,7 +78,8 @@ public class LoginFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UserRepository userRepository = ServiceLocator.getInstance().getUserRepo(getActivity().getApplication());
+        UserRepository userRepository = ServiceLocator.getInstance().getUserRepo(requireActivity().getApplication());
+
         usersViewModel = new ViewModelProvider(
                 requireActivity(),
                 new UsersVMFactory(userRepository)).get(UsersViewModel.class);

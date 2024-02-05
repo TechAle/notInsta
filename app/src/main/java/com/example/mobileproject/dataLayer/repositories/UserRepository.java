@@ -3,6 +3,7 @@ package com.example.mobileproject.dataLayer.repositories;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mobileproject.dataLayer.sources.CallbackUsers;
@@ -18,6 +19,7 @@ public class UserRepository implements CallbackUsers {
     private final MutableLiveData<Result> users;
 
     private final GeneralUserRemoteSource rem;
+//    private final GeneralUserLocalSource local;
 
     private final MutableLiveData<Result> ready;
 
@@ -178,4 +180,13 @@ public class UserRepository implements CallbackUsers {
     public void passwordReset(String email) {
         rem.passwordReset(email);
     }
+/*
+    public LiveData<Users> getCurrentUser(){
+        local.retrieveCurrentUser();
+        return User;
+    }
+
+    public void onLocalSuccess(){
+        this.
+    }*/
 }
