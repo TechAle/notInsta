@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 //import android.widget.ImageView;
 
+
 import com.example.mobileproject.R;/*
 import com.example.mobileproject.ViewModels.Posts.PostsViewModel;
 import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
@@ -88,6 +89,7 @@ public class ProfileFragment extends Fragment {
                 FragmentUtils.updateTextById(view, R.id.descrizione, target.getDescrizione());
                 FragmentUtils.updateTextById(view, R.id.seguaci, "Seguaci: " + target.getFollowers().size());
                 FragmentUtils.updateTextById(view, R.id.seguiti, "Seguiti: " + target.getFollowing().size());
+                onLoadComplete(target.getId());
             }
         });*/
     }
@@ -102,5 +104,4 @@ public class ProfileFragment extends Fragment {
     public void onLoadComplete(String id){
         ref_underlying_fragment.setIdUser(id);
     }*/
-
 }

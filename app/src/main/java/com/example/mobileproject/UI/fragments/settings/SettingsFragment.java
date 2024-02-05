@@ -1,9 +1,14 @@
 package com.example.mobileproject.UI.fragments.settings;
 
+import static com.example.mobileproject.utils.Constants.PICK_IMAGE_REQUEST;
+import static com.example.mobileproject.utils.Constants.PREF_SELECTED_LANGUAGE;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
+
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,18 +25,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Switch;
+
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.UI.activities.HomeActivity;
 import com.example.mobileproject.UI.activities.LoginActivity;
-import com.example.mobileproject.UI.fragments.settings.ChangePasswordFragment;
-import com.example.mobileproject.UI.fragments.settings.ChangeUsernameFragment;
-import com.example.mobileproject.ViewModels.Settings.SettingsViewModel;
+import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
+import com.example.mobileproject.ViewModels.Users.UsersViewModel;
+import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.utils.FragmentUtils;
-import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.Locale;
+import com.example.mobileproject.utils.ServiceLocator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,30 +42,33 @@ import java.util.Locale;
 public class SettingsFragment extends Fragment {
 
     private NavController ctrl;
-    private View backButton;
+
     private View changeUsernameButton;
     private View changePasswordButton;
-    private Switch notifiesSwitch;
-    private Switch privateAccountSwitch;
+
     private Spinner languagesSpinner;
-    private Switch showLikesSwitch;
     private Button signOutButton;
     private Button deleteAccountButton;
-    private SettingsViewModel settingsViewModel;
-    private static final String PREF_SELECTED_LANGUAGE = "selected_language";
     private boolean firstSelected = true;
+
+    private UsersViewModel PVM;
+
+    private Button changeImageButton;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         ctrl = NavHostFragment.findNavController(this);
+
+        UserRepository pr = ServiceLocator.getInstance().getUserRepo(this.requireActivity().getApplication());
+        if (pr != null) {
+            PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(pr)).get(UsersViewModel.class);
+        }
 
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String selectedLanguage = sharedPref.getString(PREF_SELECTED_LANGUAGE, "en");
         FragmentUtils.loadLanguage(selectedLanguage, getActivity(), getResources());
-
 
     }
 
@@ -73,8 +78,10 @@ public class SettingsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+
         changeUsernameButton = view.findViewById(R.id.changeUsernameText);
         changePasswordButton = view.findViewById(R.id.changePasswordText);
+        changeImageButton = view.findViewById(R.id.changePictureButton);
         signOutButton = view.findViewById(R.id.signOutButton);
         deleteAccountButton = view.findViewById(R.id.DeleteAccountButton);
 
@@ -116,25 +123,45 @@ public class SettingsFragment extends Fragment {
                 ctrl.navigate(R.id.action_settingsFragment_to_changePasswordFragment)
         );
 
+        changeImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, PICK_IMAGE_REQUEST);
+            }
+        });
+
+
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                PVM.signOut();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
-                intent.putExtra("logout_message", "You have logged out successfully");
+                intent.putExtra((String) getText(R.string.success_logout), getText(R.string.success_logout));
                 startActivity(intent);
                 getActivity().finish();
-                FirebaseAuth.getInstance().signOut();
             }
         });
 
         deleteAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                PVM.deleteAccount();
             }
         });
 
         return view;
 
 
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            Uri selectedImageUri = data.getData();
+            PVM.changeImage(selectedImageUri);
+        }
     }
 }

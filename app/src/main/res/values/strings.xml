@@ -120,5 +120,8 @@
     <string name="error_no_google_account_found_message">Nessun account Google trovato</string>
     <string name="back">Back</string>
     <string name="termsConditions">Terms and conditions will be described here.</string>
+    <string name="pass_special">Password must contain at least one special character</string>
+
+
     <string name="passwordButton">Send email</string>
 </resources>

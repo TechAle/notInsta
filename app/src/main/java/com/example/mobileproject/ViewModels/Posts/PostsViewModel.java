@@ -62,6 +62,10 @@ public class PostsViewModel extends ViewModel {
                 throw new RuntimeException();
         }
     }
+    public void removeTag(){
+        tags.clear();
+        flush();
+    }
     public boolean removeTag(String tag){
         boolean success = userTags.remove(tag);
         if(success){
@@ -107,7 +111,6 @@ public class PostsViewModel extends ViewModel {
     public MutableLiveData<Result>  createImage(Uri imageUri, String document, ContentResolver contentResolver, String id) {
         return repoP.createImage(imageUri, document, contentResolver, id);
     }
-
     public MutableLiveData<Result> getSponsodedPosts(LifecycleOwner ow){
         return repoP.retrieveSponsoredPosts(ow);
     }

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.ViewModels.Settings.SettingsViewModel;
 import com.example.mobileproject.ViewModels.Users.UsersVMFactory;
 import com.example.mobileproject.ViewModels.Users.UsersViewModel;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
@@ -25,23 +24,16 @@ import com.google.android.material.textfield.TextInputLayout;
  */
 public class ChangeUsernameFragment extends Fragment {
 
-    private String mParam1;
-    private String mParam2;
-    //private View backButton;
+
     private Button changeButton;
-    private SettingsViewModel settingsViewModel;
     private UsersViewModel PVM;
 
     public ChangeUsernameFragment() {
         // Required empty public constructor
     }
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         UserRepository pr = ServiceLocator.getInstance().getUserRepo(requireActivity().getApplication());
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(pr)).get(UsersViewModel.class);
@@ -52,7 +44,6 @@ public class ChangeUsernameFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        String id = "0TsbiPUaL5qfFQiH6572";
 
         View view = inflater.inflate(R.layout.fragment_change_username, container, false);
 
@@ -77,7 +68,7 @@ public class ChangeUsernameFragment extends Fragment {
                 TextInputLayout inputUsername = getView().findViewById(R.id.textInputUsername);
                 String username = inputUsername.getEditText().getText().toString();
 
-                //da spostare in viewmodel??
+
                 if (username.length() < 5) {
                     inputUsername.setError(getString(R.string.error_username));
                     Snackbar.make(
@@ -85,7 +76,10 @@ public class ChangeUsernameFragment extends Fragment {
                             getString(R.string.error_username),
                             Snackbar.LENGTH_SHORT).show();
                 } else {
-                    PVM.editUsername(id, username).observe(getViewLifecycleOwner(), output -> {
+
+
+
+                    PVM.editUsername(username).observe(getViewLifecycleOwner(), output -> {
                         if (output.successful()) {
                             Snackbar.make(
                                     getView().findViewById(R.id.layout),
@@ -98,6 +92,8 @@ public class ChangeUsernameFragment extends Fragment {
                         }
                     });
                 }
+
+
             }
         });
 

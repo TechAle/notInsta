@@ -1,8 +1,10 @@
 package com.example.mobileproject.ViewModels.Users;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.LiveDataKt;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -44,8 +46,12 @@ public class UsersViewModel extends ViewModel {
         return selectedUsers;
     }
 
-    public MutableLiveData<Result> editUsername(String tag, String newUsername) {
-        return repo.editUsername(tag, newUsername);
+    public MutableLiveData<Result> editUsername( String newUsername) {
+        return repo.editUsername( newUsername);
+    }
+
+    public MutableLiveData<Result> editPassword(String newPassword) {
+        return repo.editPassword( newPassword);
     }
 
     public int getPage() {
@@ -132,5 +138,19 @@ public class UsersViewModel extends ViewModel {
 
     public void sendPasswordReset(String email){
         repo.passwordReset(email);
+    }
+
+
+    public void signOut() {
+        repo.signOut();
+    }
+
+    public void deleteAccount() {
+        repo.deleteAccount();
+    }
+
+
+    public void changeImage(Uri selectedImageUri) {
+        repo.changeImage(selectedImageUri);
     }
 }

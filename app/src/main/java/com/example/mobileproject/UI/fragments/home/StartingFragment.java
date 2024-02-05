@@ -100,12 +100,7 @@ public class StartingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Toolbar del fragment
-        // Aggiunta del titolo; commentato per il fatto che non è centrato orizzontalmente
         binding.toolbarStartingFragment.setTitle("!Insta");
-        /*binding.toolbarStartingFragment.setNavigationOnClickListener(v -> {
-            Intent i = new Intent(getActivity(), CameraActivity.class);
-            startActivity(i);
-        });*/
         binding.toolbarStartingFragment.inflateMenu(R.menu.settings_menu);
         binding.toolbarStartingFragment.setOnMenuItemClickListener(item -> {
             int action = item.getItemId();
