@@ -29,6 +29,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 */
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -146,6 +147,30 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
                         Post p = new Post(m, tag);
                         ArrayList<Post> results = new ArrayList<>();
                         results.add(p);
+                        c.onSuccess(results);
+                    } else {
+                        c.onFailure(task.getException());
+                    }
+                });
+    }
+
+    @Override
+    public void retrievePostsByAuthor(String idUser, int page){
+        DocumentReference refUser = db.collection("utenti").document(idUser);
+        db.collection("post")
+                .whereEqualTo("autore", refUser)
+                .orderBy("data")
+                .startAfter(page * 20)
+                .limit(20)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        List<Post> results = new ArrayList<>();
+                        for (QueryDocumentSnapshot i : task.getResult()) {
+                            Map<String, Object> m = i.getData();
+                            Post p = new Post(m, i.getId());
+                            results.add(p);
+                        }
                         c.onSuccess(results);
                     } else {
                         c.onFailure(task.getException());

@@ -1,5 +1,6 @@
 package com.example.mobileproject.dataLayer.sources;
 
+import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -34,12 +35,14 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageRef;
-    FirebaseAuth firebaseAuth;
-    public FirestoreUserRemoteSource(){
+    private final FirebaseAuth firebaseAuth;
+    private Application app;
+    public FirestoreUserRemoteSource(Application app){
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
+        this.app = app;
     }
     @Override
     public void retrieveUsers(CallbackUsers c){

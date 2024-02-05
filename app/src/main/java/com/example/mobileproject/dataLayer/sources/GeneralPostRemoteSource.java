@@ -23,6 +23,9 @@ public abstract class GeneralPostRemoteSource {
     public abstract void retrievePostByDocumentId(String tag);
     public abstract void retrievePosts();
     public abstract void retrievePostsWithTags(String[] tags);
+
+    public abstract void retrievePostsByAuthor(String idUser, int page);
+
     public abstract void createPosts(Post post);
     protected abstract void createDocument(String collectionName, Map<String, Object> documentFields, CallbackInterface ci);
     public abstract void createImage(Uri imageUri, String document, ContentResolver contentResolver, CallbackInterface postRepository, String id);

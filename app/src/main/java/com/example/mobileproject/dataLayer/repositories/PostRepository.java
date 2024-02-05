@@ -43,6 +43,11 @@ public class PostRepository implements CallbackPosts {
         rem.retrievePostByDocumentId(tag);
         return posts;
     }
+    public MutableLiveData<Result> retrieveUserPosts(String idUser, int page){
+        rem.retrievePostsByAuthor(idUser, page);
+        return posts;
+    }
+
     public MutableLiveData<Result> retrievePostsLL(int page){ //Lazy Loading
         rem.retrievePostsLL(page);
         return posts;
