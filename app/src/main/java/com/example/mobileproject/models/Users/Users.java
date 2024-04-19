@@ -52,8 +52,12 @@ public class Users {
         this.following = (ArrayList<DocumentReference>) m.get("following");
         this.followers = (ArrayList<DocumentReference>) m.get("followers");
         this.tags = (ArrayList<String>) m.get("tags");
-        this.dataNascita = ((Timestamp) m.get("dataNascita")).toDate();
         this.id = id;
+        try{
+            this.dataNascita = ((Timestamp) m.get("dataNascita")).toDate();
+        } catch (NullPointerException e) {
+            this.dataNascita = null;
+        }
     }
 
     public Users getUser() {

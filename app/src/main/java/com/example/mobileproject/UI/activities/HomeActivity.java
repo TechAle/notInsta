@@ -1,7 +1,6 @@
 package com.example.mobileproject.UI.activities;
 
 //import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 //import androidx.core.graphics.Insets;
 //import androidx.core.view.ViewCompat;
@@ -17,7 +16,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 //import android.view.ViewGroup;
 
 import com.example.mobileproject.R;
@@ -28,6 +26,7 @@ import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.utils.FragmentUtils;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,11 +38,24 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 //        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
-        if(FirebaseAuth.getInstance().getCurrentUser() == null){ //nessun utente loggato, fare il login e terminare l'attività. Ma non deve essere nel datalayer???
+
+        ServiceLocator sl = ServiceLocator.getInstance();
+        PostRepository pr = sl.getPostRepo(/*getApplication()*/);
+        UserRepository ur = sl.getUserRepo(getApplication());
+        if(pr == null || ur == null){
+            Log.wtf("WTF", "WTF");
+            finish();
+            return;
+        }
+        /*if(FirebaseAuth.getInstance().getCurrentUser() == null){
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             finish();
-        }
+            return;
+        }*/
+        PVM = new ViewModelProvider(this, new PostsVMFactory(sl.getPostRepo(/*getApplication()*/), sl.getUserRepo(getApplication())))
+            .get(PostsViewModel.class);
+        PVM.setUser();
         setContentView(R.layout.activity_home);
         //Questa cosa la avrei anche fatta, ma da problemi sul mio telefono (Android 9)
         /*ViewCompat.setOnApplyWindowInsetsListener( findViewById(R.id.globalView) , (v, windowInsets) -> {
@@ -56,12 +68,6 @@ public class HomeActivity extends AppCompatActivity {
             v.setLayoutParams(mlp);
             return WindowInsetsCompat.CONSUMED;
         });*/
-        /*
-        if(/*condizione di accesso non effettuato//*){
-            Intent i = new Intent(this, Login.class);
-            startActivityForResult(i); //ma è deprecato, serve qualcos'altro
-        }
-        */
         BottomNavigationView bottomBar = findViewById(R.id.bottomNavigationView);
         NavHostFragment n = (NavHostFragment) getSupportFragmentManager().
                 findFragmentById(R.id.fragment_window_host);
@@ -74,13 +80,11 @@ public class HomeActivity extends AppCompatActivity {
         String selectedLanguage = sharedPref.getString("selected_language", "en");
         FragmentUtils.loadLanguage(selectedLanguage, this, getResources());
 
-        ServiceLocator sl = ServiceLocator.getInstance();
-        PostRepository pr = sl.getPostRepo();
-        UserRepository ur = sl.getUserRepo(getApplication());
-        if(pr != null && ur != null){
-            PVM = new ViewModelProvider(this, new PostsVMFactory(sl.getPostRepo(), sl.getUserRepo(getApplication())))
-                    .get(PostsViewModel.class);
-        }/*
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(b -> {
+            startActivity(new Intent(this, CameraActivity.class));
+        });
+        /*
         else{
             //Snackbar.make( ,"Unexpected error",Snackbar.LENGTH_SHORT).show();
 

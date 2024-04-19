@@ -44,6 +44,7 @@ public class FragmentUtils {
             }
         });
     }
+    //TODO: Is this a data layer function?
 
     public static void loadLanguage(String lang, FragmentActivity activity, Resources res) {
         if (!lang.equals(Locale.getDefault().getLanguage())) {

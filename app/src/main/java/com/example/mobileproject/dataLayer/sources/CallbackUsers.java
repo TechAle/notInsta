@@ -15,6 +15,7 @@ import java.util.List;
 public interface CallbackUsers extends CallbackInterface {
     void onSuccess(List<Users> res);
 
+    //TODO: Controllare qua, non tutte sono chiamate di ritorno
     MutableLiveData<Result> getUser(String email, String password, boolean isUserRegistered);
     MutableLiveData<Result> getGoogleUser(String idToken);
     MutableLiveData<Result> logout();

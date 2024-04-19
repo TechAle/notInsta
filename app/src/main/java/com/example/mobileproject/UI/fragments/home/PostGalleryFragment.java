@@ -43,44 +43,25 @@ import javax.annotation.Nullable;
  * Use the {@link PostGalleryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PostGalleryFragment extends Fragment {
-
+public final class PostGalleryFragment extends GenericGalleryFragment{
+/*
     private FragmentPostGalleryBinding binding;
     private List<Post> postList;
     private PostAdapter pa;
     private PostsViewModel PVM;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private String user;
-    private int itemLoaded;
-
+    private int itemLoaded;*/
     public PostGalleryFragment() {
         // Required empty public constructor
     }
-/*
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param tag Parameter 1.
-     * @param user Parameter 2.
-     * @return A new instance of fragment PostGalleryFragment.
-     */
-    public static PostGalleryFragment newInstance(/*String tag, String user*/) {
+    public static PostGalleryFragment newInstance() {
         PostGalleryFragment fragment = new PostGalleryFragment();
-        /*Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, tag);
-        args.putString(ARG_PARAM2, user);
-        fragment.setArguments(args);*/
         return fragment;
     }
-
+/*
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ServiceLocator sl = ServiceLocator.getInstance();
         PostRepository pr = ServiceLocator.getInstance().getPostRepo();
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
@@ -102,14 +83,13 @@ public class PostGalleryFragment extends Fragment {
         return binding.getRoot();
     }
 
+*/
+    /*
     @Override
     public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState){
         super.onViewCreated(v, savedInstanceState);
-        itemLoaded = -1;
-
         RecyclerView posts = binding.gallery;
         StaggeredGridLayoutManager lmp = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-
         pa = new PostAdapter(postList, requireActivity().getApplication(), new PostAdapter.OnItemClickListener(){
             //Qua non metto una funzione anonima
             @Override
@@ -122,12 +102,10 @@ public class PostGalleryFragment extends Fragment {
         posts.setAdapter(pa);
         //binding.progressBar.setVisibility(View.VISIBLE);
         // progressbar non inserita, ma probabilmente all'interno del fragment assieme alla recyclerView
-
-        /*PVM.getPosts().observe(getViewLifecycleOwner(), result -> { //Listener
+        PVM.getPosts().observe(getViewLifecycleOwner(), result -> {
             if(result.successful()){//Successo nel recuperare i dati
                 PostResp resp = ((Result.PostResponseSuccess) result).getData();
                 List<Post> res = resp.getPostList();
-
                 if(!PVM.isLoading()){ //Se non è attiva una chiamata
                     if(PVM.isFirstLoading()){ //Se è il primo caricamento -> lista interna vuota o aggiornamento completo
                         PVM.setFirstLoading(false);
@@ -143,7 +121,7 @@ public class PostGalleryFragment extends Fragment {
                         postList.clear();
                         postList.addAll(res);
                         pa.notifyItemRangeInserted(0, res.size());
-                        if(postList.size() < 20){
+                        if(postList.size() < 20){ // Ho meno post di quelli possibili, allora non ne ho altri
                             PVM.setAllPosts(true);
                         }
                     }
@@ -161,16 +139,12 @@ public class PostGalleryFragment extends Fragment {
                         postList.add(res.get(i));
                     }
                     pa.notifyItemRangeInserted(initial_size, postList.size());
-                    if(res.size() < 20){
-                        PVM.setAllPosts(true);
-                    }
                 }
             } else {
                 //TODO: codice relativo + errore
                 //binding.progressBar.setVisibility(View.GONE);
             }
         });
-
         posts.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -184,13 +158,20 @@ public class PostGalleryFragment extends Fragment {
                     int visibleItemCount = lmp.getChildCount();
 
                     // Condition to enable the loading of other news while the user is scrolling the list
+                    if(!PVM.isLoading()
+                        && !PVM.areAllPosts()
+                        && (itemLoaded == visibleItemCount
+                            || (itemLoaded <= (pastVisiblesItems))
+                                && dy > 0)
+                        && PVM.getActualPosts().getValue() != null
+                    ) {/*
                     if (itemLoaded == visibleItemCount
                             || (itemLoaded <= (pastVisiblesItems + 2)
                                 && dy > 0
                                 && !PVM.isLoading())
-                            && PVM.getPosts().getValue() != null
+                            && PVM.getActualPosts().getValue() != null
                             && !PVM.areAllPosts())
-                    {
+                    {*//*
                         MutableLiveData<Result> m = PVM.getActualPosts();
 
                         if (m.getValue() != null && m.getValue().successful()) {
@@ -204,14 +185,72 @@ public class PostGalleryFragment extends Fragment {
                     }
                 }
             }
-        });*/
-    }
-    private boolean internetConnection(){
+        });
+    }*/
+
+    /*private boolean internetConnection(){
         ConnectivityManager cm =
                 (ConnectivityManager)requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkCapabilities nc = cm.getNetworkCapabilities(cm.getActiveNetwork());
         return nc != null
                 && nc.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 && nc.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+    }*/
+
+    @Override
+    protected void FetchAction(View v) {
+        PVM.getPosts().observe(getViewLifecycleOwner(), result -> {
+            if(result.successful()){//Successo nel recuperare i dati
+                PostResp resp = ((Result.PostResponseSuccess) result).getData();
+                List<Post> res = resp.getPostList();
+                if(!PVM.isLoading()){ //Se non è attiva una chiamata
+                    /*if(res.size() == 0){
+                        PVM.setAllPosts(true);
+                        postList.remove(null);
+                        return;
+                    }*/
+                    if(PVM.isFirstLoading()){ //Se è il primo caricamento -> lista interna vuota o aggiornamento completo
+                        PVM.setFirstLoading(false);
+                        int lastSize = postList.size();
+                        postList.clear();
+                        pa.notifyItemRangeRemoved(0, lastSize);
+                        postList.addAll(res);
+                        pa.notifyItemRangeInserted(0, postList.size());
+                        if(postList.size() < 20){ // Ho meno post di quelli possibili, allora non ne ho altri
+                            PVM.setAllPosts(true);
+                        }
+                    } else {// ???
+                        postList.clear();
+                        postList.addAll(res);
+                        pa.notifyItemRangeInserted(0, res.size());
+                        if(postList.size() < 20){ // Ho meno post di quelli possibili, allora non ne ho altri
+                            PVM.setAllPosts(true);
+                        }
+                    }
+                    //bindings
+                } else {
+                    PVM.setLoading(false); //rendo disponibile un altra chiamata
+                    /*if(res.size() == 0){
+                        PVM.setAllPosts(true);
+                        postList.remove(null);
+                        return;
+                    }*/
+                    int initial_size = postList.size();
+                    for(int i = 0; i < postList.size(); i++){
+                        if(postList.get(i) == null){
+                            postList.remove(null);
+                        }
+                    }
+                    int start_index = (PVM.getPage())*20; //TODO: volendo il 20 si può sostituire con una costante definita altrove
+                    for(int i = start_index; i < res.size(); i++){
+                        postList.add(res.get(i));
+                    }
+                    pa.notifyItemRangeInserted(initial_size, postList.size());
+                }
+            } else {
+                //TODO: codice relativo + errore
+                //binding.progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 }

@@ -248,12 +248,18 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                     });
         }
     }
+
+    /*public FirebaseUser getLoggedUser(){
+        return firebaseAuth.getCurrentUser();
+    }*/
+
     @Override
     public Users getLoggedUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {
             return null;
-        } else {
+        }
+        else {
             Map<String, Object> documentFields = new HashMap<>();
             //Stessa cosa
             db.collection("utenti").document(firebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -369,12 +375,9 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
     public void passwordReset(String email) {
         if (email != null) {
             firebaseAuth.sendPasswordResetEmail(email)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d("TAG", "Email sent.");
-                            }
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Log.d("TAG", "Email sent.");
                         }
                     });
         }

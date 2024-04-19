@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Snackbar.make(
                                             findViewById(android.R.id.content),
                                             getString(R.string.error_login),
-                                            Snackbar.LENGTH_SHORT);
+                                            Snackbar.LENGTH_SHORT).show();
                                 }
                             }
                         });

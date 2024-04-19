@@ -2,10 +2,7 @@ package com.example.mobileproject.models.Post;
 
 import android.net.Uri;
 
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.StorageReference;
+import com.example.mobileproject.utils.DateConverter;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,16 +11,44 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-//@Entity
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+/*@Entity (tableName = "posts")
+@TypeConverters(DateConverter.class)*/
 public class Post {
+/*    @PrimaryKey
+    @NonNull*/
     private String id;
-    private DocumentReference autore;
+    private String autore;
     private String descrizione;
     private Date pubblicazione;
     private List<String> tags;
-    private List<DocumentReference> likes;
+    private List<String> likes;
     private String image;
     private boolean promozionale;
+
+    public void setAutore(String autore) {
+        this.autore = autore;
+    }
+
+    public void setPubblicazione(Date pubblicazione) {
+        this.pubblicazione = pubblicazione;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public void setLikes(List<String> likes) {
+        this.likes = likes;
+    }
+
+    public void setPromozionale(boolean promozionale) {
+        this.promozionale = promozionale;
+    }
 
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
@@ -42,13 +67,25 @@ public class Post {
 
     }
 
-    public Post(String autore, String descrizione, List<String> tags, boolean promozionale, FirebaseFirestore db) {
-        this.autore = db.collection("utenti").document(autore);
+    public Post(String id, String autore, String descrizione, Date pubblicazione, List<String> tags, boolean promozionale, String imageURI) {
+        this.id = id; //TODO: come segnaposto pensavo di mettere un qualcosa del tipo "???1234"
+        this.autore = autore;
         this.descrizione = descrizione;
-        this.pubblicazione = Calendar.getInstance().getTime();
+        this.pubblicazione = pubblicazione;
         this.tags = tags;
         this.likes = new ArrayList<>();
         this.promozionale = promozionale;
+        this.image = imageURI;
+    }
+
+    public Post(String autore, String descrizione, Date pubblicazione, List<String> tags, boolean promo) {
+        this.id = "???";
+        this.autore = autore;
+        this.descrizione = descrizione;
+        this.pubblicazione = null;
+        this.tags = tags;
+        this.likes = new ArrayList<>();
+        this.promozionale = promo;
     }
 
     public void setId(String id) {
@@ -61,10 +98,10 @@ public class Post {
 
     public Post(Map<String, Object> m, String id) {
         this.descrizione = (String) m.get("descrizione");
-        this.pubblicazione = ((Timestamp) m.get("data")).toDate();
-        this.autore = (DocumentReference) m.get("creatoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
+        this.pubblicazione = (Date) m.get("data");
+        this.autore = (String) m.get("creatoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
         this.tags = (ArrayList<String>) m.get("tag");
-        this.likes = (ArrayList<DocumentReference>) m.get("likes");
+        this.likes = (ArrayList<String>) m.get("likes");
         this.id = id;
         this.promozionale = (Boolean) m.get("promozionale");
     }
@@ -73,7 +110,7 @@ public class Post {
         return id;
     }
 
-    public DocumentReference getAutore() {
+    public String getAutore() {
         return autore;
     }
 
@@ -85,7 +122,7 @@ public class Post {
         return pubblicazione;
     }
 
-    public List<DocumentReference> getLikes() {
+    public List<String> getLikes() {
         return likes;
     }
 
@@ -93,11 +130,9 @@ public class Post {
         return promozionale;
     }
 
-    public boolean getPromozionale() {
-        return this.promozionale;
-    }
-
     public Date getData() {
         return this.pubblicazione;
     }
+
 }
+//Calendar.getInstance().getTime()

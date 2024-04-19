@@ -23,9 +23,11 @@ public class UserRepository implements CallbackUsers {
 
     private final MutableLiveData<Result> ready;
 
-    public UserRepository(GeneralUserRemoteSource rem){
+    public UserRepository(GeneralUserRemoteSource rem/*, GeneralUserLocalSource local*/){
         this.rem = rem;
         this.rem.setCallback(this);
+/*        this.local = local;
+        this.local.setCallback(this);*/
         users = new MutableLiveData<>();
         ready = new MutableLiveData<>();
     }

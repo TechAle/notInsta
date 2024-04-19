@@ -25,7 +25,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private static final int NORMAL_TYPE = 0;
-    private static final int LOADING_TYPE = 0;
+    private static final int LOADING_TYPE = 1;
     private final List<Post> postSet;
 //    private final OnItemClickListener l; //Uncomment to use on clicking image
     private final Application appl; //per il caricamento con Glide

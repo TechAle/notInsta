@@ -93,7 +93,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView4"
-        android:name="com.example.mobileproject.UI.fragments.home.PostGalleryFragment"
+        android:name="com.example.mobileproject.UI.fragments.home.ProfileGalleryFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

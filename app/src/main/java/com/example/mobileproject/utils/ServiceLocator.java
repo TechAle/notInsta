@@ -6,6 +6,8 @@ import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.dataLayer.sources.FirestorePostRemoteSource;
 import com.example.mobileproject.dataLayer.sources.FirestoreUserRemoteSource;
+import com.example.mobileproject.dataLayer.sources.PostRoomDatabase;
+import com.example.mobileproject.dataLayer.sources.RoomPostLocalSource;
 import com.example.mobileproject.service.StoreAPIService;
 
 import retrofit2.Retrofit;
@@ -26,10 +28,14 @@ public class ServiceLocator {
         return INSTANCE;
     }
 
-    //TODO: vedere la Application
-//    public PostRepository getPostRepo(Application a){
-    public PostRepository getPostRepo(){
-        return new PostRepository(new FirestorePostRemoteSource());
+/*
+    public PostRoomDatabase getPostDao(Application a){
+        return PostRoomDatabase.getInstance(a);
+    }
+*/
+
+    public PostRepository getPostRepo(/*Application a*/){
+        return new PostRepository(new FirestorePostRemoteSource()/*, new RoomPostLocalSource(getPostDao(a))*/);
     }
 
     public UserRepository getUserRepo(Application app){
