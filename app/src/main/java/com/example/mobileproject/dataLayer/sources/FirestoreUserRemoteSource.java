@@ -8,7 +8,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 /*
-import com.example.mobileproject.dataLayer.repositories.ProductsRepository;
+import com.example.mobileproject.dataLayer.sources.AdvertisementSource;
 import com.example.mobileproject.models.Product;
 import com.example.mobileproject.models.StoreApiResponse;*/
 import com.example.mobileproject.models.Users.Users;
@@ -26,13 +26,11 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,7 +69,7 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                         c.onSuccess(results);
                     }
                     else{
-                        c.onFailure(task.getException());
+                        c.onUploadFailure(task.getException());
                     }
                 });
     }
@@ -88,7 +86,7 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                         c.onSuccess(results);
                     }
                     else{
-                        c.onFailure(task.getException());
+                        c.onUploadFailure(task.getException());
                     }
                 });
     }
@@ -118,20 +116,17 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                         if (task.isSuccessful()) {
                             if (task.getResult().isEmpty()) {
                                 updateField("utenti", user.getUid(), "username", newUsername, c);
-                            } else c.onFailure(new Exception("Someone already has this error"));
-                        } else c.onFailure(new Exception("Firebase error"));
+                            } else c.onUploadFailure(new Exception("Someone already has this error"));
+                        } else c.onUploadFailure(new Exception("Firebase error"));
                     });
         } else {
-            c.onFailure(new Exception("Firebase error"));
+            c.onUploadFailure(new Exception("Firebase error"));
         }
     }
     @Override
     public void editPassword(String newPassword) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
-
-        if (user != null)
-            user.updatePassword(newPassword);
-
+        if (user != null) user.updatePassword(newPassword);
     }
     @Override
     protected void createDocument(String collectionName, Map<String, Object> documentFields, CallbackInterface ci) {
@@ -142,7 +137,7 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                     if (task.isSuccessful())
                         ci.onUploadSuccess(task.getResult().getId());
                     else
-                        ci.onFailure(new Exception("Error creating document"));
+                        ci.onUploadFailure(new Exception("Error creating document"));
                 });
     }
     private void updateField(String collectionName, String documentId, String fieldToUpdate, Object newValue, CallbackInterface c) {
@@ -158,22 +153,10 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                     if (task.isSuccessful()) {
                         c.onSuccess();
                     } else {
-                        c.onFailure(new Exception("Firebase errore field"));
+                        c.onUploadFailure(new Exception("Firebase errore field"));
                     }
                 });
     }
-
-    /*@Override
-    public void createPosts(Post post, CallbackPosts ci) {
-        Map<String, Object> documentFields = new HashMap<>();
-        documentFields.put("autore", post.getAutore());
-        documentFields.put("likes", post.getLikes());
-        documentFields.put("promozionale", post.getPromozionale());
-        documentFields.put("data", post.getPubblicazione());
-        documentFields.put("tags", post.getTags());
-        documentFields.put("descrizione", post.getDescrizione());
-        createDocument("post", documentFields, ci);
-    }*/
     @Override
     public void createUser(Users user) {
         String uid = firebaseAuth.getCurrentUser().getUid();
@@ -274,8 +257,13 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                         String username = documentSnapshot.getString("username");
                         String descrizione = documentSnapshot.getString("descrizione");
                         Date dataNascita = documentSnapshot.getDate("dataNascita");
+                        Uri imgUri = firebaseUser.getPhotoUrl(); //TODO: controllare qua
+                        ArrayList<String> followers = null; //placeholder
+                        ArrayList<String> following = null; //placeholder
+                        /*
                         ArrayList<DocumentReference> followers = (ArrayList<DocumentReference>) documentSnapshot.get("followers");
                         ArrayList<DocumentReference> following = (ArrayList<DocumentReference>) documentSnapshot.get("following");
+                        */
                         ArrayList<String> tags = (ArrayList<String>) documentSnapshot.get("following");
 
                         Map<String, Object> documentFields = new HashMap<>();

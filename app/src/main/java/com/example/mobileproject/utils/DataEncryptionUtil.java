@@ -18,7 +18,7 @@ import java.security.GeneralSecurityException;
 
 /**
  * Utility class to encrypt data using EncryptedSharedPreferences and EncryptedFile.
- * Doc can be read here: https://developer.android.com/topic/security/data
+ * Doc can be read here: <a href="https://developer.android.com/topic/security/data">...</a>
  */
 public class DataEncryptionUtil {
 

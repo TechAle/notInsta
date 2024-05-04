@@ -6,17 +6,17 @@
     app:startDestination="@id/settingsFragment">
     <fragment
         android:id="@+id/changePasswordFragment"
-        android:name="com.example.mobileproject.UI.fragments.settings.ChangePasswordFragment"
+        android:name="com.example.mobileproject.UI.Settings.ChangePasswordFragment"
         android:label="fragment_change_password"
         tools:layout="@layout/fragment_change_password" />
     <fragment
         android:id="@+id/changeUsernameFragment"
-        android:name="com.example.mobileproject.UI.fragments.settings.ChangeUsernameFragment"
+        android:name="com.example.mobileproject.UI.Settings.ChangeUsernameFragment"
         android:label="fragment_change_username"
         tools:layout="@layout/fragment_change_username" />
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.mobileproject.UI.fragments.settings.SettingsFragment"
+        android:name="com.example.mobileproject.UI.Settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings">
         <action

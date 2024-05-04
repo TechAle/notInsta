@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.fragments.home.StartingFragment">
+    tools:context=".UI.Home.StartingFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tags"
@@ -28,7 +28,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView2"
-        android:name="com.example.mobileproject.UI.fragments.home.PostGalleryFragment"
+        android:name="com.example.mobileproject.UI.Home.PostGalleryFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

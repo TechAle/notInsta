@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 
 import com.example.mobileproject.models.Post.Post;
 
-//@Database(entities = {Post.class}, version = 1)
+@Database(entities = {Post.class}, version = 1)
 public abstract class PostRoomDatabase extends RoomDatabase {
     public abstract PostDao postDao();
     private static final int THREAD_NUMBER = Runtime.getRuntime().availableProcessors();

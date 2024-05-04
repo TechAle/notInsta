@@ -76,7 +76,7 @@ public class UserRepository implements CallbackUsers {
     }
 
     @Override
-    public void onFailure(Exception e) {
+    public void onUploadFailure(Exception e) {
         Result.Error resultError = new Result.Error(e.getMessage());
         users.postValue(resultError);
     }
@@ -109,6 +109,11 @@ public class UserRepository implements CallbackUsers {
         return users;
     }
 
+    /**
+     * Metodo per prendere le informazioni dell'utente loggato.
+     *
+     * @return Users loggato
+     */
     @Override
     public Users getLoggedUser() {
         return rem.getLoggedUser();

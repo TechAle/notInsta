@@ -2,11 +2,9 @@ package com.example.mobileproject.models.Post;
 
 import android.net.Uri;
 
-import com.example.mobileproject.utils.DateConverter;
+import com.example.mobileproject.utils.DBConverter;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,18 +14,22 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-/*@Entity (tableName = "posts")
-@TypeConverters(DateConverter.class)*/
+@Entity (tableName = "posts")
+@TypeConverters(DBConverter.class)
+
+/**
+ * Classe che rappresenta i posts
+ */
 public class Post {
-/*    @PrimaryKey
-    @NonNull*/
+    @PrimaryKey
+    @NonNull
     private String id;
     private String autore;
     private String descrizione;
     private Date pubblicazione;
     private List<String> tags;
     private List<String> likes;
-    private String image;
+    private Uri image;
     private boolean promozionale;
 
     public void setAutore(String autore) {
@@ -54,12 +56,12 @@ public class Post {
         this.descrizione = descrizione;
     }
 
-    public void setImage(String image) {
+    public void setImage(Uri image) {
         this.image = image;
     }
 
     // TODO make for null better management
-    public String getImage() {
+    public Uri getImage() {
         return image;
     }
 
@@ -67,7 +69,7 @@ public class Post {
 
     }
 
-    public Post(String id, String autore, String descrizione, Date pubblicazione, List<String> tags, boolean promozionale, String imageURI) {
+    public Post(String id, String autore, String descrizione, Date pubblicazione, List<String> tags, boolean promozionale, Uri imageURI) {
         this.id = id; //TODO: come segnaposto pensavo di mettere un qualcosa del tipo "???1234"
         this.autore = autore;
         this.descrizione = descrizione;
@@ -78,7 +80,7 @@ public class Post {
         this.image = imageURI;
     }
 
-    public Post(String autore, String descrizione, Date pubblicazione, List<String> tags, boolean promo) {
+    public Post(String autore, String descrizione, @Deprecated Date pubblicazione, List<String> tags, boolean promo) {
         this.id = "???";
         this.autore = autore;
         this.descrizione = descrizione;

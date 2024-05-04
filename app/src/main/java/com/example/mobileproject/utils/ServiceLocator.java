@@ -1,9 +1,11 @@
 package com.example.mobileproject.utils;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
+import com.example.mobileproject.dataLayer.sources.AdvertisementSource;
 import com.example.mobileproject.dataLayer.sources.FirestorePostRemoteSource;
 import com.example.mobileproject.dataLayer.sources.FirestoreUserRemoteSource;
 import com.example.mobileproject.dataLayer.sources.PostRoomDatabase;
@@ -28,14 +30,13 @@ public class ServiceLocator {
         return INSTANCE;
     }
 
-/*
-    public PostRoomDatabase getPostDao(Application a){
-        return PostRoomDatabase.getInstance(a);
+    public PostRoomDatabase getPostDao(Context c){
+        return PostRoomDatabase.getInstance(c);
     }
-*/
 
-    public PostRepository getPostRepo(/*Application a*/){
-        return new PostRepository(new FirestorePostRemoteSource()/*, new RoomPostLocalSource(getPostDao(a))*/);
+
+    public PostRepository getPostRepo(Context c){
+        return new PostRepository(new FirestorePostRemoteSource(), new RoomPostLocalSource(getPostDao(c)/*, a.getApplicationContext()*/), new AdvertisementSource());
     }
 
     public UserRepository getUserRepo(Application app){

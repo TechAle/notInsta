@@ -42,6 +42,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     val fragmentVersion = "1.6.2"
+    val workVersion = "2.9.0"
 
     // Java language implementation
     implementation("androidx.fragment:fragment:$fragmentVersion")
@@ -74,6 +75,18 @@ dependencies {
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
+
+    //Credential Manager
+    implementation("androidx.credentials:credentials:1.3.0-alpha03")
+
+    //WorkManager (non so se lo utilizzerò effettivamente)
+    implementation("androidx.work:work-runtime:$workVersion")
+    implementation("androidx.work:work-runtime-ktx:$workVersion")
+    implementation("androidx.work:work-multiprocess:$workVersion")//non so se è necessario questo
+
+    //DataStore
+    implementation("androidx.datastore:datastore-preferences:1.1.0")
+    implementation("androidx.datastore:datastore-preferences-rxjava3:1.1.0")
 
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")

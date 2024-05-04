@@ -12,7 +12,7 @@ import java.util.List;
 
 @Dao
 public interface PostDao {
-/*    @Query("SELECT * FROM posts ORDER BY pubblicazione")
+    @Query("SELECT * FROM posts ORDER BY pubblicazione")
     List<Post> getUserPosts();
 
     @Query("SELECT * FROM posts WHERE pubblicazione IS NULL")
@@ -21,8 +21,11 @@ public interface PostDao {
     @Insert
     void insertAll(List<Post> l);
 
-    @Update
-    int updateSyncPosts(List<Post> l);
+    @Insert
+    void insertPost(Post p);
+
+    /*@Update
+    int updateSyncPosts(List<Post> l);*/
 
     @Delete
     void deletePost(Post p);
@@ -30,5 +33,5 @@ public interface PostDao {
     void deleteAllWithoutQuery(Post... posts);
 
     @Query("DELETE FROM posts")
-    int deleteAll();*/
+    int deleteAll();
 }

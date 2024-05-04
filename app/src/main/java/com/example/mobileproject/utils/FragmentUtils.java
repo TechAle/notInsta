@@ -17,8 +17,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.Locale;
 
+@Deprecated
 public class FragmentUtils {
-    // Function to update the text of a view based on its ID
     // Function to update the text of a view based on its ID
     public static void updateTextById(View parentView, int viewId, String newText) {
         View view = parentView.findViewById(viewId);
