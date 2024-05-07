@@ -3,7 +3,6 @@ package com.example.mobileproject.dataLayer.repositories;
 import android.content.ContentResolver;
 import android.net.Uri;
 
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mobileproject.dataLayer.sources.CallbackPosts;
@@ -17,13 +16,13 @@ import com.example.mobileproject.utils.Result;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
 
 public class PostRepository implements CallbackPosts {
 
     private final MutableLiveData<Result> postsG;
     private final MutableLiveData<Result> postsO;
     private final MutableLiveData<Result> postsF;
-    private final MutableLiveData<Result> postsS;//TODO: può essere altro?
     private final MutableLiveData<Result> ready;
     private final MutableLiveData<Result> ad;
     private final GeneralPostRemoteSource rem;
@@ -35,12 +34,8 @@ public class PostRepository implements CallbackPosts {
     /**
      * Latch per permettere la chiamata sincrona da remoto
      */
+    private final CyclicBarrier barrier;//TODO: sostituzione latch con barriere
     private CountDownLatch latch;
-    private Uri image;              //Ma a cosa serve questo???
-
-    /*public void resetPosts() {
-        this.posts.setValue(null);
-    }*/
     /**
      * Costruttore
      */
@@ -54,9 +49,9 @@ public class PostRepository implements CallbackPosts {
         postsG = new MutableLiveData<>();
         postsO = new MutableLiveData<>();
         postsF = new MutableLiveData<>();
-        postsS = new MutableLiveData<>();
         ready = new MutableLiveData<>();
         ad = new MutableLiveData<>();
+        barrier = new CyclicBarrier(1);
     }
 
     //assegnamento in callback
@@ -125,32 +120,63 @@ public class PostRepository implements CallbackPosts {
 
     /**
      * Metodo che prende i post dell'utente loggato.
+     * @param page pagina di caricamento
      *
      * @implNote ATTENZIONE: questa è una chiamata sincrona, non deve essere utilizzata dal thread UI
      * (infatti è chiamata da un worker)
      */
-    public List<Post> syncPostsFromRemote(int page){
+    public List<Post> retrieveUserPostSynchronously(int page){
         latch = new CountDownLatch(1);
-        rem.retrievePostsForSync(page);
+        rem.retrieveUserPostsForSync(page);
         try{
             latch.await();
         } catch (InterruptedException e){
             return null;
         }
         if(res == null){
-            res = new ArrayList<>();
+            return new ArrayList<>();
         }
         return res;
     }
-
     public void loadPostsInLocal(List<Post> p){
         loc.insertPosts(p);
     }
 
-    public void syncPostsFromLocal(){
-
+    /**
+     * Metodo che prende i post dell'utente loggato postati dopo una certa data.
+     *
+     * @implNote ATTENZIONE: questa è una chiamata sincrona, non deve essere utilizzata dal thread UI
+     * (infatti è chiamata da un worker)
+     */
+    public List<Post> retrievePostsForSync(int page, long lastUpdate){
+        latch = new CountDownLatch(1);
+        rem.retrieveUserPostsForSync(page, lastUpdate);
+        try{
+            latch.await();
+        } catch (InterruptedException e){
+            return null;
+        }
+        if(res == null){
+            return new ArrayList<>();
+        }
+        return res;
     }
-
+    public List<Post> syncPostsFromLocal(){
+        latch = new CountDownLatch(1);
+        loc.retrieveNoSyncPosts();
+        try{
+            latch.await();
+        } catch (InterruptedException e){
+            return null;
+        }
+        if(res == null){
+            return new ArrayList<>();
+        }
+        return res;
+    }
+    public void substitutePost(Post p1, Post p2){
+        //TODO: implementare questa parte
+    }
     //Callbacks
 
     public void onSuccessG(List<Post> res) {/*
@@ -235,11 +261,17 @@ public class PostRepository implements CallbackPosts {
         latch.countDown();
     }
 
+    //TODO: duplicato?
     @Override
     public void onSuccessSyncLocal(List<Post> pl){
-        if(pl != null && pl.size()!=0) {
-            rem.createPosts(pl);
-        }
+        res = pl;
+        latch.countDown();
+    }
+
+    @Override
+    public void onFailureSync(){
+        res = null;
+        latch.countDown();
     }
 
     @Override

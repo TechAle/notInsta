@@ -12,6 +12,7 @@ public class Constants {
     public static final String PREF_SELECTED_LANGUAGE = "selected_language";
     public static final int ELEMENTS_LAZY_LOADING = 16;
     public static final String DB_NAME = "post_db";
+    public static final String LAST_UPDATE = "LastUpdate";
 
 
 }

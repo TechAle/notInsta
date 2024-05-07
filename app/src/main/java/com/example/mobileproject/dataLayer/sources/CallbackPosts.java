@@ -33,6 +33,8 @@ public interface CallbackPosts extends CallbackInterface {
      */
     void onSuccessSyncLocal(List<Post> res);
 
+    void onFailureSync();
+
     //Set di callback per lo sponsor
     void onSuccessAdv(Post p);
     void onFailureAdv(Exception e);

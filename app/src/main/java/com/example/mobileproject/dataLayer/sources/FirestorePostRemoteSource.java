@@ -17,6 +17,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Classe per il recupero remoto dei post da Firebase
@@ -32,6 +34,7 @@ import java.util.Map;
 public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
     FirebaseFirestore db;
     FirebaseStorage storage;
+    private Uri u;
     public FirestorePostRemoteSource(){
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -145,13 +148,24 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
                         List<Post> results = new ArrayList<>();
                         for(QueryDocumentSnapshot i : task.getResult()){
                             Map<String, Object> m = i.getData();
+                            CountDownLatch l = new CountDownLatch(1);
                             //TODO: gestione immagini
-                            /*storage.getReference().child((String) m.get("immagine")).getDownloadUrl().addOnCompleteListener(uri -> {
-
+                            StorageReference storageRef = storage.getReference();
+                            String path = "asdddsas";
+                            StorageReference imageRef = storageRef.child(path);
+                            imageRef.getDownloadUrl().addOnCompleteListener(image -> {
+                                if (image.isSuccessful()) {
+                                    Uri URLImage = image.getResult();
+                                    l.countDown();
+                                }
                             });
+                            try {
+                                l.await();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
                             m.replace("autore", ((DocumentReference) m.get("autore")).getId());
-
-                            m.replace("immagine", )*/
+                            m.replace("immagine", u);
                             m.replace("data", ((Timestamp) m.get("data")).toDate());
                             Post p = new Post(m, i.getId());
                             results.add(p);
@@ -189,30 +203,10 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
                 });
     }
 
-/*    @Override
-    public void retrievePostsForSync(Date lastUpdate){
-        db.collection("posts")
-            //.whereEqualTo("autore", <segnaposto per l'autore>)
-            .whereLessThan("data", lastUpdate)
-            .get()
-            .addOnCompleteListener(task -> {
-                if(task.isSuccessful()){
-                    List<Post> results = new ArrayList<>();
-                    for(QueryDocumentSnapshot i : task.getResult()){
-                        Map<String, Object> m = i.getData();
-                        Post p = new Post(m, i.getId());
-                        results.add(p);
-                    }
-                    c.onSuccess(results);
-                }
-                else{
-                    c.onFailure(task.getException());
-                }
-            });
-    }*/
-
+    //TODO: avevo in mente di utilizzare retrieveUserPosts(), ma mi servono callback diverse.
+    // Se funziona tutto pensavo di chiamare quella (e di riscrivere in parte il codice) [CCL]
     @Override
-    public void retrievePostsForSync(int page){
+    public void retrieveUserPostsForSync(int page){
         db.collection("posts")
                 .whereEqualTo("autore", FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .startAfter(page*ELEMENTS_LAZY_LOADING*5)
@@ -229,7 +223,32 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
                         c.onSuccessSyncRemote(results);
                     }
                     else{
-                        c.onUploadFailure(task.getException());
+                        c.onFailureSync();
+                    }
+                });
+    }
+
+    //Questa invece ha una query diversa, meglio tenerla separata (riferito al to do precedente) [CCL]
+    @Override
+    public void retrieveUserPostsForSync(int page, long lastUpdate){
+        db.collection("posts")
+                .whereEqualTo("autore", FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .whereGreaterThan("pubblicazione", lastUpdate)
+                .startAfter(page*ELEMENTS_LAZY_LOADING*5)
+                .limit(ELEMENTS_LAZY_LOADING*5)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        List<Post> results = new ArrayList<>();
+                        for(QueryDocumentSnapshot i : task.getResult()){
+                            Map<String, Object> m = i.getData(); //TODO: gestione immagini (e fallo!)
+                            Post p = new Post(m, i.getId());
+                            results.add(p);
+                        }
+                        c.onSuccessSyncRemote(results);
+                    }
+                    else{
+                        c.onFailureSync();
                     }
                 });
     }

@@ -1,7 +1,5 @@
 package com.example.mobileproject.UI.Login;
 
-//TODO: use this to solve deprecated calls (if you want to solve)
-//import android.credentials.CredentialManager;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -150,6 +148,7 @@ public class LoginFragment extends Fragment {
 
                 boolean inputError = false;
 
+                //TODO: messaggi non conformi agli standard di sicurezza
                 if (TextUtils.isEmpty(email)) {
                     inputError = true;
                     inputEmail.setError(getString(R.string.error_email));
