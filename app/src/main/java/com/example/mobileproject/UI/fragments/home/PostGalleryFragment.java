@@ -80,31 +80,15 @@ public class PostGalleryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*try{
-
-        }*//*
-        if (getArguments() != null) {
-            tag = getArguments().getString(ARG_PARAM1);
-            user = getArguments().getString(ARG_PARAM2);
-        }
-        else {
-            tag = null;
-            user = null;
-        } // TODO: può darsi che questo if-else debba essere sostituito da due try-catch?*/
+        ServiceLocator sl = ServiceLocator.getInstance();
         PostRepository pr = ServiceLocator.getInstance().getPostRepo();
         if(pr != null){
-            PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);
+            PVM = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
+
         } else { //TODO: Sostituire testo con una risorsa
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
         }
-        /*UserRepository ur = ServiceLocator.getInstance().getUserRepo();
-        if (ur != null) {
-            UVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ur)).get(UsersViewModel.class);
-        } else {
-            Snackbar.make(requireActivity().findViewById(android.R.id.content),
-                    "Unexpected Error", Snackbar.LENGTH_SHORT).show();
-        }*/
         postList = new ArrayList<>();
     }
 
@@ -139,8 +123,7 @@ public class PostGalleryFragment extends Fragment {
         //binding.progressBar.setVisibility(View.VISIBLE);
         // progressbar non inserita, ma probabilmente all'interno del fragment assieme alla recyclerView
 
-
-        PVM.getPosts().observe(getViewLifecycleOwner(), result -> { //Listener
+        /*PVM.getPosts().observe(getViewLifecycleOwner(), result -> { //Listener
             if(result.successful()){//Successo nel recuperare i dati
                 PostResp resp = ((Result.PostResponseSuccess) result).getData();
                 List<Post> res = resp.getPostList();
@@ -159,7 +142,7 @@ public class PostGalleryFragment extends Fragment {
                     } else {// ???
                         postList.clear();
                         postList.addAll(res);
-                        pa.notifyDataSetChanged(); // L'unico modo per non fare crashare
+                        pa.notifyItemRangeInserted(0, res.size());
                         if(postList.size() < 20){
                             PVM.setAllPosts(true);
                         }
@@ -221,7 +204,7 @@ public class PostGalleryFragment extends Fragment {
                     }
                 }
             }
-        });
+        });*/
     }
     private boolean internetConnection(){
         ConnectivityManager cm =

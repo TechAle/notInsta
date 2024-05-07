@@ -1,7 +1,9 @@
 package com.example.mobileproject.dataLayer.sources;
 
 import android.app.Application;
+
 import android.net.Uri;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -44,7 +46,7 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
     FirebaseStorage storage;
     StorageReference storageRef;
     FirebaseAuth firebaseAuth;
-    Application app;
+    private Application app;
     StoreAPIService storeAPIService;
 
     public FirestoreUserRemoteSource(Application app){

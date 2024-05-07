@@ -39,8 +39,7 @@ public class StartingFragment extends Fragment {
     private FragmentStartingBinding binding;
 
     private List<String> arrayTags;
-    private PostsViewModel ref_underlying_fragment;
-    private UsersViewModel UVM;
+    private PostsViewModel PVM;
     private TagsAdapter ta;
     public StartingFragment() {
         // Required empty public constructor
@@ -63,7 +62,7 @@ public class StartingFragment extends Fragment {
         if(pr != null){
             ref_underlying_fragment = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
 
-        } else { //TODO: Sostituire testo con una risorsa
+        } else {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
         }
@@ -74,8 +73,9 @@ public class StartingFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
         }*/
+        PVM = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
         arrayTags = new ArrayList<>();
-        arrayTags.add("Tag 1");
+        arrayTags.add("Tag di prova");
         arrayTags.add("Tag 2");
         arrayTags.add("Tag 3");
         arrayTags.add("Tag 4");
@@ -92,23 +92,15 @@ public class StartingFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         binding = FragmentStartingBinding.inflate(inflater, container, false);
+        PVM.setCurrentFragment(0);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ref_underlying_fragment = new ViewModelProvider(requireActivity()).get(PostsViewModel.class); //TODO: controllare qua
-        // Qua altrimenti cerca qualcosa di inesistente
-
-
         // Toolbar del fragment
-        // Aggiunta del titolo; commentato per il fatto che non è centrato orizzontalmente
-        //binding.toolbarStartingFragment.setTitle("!Insta");
-        binding.toolbarStartingFragment.setNavigationOnClickListener(v -> {
-            Intent i = new Intent(getActivity(), CameraActivity.class);
-            startActivity(i);
-        }); //Ok non è proprio consono per le foto, perlomeno è intuitivo
+        binding.toolbarStartingFragment.setTitle("!Insta");
         binding.toolbarStartingFragment.inflateMenu(R.menu.settings_menu);
         binding.toolbarStartingFragment.setOnMenuItemClickListener(item -> {
             int action = item.getItemId();
@@ -117,10 +109,6 @@ public class StartingFragment extends Fragment {
                 startActivity(i);
                 return true;
             }
-            /* Tip: Possibile aggiunta di elementi al menù:
-                - modificare il file settings_menu aggiungendo una voce di menu
-                - associare il comportamento voluto in questo punto con un else if (id richiesto)
-            */
             else {
                 return false;
             }
@@ -130,19 +118,17 @@ public class StartingFragment extends Fragment {
         RecyclerView.LayoutManager lmt = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.HORIZONTAL, false);
 
-        /*
         ta = new TagsAdapter(arrayTags, new TagsAdapter.OnItemClickListener(){
             @Override
             public void onTagClicked(String s, boolean selected){
                 //Snackbar.make(view, s, Snackbar.LENGTH_SHORT).show();
                 if(selected){
-                    ref_underlying_fragment.addTag(s);
+                    PVM.addTag(s, 0);
                 } else {
-                    ref_underlying_fragment.removeTag(s);
+                    PVM.removeTag(s);
                 }
             }
-        });*/
-
+        });
         tags.setLayoutManager(lmt);
         tags.setAdapter(ta);
 
