@@ -94,7 +94,6 @@ public class PostGalleryFragment extends Fragment {
         PostRepository pr = ServiceLocator.getInstance().getPostRepo();
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity(), new PostsVMFactory(pr)).get(PostsViewModel.class);
-
         } else { //TODO: Sostituire testo con una risorsa
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
@@ -140,6 +139,7 @@ public class PostGalleryFragment extends Fragment {
         //binding.progressBar.setVisibility(View.VISIBLE);
         // progressbar non inserita, ma probabilmente all'interno del fragment assieme alla recyclerView
 
+
         PVM.getPosts().observe(getViewLifecycleOwner(), result -> { //Listener
             if(result.successful()){//Successo nel recuperare i dati
                 PostResp resp = ((Result.PostResponseSuccess) result).getData();
@@ -159,7 +159,7 @@ public class PostGalleryFragment extends Fragment {
                     } else {// ???
                         postList.clear();
                         postList.addAll(res);
-                        pa.notifyItemRangeInserted(0, res.size());
+                        pa.notifyDataSetChanged(); // L'unico modo per non fare crashare
                         if(postList.size() < 20){
                             PVM.setAllPosts(true);
                         }

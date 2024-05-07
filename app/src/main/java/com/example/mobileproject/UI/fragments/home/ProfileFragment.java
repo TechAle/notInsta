@@ -123,6 +123,6 @@ public class ProfileFragment extends Fragment {
     }
 
     public void onLoadComplete(String id){
-        ref_underlying_fragment.setIdUser(id);
+        ref_underlying_fragment.getPostsByTag(id);
     }
 }

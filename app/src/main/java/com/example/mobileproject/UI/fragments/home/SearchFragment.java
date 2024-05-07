@@ -96,8 +96,9 @@ public class SearchFragment extends Fragment {
             }});*/
         Button b = view.findViewById(R.id.goResults);
         EditText t = view.findViewById(R.id.input_search);
+        /*
         b.setOnClickListener(l -> {
             ref_underlying_fragment.addTag(t.getText().toString());
-        });
+        });*/
     }
 }

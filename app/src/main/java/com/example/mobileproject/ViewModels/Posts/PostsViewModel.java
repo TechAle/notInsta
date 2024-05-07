@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.utils.Result;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,46 +37,23 @@ public class PostsViewModel extends ViewModel {
         this.tags = new HashSet<>();
     }
 
-    public void setIdUser(String id){
-        idUser = id;
-        removeTag();
-        getPosts();
-    }
-    public boolean addTag(String tag){
-        boolean success = tags.add(tag);
-        if(success){
-            idUser = null;
-            flush();
-        }
-        getPosts();
-        return success;
-    }
-    public void removeTag(){
-        tags.clear();
-        flush();
-    }
-    public boolean removeTag(String tag){
-        boolean success = tags.remove(tag);
-        if(success){
-            flush();
-        }
-        //getPosts();
-        return success;
-    }
 
     //getters & setters
     public MutableLiveData<Result> getPosts(){
-        if(posts == null){          //mai caricati o tag non corrispondente
-            if(tags.size() != 0){
-                posts = repo.retrievePostsWithTagsLL(tags.toArray(new String[tags.size()]), page);
-            } else if(idUser != null) {
-                posts = repo.retrievePostsbyAuthor(idUser, page);
-            } else {                //nessun filtro di ricerca, li prendo tutti
-                posts = repo.retrievePostsLL(page); //versione Lazy loading
-            }
-        }
+        posts = repo.retrievePostsLL(page);
         return posts;
     }
+
+    public MutableLiveData<Result> getPostsByTag(ArrayList<String> tags){
+        posts = repo.retrievePostsWithTagsLL(tags.toArray(new String[0]), page);
+        return posts;
+    }
+
+    public MutableLiveData<Result> getPostsByTag(String idUser){
+        posts = repo.retrievePostsbyAuthor(idUser, page);
+        return posts;
+    }
+
 
     public MutableLiveData<Result> getActualPosts(){ //versione senza chiamata
         return posts;
@@ -121,11 +99,12 @@ public class PostsViewModel extends ViewModel {
     public boolean areAllPosts() {
         return allPosts;
     }
-    private void flush(){
+    public void flush(){
         this.posts = null;
         this.page = 0;
         this.allPosts = false;
         this.loading = false;
         this.firstLoading = true;
+        this.idUser = null;
     }
 }

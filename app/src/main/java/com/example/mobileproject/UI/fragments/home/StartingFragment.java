@@ -130,6 +130,7 @@ public class StartingFragment extends Fragment {
         RecyclerView.LayoutManager lmt = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.HORIZONTAL, false);
 
+        /*
         ta = new TagsAdapter(arrayTags, new TagsAdapter.OnItemClickListener(){
             @Override
             public void onTagClicked(String s, boolean selected){
@@ -140,7 +141,7 @@ public class StartingFragment extends Fragment {
                     ref_underlying_fragment.removeTag(s);
                 }
             }
-        });
+        });*/
 
         tags.setLayoutManager(lmt);
         tags.setAdapter(ta);
