@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+//TODO: credo che questo debba stare in una source [CCL]
 public class BitmapUtils {
 
     public static Uri getUriFromBitmap(Context context, Bitmap bitmap) throws FileNotFoundException {

@@ -106,6 +106,7 @@ public class Post {
         this.likes = (ArrayList<String>) m.get("likes");
         this.id = id;
         this.promozionale = (Boolean) m.get("promozionale");
+        this.image = (Uri) m.get("immagine");
     }
 
     public String getId() {

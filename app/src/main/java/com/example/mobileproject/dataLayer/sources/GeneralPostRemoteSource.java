@@ -48,7 +48,7 @@ public abstract class GeneralPostRemoteSource {
      * @implNote Utilizza il meccanismo del lazy loading
      * @param page pagina di caricamento
      */
-    public abstract void retrievePostsLL(int page);
+    public abstract void retrievePosts(int page);
     public abstract void retrievePostsWithTagsLL(String[] tags, int page);
 /*    public abstract void retrievePostsForSync(Date d);*/
     public abstract void retrieveUserPostsForSync(int page);

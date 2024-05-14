@@ -14,41 +14,88 @@ import com.example.mobileproject.utils.DBConverter;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Classe per il recupero remoto dei post da Firebase
  */
-//TODO: mettere una Uri nel campo "immagine" per ogni post preso
-public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
+public class PostRemoteSource extends GeneralPostRemoteSource{
     FirebaseFirestore db;
     FirebaseStorage storage;
-    private Uri u;
-    public FirestorePostRemoteSource(){
+
+    /**
+     * Variabili per effettuare il lazy loading
+     * */
+    private DocumentSnapshot lastPostDate;
+    private final Map<String, DocumentSnapshot> lastElementPerAuthor;
+    public PostRemoteSource(){
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
+        lastElementPerAuthor = new HashMap<>();
+    }
+    @Override
+    public void retrievePosts(int page){
+        /*in genere:
+           - se viene chiesta la pagina 0 allora prendo i nuovi dati
+           - se viene chiesta un altra pagina allora continuo con gli stessi dati
+        */
+        //DocumentReference refUser = db.collection("utenti").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        if(page == 0){
+            lastPostDate = null;
+            //lastPostDate = new Timestamp(253402300799L, 999999999); //Magic number: massimo valore di timestamp consentito
+        }
+        Query q = db.collection("post")
+                //.whereNotEqualTo("autore", refUser)  //l'utente quando cerca altri post non cerca i propri //TODO: sistemare?
+                .orderBy("data", Query.Direction.DESCENDING);
+        if(lastPostDate != null){
+            q = q.startAfter(lastPostDate);
+        }
+        q.limit(ELEMENTS_LAZY_LOADING)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        List<Post> results = new ArrayList<>();
+                        for(QueryDocumentSnapshot i : task.getResult()){
+                            Map<String, Object> m = i.getData();
+                            //m.put("immagine", getUriFromIdAndToken(i.getId(), (String) m.get("immagine")));
+                            m.put("immagine", getUriFromId(i.getId()));
+                            m.replace("autore", ((DocumentReference) m.get("autore")).getId());
+                            m.put("data", ((Timestamp) m.get("data")).toDate());
+                            Post p = new Post(m, i.getId());
+                            results.add(p);
+                            lastPostDate = i;
+                        }
+                        c.onSuccessG(results);
+                    }
+                    else{
+                        c.onFailureG(task.getException());
+                    }
+                });
     }
     @Override
     public void retrievePostsSponsor() {
         db.collection("post")
                 .whereEqualTo("promozionale", true)
-                .get() //TODO: gestione immagini
+                .get()
                 .addOnCompleteListener(task -> {
                     ArrayList<Post> sponsors = new ArrayList<>();
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot i : task.getResult()) {
                             Map<String, Object> m = i.getData();
+                            m.replace("autore", ((DocumentReference) m.get("autore")).getId());
+                            m.put("immagine", getUriFromId(i.getId()));
                             m.replace("data", ((Timestamp) m.get("data")).toDate());
                             Post p = new Post(m, i.getId());
                             sponsors.add(p);
@@ -61,22 +108,31 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
                 });
     }
     @Override
-    public void retrievePostsByAuthor(@NonNull String idUser, int page){//TODO: ma invece di mettere l'id, non si potrebbe mettere lo username???
+    public void retrievePostsByAuthor(@NonNull String idUser, int page){//TODO: ma invece di mettere l'id, non si potrebbe mettere lo username?
         DocumentReference refUser = db.collection("utenti").document(idUser);
-        db.collection("post")
+        if(page == 0){
+            lastElementPerAuthor.put(idUser, null);
+        }
+        Query q = db.collection("post")
                 .whereEqualTo("autore", refUser)
-                .orderBy("data")
-                .startAfter(page * ELEMENTS_LAZY_LOADING)
-                .limit(ELEMENTS_LAZY_LOADING)
-                .get()//TODO: gestione immagini
+                .orderBy("data");
+        DocumentSnapshot d = lastElementPerAuthor.get(idUser);
+        if (d != null){
+            q = q.startAfter(d);
+        }
+        q.limit(ELEMENTS_LAZY_LOADING)
+                .get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         List<Post> results = new ArrayList<>();
                         for (QueryDocumentSnapshot i : task.getResult()) {
                             Map<String, Object> m = i.getData();
+                            m.put("immagine", getUriFromId(i.getId()));
+                            m.replace("autore", ((DocumentReference) m.get("autore")).getId());
                             m.replace("data", ((Timestamp) m.get("data")).toDate());
                             Post p = new Post(m, i.getId());
                             results.add(p);
+                            lastElementPerAuthor.replace((String) m.get("autore"), i);
                         }
                         c.onSuccessO(results);
                     } else {
@@ -136,51 +192,10 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
     }
 
     @Override
-    public void retrievePostsLL(int page){
-        db.collection("post")
-                //.whereNotEqualTo("autore", <segnaposto per l'autore>)  //l'utente quando cerca altri post non cerca i propri
-                .orderBy("data")
-                .startAfter(page * ELEMENTS_LAZY_LOADING)
-                .limit(ELEMENTS_LAZY_LOADING)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
-                        List<Post> results = new ArrayList<>();
-                        for(QueryDocumentSnapshot i : task.getResult()){
-                            Map<String, Object> m = i.getData();
-                            CountDownLatch l = new CountDownLatch(1);
-                            //TODO: gestione immagini
-                            StorageReference storageRef = storage.getReference();
-                            String path = "asdddsas";
-                            StorageReference imageRef = storageRef.child(path);
-                            imageRef.getDownloadUrl().addOnCompleteListener(image -> {
-                                if (image.isSuccessful()) {
-                                    Uri URLImage = image.getResult();
-                                    l.countDown();
-                                }
-                            });
-                            try {
-                                l.await();
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                            m.replace("autore", ((DocumentReference) m.get("autore")).getId());
-                            m.replace("immagine", u);
-                            m.replace("data", ((Timestamp) m.get("data")).toDate());
-                            Post p = new Post(m, i.getId());
-                            results.add(p);
-                        }
-                        c.onSuccessG(results);
-                    }
-                    else{
-
-                        c.onUploadFailure(task.getException());
-                    }
-                });
-    }
-    @Override
     public void retrievePostsWithTagsLL(String[] tags, int page) {//mero segnaposto, è come quello normale
-        db.collection("post").get() //TODO: gestione immagini
+        db.collection("post")
+                //.whereNotEqualTo("autore", <segnaposto per l'autore>)
+                .get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         List<Post> results = new ArrayList<>();
@@ -198,7 +213,7 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
                         c.onSuccessG(results);
                     }
                     else{
-                        c.onUploadFailure(task.getException());
+                        c.onFailureG(task.getException());
                     }
                 });
     }
@@ -206,7 +221,7 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
     //TODO: avevo in mente di utilizzare retrieveUserPosts(), ma mi servono callback diverse.
     // Se funziona tutto pensavo di chiamare quella (e di riscrivere in parte il codice) [CCL]
     @Override
-    public void retrieveUserPostsForSync(int page){
+    public void retrieveUserPostsForSync(int page){//TODO: fixare
         db.collection("posts")
                 .whereEqualTo("autore", FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .startAfter(page*ELEMENTS_LAZY_LOADING*5)
@@ -216,7 +231,7 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
                     if(task.isSuccessful()){
                         List<Post> results = new ArrayList<>();
                         for(QueryDocumentSnapshot i : task.getResult()){
-                            Map<String, Object> m = i.getData(); //TODO: gestione immagini (e fallo!)
+                            Map<String, Object> m = i.getData();
                             Post p = new Post(m, i.getId());
                             results.add(p);
                         }
@@ -241,7 +256,7 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
                     if(task.isSuccessful()){
                         List<Post> results = new ArrayList<>();
                         for(QueryDocumentSnapshot i : task.getResult()){
-                            Map<String, Object> m = i.getData(); //TODO: gestione immagini (e fallo!)
+                            Map<String, Object> m = i.getData();
                             Post p = new Post(m, i.getId());
                             results.add(p);
                         }
@@ -252,4 +267,10 @@ public class FirestorePostRemoteSource extends GeneralPostRemoteSource{
                     }
                 });
     }
+    private Uri getUriFromId(String id){
+        return Uri.parse("https://firebasestorage.googleapis.com/v0/b/notinsta-941ae.appspot.com/o/POSTS%2F" + id + ".png?alt=media");
+    }
+    /*private Uri getUriFromIdAndToken(String id, String token){//In pratica indovino l'url di download con un piccolo aiuto (rimane sempre lo stesso, tranne il valore del token e l'ID dell'autore)
+        return Uri.parse("https://firebasestorage.googleapis.com/v0/b/notinsta-941ae.appspot.com/o/POSTS%2F" + id + ".png?alt=media&token=" + token);
+    }*/
 }

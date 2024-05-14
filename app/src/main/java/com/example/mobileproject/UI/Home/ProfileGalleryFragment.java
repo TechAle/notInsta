@@ -61,11 +61,23 @@ public final class ProfileGalleryFragment extends GenericGalleryFragment{
                             postList.remove(null);
                         }
                     }
-                    int start_index = (PVM.getPage())*ELEMENTS_LAZY_LOADING;
-                    for(int i = start_index; i < res.size(); i++){
+                    int s = res.size();
+                    for(int i = 0; i < s; i++){
                         postList.add(res.get(i));
                     }
-                    pa.notifyItemRangeInserted(initial_size, postList.size());
+                    if(s < ELEMENTS_LAZY_LOADING){
+                        PVM.setAllPosts(true);
+                    }
+                    if(s == 0){
+                        pa.notifyItemRangeRemoved(initial_size, initial_size-1);
+                        PVM.setAllPosts(true);
+                    }
+                    else if(s == 1){
+                        pa.notifyItemChanged(initial_size);
+                    }
+                    else {
+                        pa.notifyItemRangeInserted(initial_size, postList.size());
+                    }
                 }
             } else {
                 //TODO: codice relativo + errore

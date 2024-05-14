@@ -102,13 +102,6 @@ public abstract class GenericGalleryFragment extends Fragment {
                             && dy > 0)
                             && PVM.getActualPosts().getValue() != null
                     ) {
-                    /*if (itemLoaded == visibleItemCount
-                            || (itemLoaded <= (pastVisiblesItems + 2)
-                                && dy > 0
-                                && !PVM.isLoading())
-                            && PVM.getActualPosts().getValue() != null
-                            && !PVM.areAllPosts())
-                    {*/
                         MutableLiveData<Result> m = PVM.getActualPosts();
 
                         if (m.getValue() != null && m.getValue().successful()) {

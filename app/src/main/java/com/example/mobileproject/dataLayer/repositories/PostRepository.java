@@ -84,7 +84,7 @@ public class PostRepository implements CallbackPosts {
      * @return Un MutableLiveData contenente il risultato. Settato tramite callback
      */
     public MutableLiveData<Result> retrievePostsLL(int page){ //Lazy Loading
-        rem.retrievePostsLL(page);
+        rem.retrievePosts(page);
         return postsG;
     }
 

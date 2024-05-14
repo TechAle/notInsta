@@ -125,7 +125,7 @@ public class ProcessedImageViewModel extends ViewModel {
     }
 
     // Posts the image with the description
-    public void postImage(AppCompatActivity t) {
+    public MutableLiveData<Result> postImage(AppCompatActivity t) {
         saveChanges();
         Bitmap image = getProcessedImage().getValue();
         String desc = getDescription().getValue();
@@ -133,10 +133,10 @@ public class ProcessedImageViewModel extends ViewModel {
         Boolean isProm = getIsPromotional().getValue();
         try{
             Uri imageUri = BitmapUtils.getUriFromBitmap(t, image);
-            PostRepository pr = ServiceLocator.getInstance().getPostRepo(t.getApplication());//TODO: controllare qua
+            PostRepository pr = ServiceLocator.getInstance().getPostRepo(t.getApplication());
             if(pr != null){
-                Post p = new Post();
-                pr.createPost(p);
+                Post p = new Post(null, desc, null, Arrays.asList(tagArr), isProm);
+                return pr.createPost(p);
                 //TODO: Decommentare qua
                 /*PostsViewModel PVM = new ViewModelProvider(t, new PostsVMFactory(pr)).get(PostsViewModel.class);
 
@@ -161,7 +161,7 @@ public class ProcessedImageViewModel extends ViewModel {
                 */
 
             } else {
-                // TODO errore
+                return null;
             }
             //FileOutputStream out = new FileOutputStream(file);
             //image.compress(Bitmap.CompressFormat.JPEG, 100, out);
@@ -169,6 +169,7 @@ public class ProcessedImageViewModel extends ViewModel {
             //out.close();
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 }

@@ -31,7 +31,6 @@ public class SearchGalleryFragment extends GenericGalleryFragment{
                     postList.remove(null);
                     return;
                 }*/
-                    //0TsbiPUaL5qfFQiH6572
                     if(PVM.isFirstLoading()){ //Se è il primo caricamento -> lista interna vuota o aggiornamento completo
                         PVM.setFirstLoading(false);
                         int lastSize = postList.size();
@@ -64,11 +63,23 @@ public class SearchGalleryFragment extends GenericGalleryFragment{
                             postList.remove(null);
                         }
                     }
-                    int start_index = (PVM.getPage())*ELEMENTS_LAZY_LOADING;
-                    for(int i = start_index; i < res.size(); i++){
+                    int sz = res.size();
+                    for(int i = 0; i < sz; i++){
                         postList.add(res.get(i));
                     }
-                    pa.notifyItemRangeInserted(initial_size, postList.size());
+                    if(sz < ELEMENTS_LAZY_LOADING){
+                        PVM.setAllPosts(true);
+                    }
+                    if(sz == 0){
+                        pa.notifyItemRangeRemoved(initial_size, initial_size-1);
+                        PVM.setAllPosts(true);
+                    }
+                    else if(sz == 1){
+                        pa.notifyItemChanged(initial_size);
+                    }
+                    else {
+                        pa.notifyItemRangeInserted(initial_size, postList.size());
+                    }
                 }
             } else {
                 //TODO: codice relativo + errore

@@ -5,13 +5,15 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
-public class RoomPostLocalSource extends GeneralPostLocalSource{
+public class PostLocalSource extends GeneralPostLocalSource{
 
     private final PostDao d;
 
-    public RoomPostLocalSource(@NonNull PostRoomDatabase db){
+    public PostLocalSource(@NonNull PostRoomDatabase db){
         this.d = db.postDao();
     }
+
+
     @Override
     public void insertPosts(List<Post> l){
         PostRoomDatabase.databaseWriteExecutor.execute(() -> {
