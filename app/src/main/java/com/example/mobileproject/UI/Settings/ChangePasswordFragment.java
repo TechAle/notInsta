@@ -54,7 +54,7 @@ public class ChangePasswordFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         ServiceLocator sl = ServiceLocator.getInstance();
-        UserRepository ur = sl.getUserRepo(this.requireActivity().getApplication());
+        UserRepository ur = sl.getUserRepo(/*this.requireActivity().getApplication()*/);
         PostRepository pr = sl.getPostRepo(this.requireActivity().getApplication());
         if (ur != null && pr != null) {
             PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ur, pr)).get(UsersViewModel.class);

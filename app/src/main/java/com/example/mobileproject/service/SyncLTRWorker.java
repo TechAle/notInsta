@@ -24,13 +24,13 @@ public class SyncLTRWorker extends Worker {
     }
     @NonNull
     @Override
-    public Result doWork() {
+    public Result doWork() {/*
         List<Post> pl = pr.syncPostsFromLocal();
         for(Post p : pl){
             //TODO: sistemare questa parte
             pr.createPost(p);
             pr.substitutePost(p, new Post());
-        }
+        }*/
         return Result.success();
     }
 }

@@ -25,7 +25,7 @@ public class SetupWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        int i = 0;
+        /*int i = 0;
         while(true){
             List<Post> tmp = pr.retrieveUserPostSynchronously(i); //Chiamata sincrona, vedere la javadoc del metodo
             if(tmp == null){ //Errore
@@ -37,6 +37,7 @@ public class SetupWorker extends Worker {
             }
             i++;
             pr.loadPostsInLocal(tmp);
-        }
+        }*/
+        return Result.success();
     }
 }

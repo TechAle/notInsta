@@ -1,6 +1,7 @@
 package com.example.mobileproject.UI.Home;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -22,7 +23,10 @@ import com.example.mobileproject.R;
 import com.example.mobileproject.UI.Camera.CameraActivity;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
+import com.example.mobileproject.models.Users.Users;
+import com.example.mobileproject.utils.DataStoreSingleton;
 import com.example.mobileproject.utils.FragmentUtils;
+import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,7 +41,7 @@ public class HomeActivity extends AppCompatActivity {
 
         ServiceLocator sl = ServiceLocator.getInstance();
         PostRepository pr = sl.getPostRepo(getApplication());
-        UserRepository ur = sl.getUserRepo(getApplication());
+        UserRepository ur = sl.getUserRepo(/*getApplication()*/);
         if(pr == null || ur == null) {
             Log.wtf("WTF", "WTF");
             finish();
@@ -60,11 +64,10 @@ public class HomeActivity extends AppCompatActivity {
         BottomNavigationView bottomBar = findViewById(R.id.bottomNavigationView);
         NavHostFragment n = (NavHostFragment) getSupportFragmentManager().
                 findFragmentById(R.id.fragment_window_host);
-        AppBarConfiguration barConfig = new AppBarConfiguration.Builder(R.id.startingFragment,
-                R.id.searchFragment, R.id.profileFragment).build();
+        /*AppBarConfiguration barConfig = new AppBarConfiguration.Builder(R.id.startingFragment,
+                R.id.searchFragment, R.id.profileFragment).build();*/
         NavController ctrl = n.getNavController();
         NavigationUI.setupWithNavController(bottomBar, ctrl);
-
         //TODO: cambiare la chiamate SharedPreferences con una a DataStore
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         String selectedLanguage = sharedPref.getString("selected_language", "en");

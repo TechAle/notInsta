@@ -1,9 +1,7 @@
 package com.example.mobileproject.dataLayer.repositories;
 
 import android.net.Uri;
-import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mobileproject.dataLayer.sources.CallbackUsers;
@@ -12,6 +10,7 @@ import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.models.Users.UsersResp;
 import com.example.mobileproject.utils.Result;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository implements CallbackUsers {
@@ -21,6 +20,7 @@ public class UserRepository implements CallbackUsers {
     private final GeneralUserRemoteSource rem;
 //    private final GeneralUserLocalSource local;
 
+    private UserResponseCallback c;
     private final MutableLiveData<Result> ready;
 
     public UserRepository(GeneralUserRemoteSource rem/*, GeneralUserLocalSource local*/){
@@ -30,6 +30,9 @@ public class UserRepository implements CallbackUsers {
         this.local.setCallback(this);*/
         users = new MutableLiveData<>();
         ready = new MutableLiveData<>();
+    }
+    public void setCallback(UserResponseCallback c){
+        this.c = c;
     }
 
     //assegnamento in callback
@@ -114,9 +117,9 @@ public class UserRepository implements CallbackUsers {
      *
      * @return Users loggato
      */
-    @Override
-    public Users getLoggedUser() {
-        return rem.getLoggedUser();
+
+    public void getLoggedUser() {
+        rem.getLoggedUser();
     }
 
     @Override
@@ -156,14 +159,18 @@ public class UserRepository implements CallbackUsers {
 
     @Override
     public void onSuccessFromRemoteDatabase(Users user) {
-        Result.UserResponseSuccessUser result = new Result.UserResponseSuccessUser(user);
-        users.postValue(result);
+        List<Users> l = new ArrayList<>();
+        l.add(user);
+        Result.UserResponseSuccess result = new Result.UserResponseSuccess(new UsersResp(l));
+        c.onResponseUser(result);
+        /*Result.UserResponseSuccessUser result = new Result.UserResponseSuccessUser(user);
+        users.postValue(result);*/
     }
 
     @Override
     public void onFailureFromRemoteDatabase(String message) {
         Result.Error result = new Result.Error(message);
-        users.postValue(result);
+        c.onResponseUser(result);
     }
 
     @Override

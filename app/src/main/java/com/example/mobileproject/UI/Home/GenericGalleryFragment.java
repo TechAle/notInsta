@@ -23,7 +23,6 @@ import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,9 +35,6 @@ public abstract class GenericGalleryFragment extends Fragment {
     protected PostsViewModel PVM;
     protected String user;
     protected int itemLoaded;
-    /*public PostGalleryFragment() {
-        // Required empty public constructor
-    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +47,6 @@ public abstract class GenericGalleryFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
         }
-        postList = new ArrayList<>();
     }
 
     @Override
@@ -72,15 +67,14 @@ public abstract class GenericGalleryFragment extends Fragment {
         pa = new PostAdapter(postList, requireActivity().getApplication(), new PostAdapter.OnItemClickListener() {
             //Qua non metto una funzione anonima
             @Override
-            public void onItemClicked() {
+            public void onItemClicked(Post p) {
                 //Volendo si può sostituire questa linea con qualcosa di altro
                 Snackbar.make(v, "Item Clicked", Snackbar.LENGTH_SHORT).show();
             }
         });
         posts.setLayoutManager(lmp);
         posts.setAdapter(pa);
-
-        FetchAction(v);
+        fetchAction(v);
 
         posts.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -110,12 +104,16 @@ public abstract class GenericGalleryFragment extends Fragment {
                             pa.notifyItemRangeInserted(postList.size(), postList.size() + 1);
                             PVM.setPage(PVM.getPage() + 1); //"giro" la pagina
                             //Inizio ad andare a prendere altri post
-                            PVM.findPosts();//TODO: Sistemare qua
+                            findAction();//TODO: Sistemare qua
                         }
                     }
                 }
             }
         });
+    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
     }
 
     private boolean internetConnection(){
@@ -127,5 +125,6 @@ public abstract class GenericGalleryFragment extends Fragment {
                 && nc.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
     }
 
-    protected abstract void FetchAction(View v);
+    protected abstract void fetchAction(View v);
+    protected abstract void findAction();
 }

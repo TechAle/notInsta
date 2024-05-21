@@ -1,5 +1,6 @@
 package com.example.mobileproject.UI.Home;
 
+import android.os.Bundle;
 import android.view.View;
 
 import static com.example.mobileproject.utils.Constants.ELEMENTS_LAZY_LOADING;
@@ -16,10 +17,23 @@ public final class ProfileGalleryFragment extends GenericGalleryFragment{
         return new ProfileGalleryFragment();
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        postList = PVM.getSavedPosts(2);
+    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        PVM.savePosts(postList, 2);
+    }
     //TODO: sistemare questa funzione
     @Override
-    protected void FetchAction(View v) {
-        PVM.getPosts().observe(getViewLifecycleOwner(), result -> {
+    protected void fetchAction(View v) {
+        if (PVM.areAllPosts()){
+            return;
+        }
+        PVM.getPosts(PostsViewModel.FragmentType.OWNED).observe(getViewLifecycleOwner(), result -> {
             if(result.successful()){//Successo nel recuperare i dati
                 PostResp resp = ((Result.PostResponseSuccess) result).getData();
                 List<Post> res = resp.getPostList();
@@ -84,5 +98,10 @@ public final class ProfileGalleryFragment extends GenericGalleryFragment{
                 //binding.progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    @Override
+    protected void findAction() {
+        PVM.findPosts(PostsViewModel.FragmentType.OWNED);
     }
 }

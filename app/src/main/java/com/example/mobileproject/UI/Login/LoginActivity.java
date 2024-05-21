@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ServiceLocator sl = ServiceLocator.getInstance();
-        UVM = new ViewModelProvider(this, new UsersVMFactory(sl.getUserRepo(getApplication()), sl.getPostRepo(getApplication())))
+        UVM = new ViewModelProvider(this, new UsersVMFactory(sl.getUserRepo(/*getApplication()*/), sl.getPostRepo(getApplication())))
                 .get(UsersViewModel.class);
         //TODO: dare un occhiata qua che non so se è giusto
         try{

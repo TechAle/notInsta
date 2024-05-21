@@ -20,7 +20,7 @@ import java.util.List;
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface OnItemClickListener{
-        void onItemClicked();
+        void onItemClicked(Post p);
     }
 
     private static final int NORMAL_TYPE = 0;
@@ -80,7 +80,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             iv = item.findViewById(R.id.post_image_bg);
             item.setOnClickListener(this);
         }
-        //TODO: sistemare il bind
         public void bind(Post p){
             //Caricamento immagine da URL con Glide
             //TODO: sistemare riferimento ad Application e cambiare foto di rimpiazzo (se qualcuno vuole)
@@ -89,7 +88,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         @Override
         public void onClick(View v) {
-            Snackbar.make(v, "Item clicked", Snackbar.LENGTH_SHORT).show();
+            l.onItemClicked(postSet.get(getAdapterPosition()));
+            //Snackbar.make(v, "Item clicked", Snackbar.LENGTH_SHORT).show();
         }
     }
     public static class LoadingPostViewHolder extends RecyclerView.ViewHolder {

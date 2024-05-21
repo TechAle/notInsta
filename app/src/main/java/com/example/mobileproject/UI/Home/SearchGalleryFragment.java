@@ -1,5 +1,6 @@
 package com.example.mobileproject.UI.Home;
 
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.lifecycle.MutableLiveData;
@@ -13,13 +14,26 @@ import com.example.mobileproject.utils.Result;
 import java.util.List;
 
 public class SearchGalleryFragment extends GenericGalleryFragment{
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        postList = PVM.getSavedPosts(1);
+    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        PVM.savePosts(postList, 1);
+    }
+    @Override
+    protected void fetchAction(View v) {}
 
     @Override
-    protected void FetchAction(View v) {}
+    protected void findAction() {
+        PVM.findPosts(PostsViewModel.FragmentType.FOUND);
+    }
 
     void loadPosts(String s){
         PVM.addTag(s);
-        MutableLiveData<Result> r = PVM.getPosts();
+        MutableLiveData<Result> r = PVM.getPosts(PostsViewModel.FragmentType.FOUND);
         if(r == null) return;
         r.observe(getViewLifecycleOwner(), result -> {
             if(result.successful()){//Successo nel recuperare i dati

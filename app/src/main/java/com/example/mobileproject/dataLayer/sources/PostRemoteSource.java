@@ -22,11 +22,14 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 /**
  * Classe per il recupero remoto dei post da Firebase
@@ -34,10 +37,6 @@ import java.util.Map;
 public class PostRemoteSource extends GeneralPostRemoteSource{
     FirebaseFirestore db;
     FirebaseStorage storage;
-
-    /**
-     * Variabili per effettuare il lazy loading
-     * */
     private DocumentSnapshot lastPostDate;
     private final Map<String, DocumentSnapshot> lastElementPerAuthor;
     public PostRemoteSource(){
@@ -143,6 +142,7 @@ public class PostRemoteSource extends GeneralPostRemoteSource{
     @Override
     public void createPost(Post post) {
         Map<String, Object> documentFields = new HashMap<>();
+        //documentFields.put("autore", FirebaseAuth.getInstance().getCurrentUser().getUid());
         documentFields.put("autore", post.getAutore());
         documentFields.put("likes", post.getLikes());
         documentFields.put("promozionale", post.isPromozionale());
@@ -153,7 +153,8 @@ public class PostRemoteSource extends GeneralPostRemoteSource{
                 .add(documentFields)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful())
-                        c.onUploadSuccess(task.getResult().getId());
+                        //c.onUploadSuccess(task.getResult().getId());
+                        c.onUploadPostSuccess(task.getResult().getId());
                     else
                         c.onUploadFailure(new Exception("Error creating document"));
                 });
@@ -166,29 +167,29 @@ public class PostRemoteSource extends GeneralPostRemoteSource{
         }
     }
     @Override
-    public void createImage(Uri imageUri, String document, ContentResolver context, @Deprecated CallbackInterface ci, String id) {
-        if (imageUri != null) {
+    public void createImage(/*Uri imageUri, String document, ContentResolver context, @Deprecated CallbackInterface ci,*/ String id, Bitmap bmp) {
+        /*if (imageUri != null) {
             try {
                 // Convert the image to PNG format
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context, imageUri);//maybe deprecated?
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context, imageUri);*/
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] data = baos.toByteArray();
                 // Create a unique filename for the uploaded image
                 String fileName = id + ".png";
-                storage.getReference(document)
+                storage.getReference("POSTS")
                         .child(fileName)
                         .putBytes(data)
                         .addOnSuccessListener(r -> {
-                            c.onSuccess();
+                            c.onUploadImageSuccess();
                         })
                         .addOnFailureListener(r -> {
                             c.onUploadFailure(new Exception("Caricamento fallito"));
                         });
-            } catch (IOException e) {
+            /*} catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }
+        }*/
     }
 
     @Override
@@ -222,7 +223,7 @@ public class PostRemoteSource extends GeneralPostRemoteSource{
     // Se funziona tutto pensavo di chiamare quella (e di riscrivere in parte il codice) [CCL]
     @Override
     public void retrieveUserPostsForSync(int page){//TODO: fixare
-        db.collection("posts")
+        /*db.collection("posts")
                 .whereEqualTo("autore", FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .startAfter(page*ELEMENTS_LAZY_LOADING*5)
                 .limit(ELEMENTS_LAZY_LOADING*5)
@@ -240,13 +241,13 @@ public class PostRemoteSource extends GeneralPostRemoteSource{
                     else{
                         c.onFailureSync();
                     }
-                });
+                });*/
     }
 
     //Questa invece ha una query diversa, meglio tenerla separata (riferito al to do precedente) [CCL]
     @Override
     public void retrieveUserPostsForSync(int page, long lastUpdate){
-        db.collection("posts")
+        /*db.collection("posts")
                 .whereEqualTo("autore", FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .whereGreaterThan("pubblicazione", lastUpdate)
                 .startAfter(page*ELEMENTS_LAZY_LOADING*5)
@@ -265,7 +266,7 @@ public class PostRemoteSource extends GeneralPostRemoteSource{
                     else{
                         c.onFailureSync();
                     }
-                });
+                });*/
     }
     private Uri getUriFromId(String id){
         return Uri.parse("https://firebasestorage.googleapis.com/v0/b/notinsta-941ae.appspot.com/o/POSTS%2F" + id + ".png?alt=media");

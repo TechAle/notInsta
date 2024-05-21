@@ -7,13 +7,14 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.mobileproject.models.Post.Post;
+import com.example.mobileproject.utils.Constants;
 
 import java.util.List;
 
 @Dao
 public interface PostDao {
-    @Query("SELECT * FROM posts ORDER BY pubblicazione")
-    List<Post> getUserPosts();
+    @Query("SELECT * FROM posts ORDER BY pubblicazione LIMIT " + Constants.ELEMENTS_LAZY_LOADING + " OFFSET :offset")
+    List<Post> getUserPosts(int offset);
 
     @Query("SELECT * FROM posts WHERE pubblicazione IS NULL")
     List<Post> getNoSyncPosts();

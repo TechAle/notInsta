@@ -26,6 +26,7 @@ import java.util.Arrays;
 public class ProcessedImageViewModel extends ViewModel {
 
     // Live Data
+    //Credo mi serva una spiegazione... [CCL]
     private MutableLiveData<Bitmap> processedImage;
     private MutableLiveData<Bitmap> tempImage;
     private MutableLiveData<String> filter;
@@ -132,11 +133,11 @@ public class ProcessedImageViewModel extends ViewModel {
         String[] tagArr = getTags().getValue();
         Boolean isProm = getIsPromotional().getValue();
         try{
-            Uri imageUri = BitmapUtils.getUriFromBitmap(t, image);
+            //Uri imageUri = BitmapUtils.getUriFromBitmap(t, image);
             PostRepository pr = ServiceLocator.getInstance().getPostRepo(t.getApplication());
             if(pr != null){
                 Post p = new Post(null, desc, null, Arrays.asList(tagArr), isProm);
-                return pr.createPost(p);
+                return pr.createPost(p, image);
                 //TODO: Decommentare qua
                 /*PostsViewModel PVM = new ViewModelProvider(t, new PostsVMFactory(pr)).get(PostsViewModel.class);
 

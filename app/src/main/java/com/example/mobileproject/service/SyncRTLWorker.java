@@ -31,7 +31,7 @@ public class SyncRTLWorker extends Worker{
         long lastUpdate = DataStoreSingleton.getInstance(getApplicationContext())
                 .readLongData(Constants.LAST_UPDATE);
         int i = 0;
-        while(true){
+        while(true){/*
             List<Post> tmp = pr.retrievePostsForSync(i, lastUpdate); //Chiamata sincrona, vedere la javadoc del metodo
             if(tmp == null){ //Errore
                 return Result.failure();
@@ -40,7 +40,8 @@ public class SyncRTLWorker extends Worker{
                 return Result.success();
             }
             i++;
-            pr.loadPostsInLocal(tmp);
+            pr.loadPostsInLocal(tmp);*/
+            return Result.success();
         }
     }
 }

@@ -13,10 +13,11 @@ import androidx.datastore.rxjava3.RxDataStore;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 
 /**
- * Classe di utilità per il salvataggio di coppie chiave-valore. Utilizza la API DataStore.
+ * Classe di utilità per il salvataggio di coppie chiave-valore non crittate. Utilizza la API DataStore.
  */
 
 public class DataStoreSingleton {
@@ -58,6 +59,27 @@ public class DataStoreSingleton {
     }
     public boolean writeLongData(String keyName, Long value){
         Preferences.Key<Long> val = PreferencesKeys.longKey(keyName);
+        Single<Preferences> res = ds.updateDataAsync(p -> {
+            MutablePreferences mp = p.toMutablePreferences();
+            mp.set(val, value);
+            return Single.just(mp);
+        }).onErrorReturnItem(error);
+        return res.blockingGet() != error;
+    }
+    public String readStringData(String keyname){
+        Preferences.Key<String> val = PreferencesKeys.stringKey(keyname);
+        Single<Preferences> valq = ds.data().first(error);
+        Single<String> value = ds.data().firstOrError().map(x -> x.get(val));
+        String s;
+        try{
+            s = value.blockingGet();
+        } catch(Exception e){
+            s = "bug";
+        }
+        return s;
+    }
+    public boolean writeStringData(String keyname, String value){
+        Preferences.Key<String> val = PreferencesKeys.stringKey(keyname);
         Single<Preferences> res = ds.updateDataAsync(p -> {
             MutablePreferences mp = p.toMutablePreferences();
             mp.set(val, value);

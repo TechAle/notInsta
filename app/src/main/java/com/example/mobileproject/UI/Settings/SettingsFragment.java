@@ -52,7 +52,7 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ctrl = NavHostFragment.findNavController(this);
 
-        UserRepository ur = ServiceLocator.getInstance().getUserRepo(this.requireActivity().getApplication());
+        UserRepository ur = ServiceLocator.getInstance().getUserRepo(/*this.requireActivity().getApplication()*/);
         PostRepository pr = ServiceLocator.getInstance().getPostRepo(this.requireActivity().getApplication());
         if (ur != null && pr != null) {
             PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ur, pr)).get(UsersViewModel.class);

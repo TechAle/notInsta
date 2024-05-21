@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileProject"
         tools:targetApi="34">
-
+        <activity
+            android:name=".UI.MainActivity"
+            android:exported="false" />
         <activity
             android:name=".UI.Settings.SettingsActivity"
             android:exported="false" />
@@ -31,7 +33,7 @@
         </activity>
         <activity
             android:name=".UI.Home.HomeActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".UI.Camera.CameraActivity"
             android:exported="true" />

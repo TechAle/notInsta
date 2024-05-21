@@ -44,16 +44,16 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
     FirebaseStorage storage;
     StorageReference storageRef;
     FirebaseAuth firebaseAuth;
-    private Application app;
+    //private Application app;
     StoreAPIService storeAPIService;
 
-    public FirestoreUserRemoteSource(Application app){
+    public FirestoreUserRemoteSource(/*Application app*/){
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         storeAPIService = ServiceLocator.getInstance().getProductsApiService();
-        this.app = app;
+        //this.app = app;
     }
     @Override
     public void retrieveUsers(){
@@ -160,8 +160,10 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
     @Override
     public void createUser(Users user) {
         String uid = firebaseAuth.getCurrentUser().getUid();
-        //non c'è qua una onCompleteListener?
-        db.collection("utenti").document(uid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        db.collection("utenti")
+                .document(uid)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
@@ -237,10 +239,10 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
     }*/
 
     @Override
-    public Users getLoggedUser() {
+    public void getLoggedUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {
-            return null;
+            c.onFailureFromRemoteDatabase("aaa");
         }
         else {
             Map<String, Object> documentFields = new HashMap<>();
@@ -250,22 +252,24 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     if (documentSnapshot.exists()) {
                         // User found, extract data
-
+                        Map<String, Object> m = documentSnapshot.getData();
+                        m.put("immagine", getUriFromId(firebaseAuth.getUid()));
+                        m.put("followers", null);
+                        m.put("following", null);
+                        m.put("tags", null);
+                        c.onSuccessFromRemoteDatabase(new Users(m, firebaseAuth.getUid()));
+                        /*
                         String email = documentSnapshot.getString("email");
                         String cognome = documentSnapshot.getString("cognome");
                         String nome = documentSnapshot.getString("nome");
                         String username = documentSnapshot.getString("username");
                         String descrizione = documentSnapshot.getString("descrizione");
                         Date dataNascita = documentSnapshot.getDate("dataNascita");
-                        Uri imgUri = firebaseUser.getPhotoUrl(); //TODO: controllare qua
                         ArrayList<String> followers = null; //placeholder
                         ArrayList<String> following = null; //placeholder
-                        /*
                         ArrayList<DocumentReference> followers = (ArrayList<DocumentReference>) documentSnapshot.get("followers");
                         ArrayList<DocumentReference> following = (ArrayList<DocumentReference>) documentSnapshot.get("following");
-                        */
                         ArrayList<String> tags = (ArrayList<String>) documentSnapshot.get("following");
-
                         Map<String, Object> documentFields = new HashMap<>();
                         documentFields.put("email", email);
                         documentFields.put("cognome", cognome);
@@ -276,11 +280,10 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                         documentFields.put("following", following);
                         documentFields.put("tags", tags);
                         documentFields.put("username", username);
+                        */
                     }
                 }
             });
-
-            return new Users(documentFields, firebaseUser.getUid());
         }
     }
     @Override
@@ -369,5 +372,8 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                         }
                     });
         }
+    }
+    private Uri getUriFromId(String id){
+        return Uri.parse("https://firebasestorage.googleapis.com/v0/b/notinsta-941ae.appspot.com/o/PFP%2F" + id + ".png?alt=media");
     }
 }

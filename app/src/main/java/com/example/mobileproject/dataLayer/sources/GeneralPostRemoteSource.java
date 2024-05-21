@@ -1,6 +1,7 @@
 package com.example.mobileproject.dataLayer.sources;
 
 import android.content.ContentResolver;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import com.example.mobileproject.models.Post.Post;
@@ -41,7 +42,7 @@ public abstract class GeneralPostRemoteSource {
     public abstract void createPost(Post post);
     public abstract void createPosts(List<Post> p);
 //    protected abstract void createDocument(String collectionName, Map<String, Object> documentFields, CallbackInterface ci);
-    public abstract void createImage(Uri imageUri, String document, ContentResolver contentResolver, CallbackInterface postRepository, String id);
+    public abstract void createImage(/*Uri imageUri, String document, ContentResolver contentResolver, CallbackInterface postRepository,*/ String id, Bitmap bmp);
 
     /**
      * Metodo per prendere tutti i post

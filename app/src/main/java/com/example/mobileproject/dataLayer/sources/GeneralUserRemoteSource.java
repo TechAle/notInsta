@@ -19,7 +19,7 @@ public abstract class GeneralUserRemoteSource {
     public abstract void editPassword(String newPassword);
     public abstract void changeImage(Uri selectedImageUri);
     protected abstract void createDocument(String collectionName, Map<String, Object> documentFields, CallbackInterface ci);
-    public abstract Users getLoggedUser();
+    public abstract void getLoggedUser();
     public abstract void logout();
     public abstract void signUp(String email, String password);
     public abstract void signIn(String email, String password);

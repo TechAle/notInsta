@@ -36,11 +36,11 @@ public class ServiceLocator {
 
 
     public PostRepository getPostRepo(Context c){
-        return new PostRepository(new PostRemoteSource(), new PostLocalSource(getPostDao(c)/*, a.getApplicationContext()*/), new AdvertisementSource());
+        return new PostRepository(new PostRemoteSource(), new PostLocalSource(getPostDao(c), c), new AdvertisementSource());
     }
 
-    public UserRepository getUserRepo(Application app){
-        return new UserRepository(new FirestoreUserRemoteSource(app));
+    public UserRepository getUserRepo(/*Application app*/){
+        return new UserRepository(new FirestoreUserRemoteSource(/*app*/));
     }
 
     public StoreAPIService getProductsApiService() {

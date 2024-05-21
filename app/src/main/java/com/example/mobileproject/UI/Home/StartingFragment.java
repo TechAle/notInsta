@@ -135,11 +135,11 @@ public class StartingFragment extends Fragment {
             @Override
             public void onTagClicked(String s, boolean selected){
                 //Snackbar.make(view, s, Snackbar.LENGTH_SHORT).show();
-                if(selected){
+                /*if(selected){
                     PVM.addTag(s);
                 } else {
                     PVM.removeTag(s);
-                }
+                }*/
             }
         });
         tags.setLayoutManager(lmt);

@@ -1,7 +1,9 @@
 package com.example.mobileproject.dataLayer.repositories;
 
 import android.content.ContentResolver;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Pair;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -13,8 +15,10 @@ import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Post.PostResp;
 import com.example.mobileproject.utils.Result;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 
@@ -28,14 +32,15 @@ public class PostRepository implements CallbackPosts {
     private final GeneralPostRemoteSource rem;
     private final GeneralPostLocalSource loc;
     private final GeneralAdvSource ads;
+    private final Queue< Pair<Post, Bitmap> > q;
 
-    private List<Post> res;
+    /*private List<Post> res;
 
     /**
      * Latch per permettere la chiamata sincrona da remoto
      */
-    private final CyclicBarrier barrier;//TODO: sostituzione latch con barriere
-    private CountDownLatch latch;
+    //private final CyclicBarrier barrier;
+    //private CountDownLatch latch;
     /**
      * Costruttore
      */
@@ -51,9 +56,13 @@ public class PostRepository implements CallbackPosts {
         postsF = new MutableLiveData<>();
         ready = new MutableLiveData<>();
         ad = new MutableLiveData<>();
-        barrier = new CyclicBarrier(1);
+        q = new ArrayDeque<>();
+        //barrier = new CyclicBarrier(1);
     }
 
+    public void setCallback(){
+
+    }
     //assegnamento in callback
     /*public MutableLiveData<Result> retrievePosts(){
         rem.retrievePosts();
@@ -71,8 +80,9 @@ public class PostRepository implements CallbackPosts {
         rem.retrievePostsByAuthor(idUser, page);
         return postsO;
     }
-    public MutableLiveData<Result> retrieveUserPosts(String idUser, int page){
-        rem.retrievePostsByAuthor(idUser, page);
+    public MutableLiveData<Result> retrieveUserPosts(int page){
+        loc.retrievePosts(page);
+        //rem.retrievePostsByAuthor(idUser, page);
         return postsO;
     }
 
@@ -118,6 +128,14 @@ public class PostRepository implements CallbackPosts {
         return ready;
     }
 
+    public MutableLiveData<Result> createPost(Post post, Bitmap bmp) {
+        q.add(new Pair<>(post, bmp));
+        rem.createPost(post);
+        return ready;
+    }
+
+    //TODO: valutare se serve questa funzione (verrà chiamata da un worker?)
+    /*
     /**
      * Metodo che prende i post dell'utente loggato.
      * @param page pagina di caricamento
@@ -125,7 +143,7 @@ public class PostRepository implements CallbackPosts {
      * @implNote ATTENZIONE: questa è una chiamata sincrona, non deve essere utilizzata dal thread UI
      * (infatti è chiamata da un worker)
      */
-    public List<Post> retrieveUserPostSynchronously(int page){
+    /*public List<Post> retrieveUserPostSynchronously(int page){
         latch = new CountDownLatch(1);
         rem.retrieveUserPostsForSync(page);
         try{
@@ -140,15 +158,16 @@ public class PostRepository implements CallbackPosts {
     }
     public void loadPostsInLocal(List<Post> p){
         loc.insertPosts(p);
-    }
+    }*/
 
+    /*
     /**
      * Metodo che prende i post dell'utente loggato postati dopo una certa data.
      *
      * @implNote ATTENZIONE: questa è una chiamata sincrona, non deve essere utilizzata dal thread UI
      * (infatti è chiamata da un worker)
      */
-    public List<Post> retrievePostsForSync(int page, long lastUpdate){
+    /*public List<Post> retrievePostsForSync(int page, long lastUpdate){
         latch = new CountDownLatch(1);
         rem.retrieveUserPostsForSync(page, lastUpdate);
         try{
@@ -160,8 +179,8 @@ public class PostRepository implements CallbackPosts {
             return new ArrayList<>();
         }
         return res;
-    }
-    public List<Post> syncPostsFromLocal(){
+    }*/
+    /*public List<Post> syncPostsFromLocal(){
         latch = new CountDownLatch(1);
         loc.retrieveNoSyncPosts();
         try{
@@ -173,33 +192,19 @@ public class PostRepository implements CallbackPosts {
             return new ArrayList<>();
         }
         return res;
-    }
+    }*/
     public void substitutePost(Post p1, Post p2){
         //TODO: implementare questa parte
     }
     //Callbacks
 
-    public void onSuccessG(List<Post> res) {/*
-        if (posts.getValue() != null && posts.getValue().successful()) { //Lazy Loading
-            List<Post> l = ((Result.PostResponseSuccess)posts.getValue()).getData().getPostList();
-            l.addAll(res);
-            Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(l));
-            posts.postValue(result);
-        } else {*/
+    public void onSuccessG(List<Post> res) {
         Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(res));
         postsG.postValue(result);
-        //}
     }
-    public void onSuccessO(List<Post> res) {/*
-        if (posts.getValue() != null && posts.getValue().successful()) { //Lazy Loading
-            List<Post> l = ((Result.PostResponseSuccess)posts.getValue()).getData().getPostList();
-            l.addAll(res);
-            Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(l));
-            posts.postValue(result);
-        } else {*/
+    public void onSuccessO(List<Post> res) {
         Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(res));
         postsO.postValue(result);
-        //}
     }
     public void onSuccessF(List<Post> res) {/*
         if (posts.getValue() != null && posts.getValue().successful()) { //Lazy Loading
@@ -238,30 +243,70 @@ public class PostRepository implements CallbackPosts {
     @Override
     public void onUploadFailure(Exception e) {
         Result.Error resultError = new Result.Error(e.getMessage());
+        /*
+        DataStoreSingleton ds = DataStoreSingleton.getInstance();
+        long temp = ds.readLongData("postsNotLoaded");
+        p.setId("???" + temp);
+        ds.writeLongData("postsNotLoaded", temp+1);
+        p.setImage(loc.createImage());
+        loc.insertPost(p);
+        */
         ready.postValue(resultError);
     }
 
     @Override
+    @Deprecated
     public void onUploadSuccess(String id) {
         Result.PostCreationSuccess result = new Result.PostCreationSuccess(id);
         ready.postValue(result);
     }
+    public void onUploadImageSuccess(){
+        Result.PostCreationSuccess result = new Result.PostCreationSuccess("immagine");
+        ready.postValue(result);
+    }
+    @Override
+    public void onUploadPostSuccess(String id){
+        Pair<Post, Bitmap> p = q.remove();
+        p.first.setId(id);
+        rem.createImage(id, p.second);
+        Uri img = loc.createImage(p.second);
+        if (img == null){
+            Result.Error res = new Result.Error("Saving image error");
+            ready.postValue(res);
+            return;
+        }
+        p.first.setImage(img);
+        loc.insertPost(p.first);
+    }
+    @Override
+    public void onLocalSaveSuccess(){
+        Result.PostCreationSuccess res = new Result.PostCreationSuccess("aaa");
+        ready.postValue(res);
+    }
+    public void onLocalSaveFailure(){
+        Result.Error resultError = new Result.Error("Qualcosa è andato storto in locale");
+        /*
+        DataStoreSingleton ds = DataStoreSingleton.getInstance();
+        long temp = ds.readLongData("postsNotLoaded");
+        p.setId("???" + temp);
+        ds.writeLongData("postsNotLoaded", temp+1);
+        p.setImage(loc.createImage());
+        loc.insertPost(p);
+        */
+        ready.postValue(resultError);
+    }
 
-    public MutableLiveData<Result> createImage(Uri imageUri, String document, ContentResolver contentResolver, String id) {
+    /*public MutableLiveData<Result> createImage(Uri imageUri, String document, ContentResolver contentResolver, String id) {
         rem.createImage(imageUri, document, contentResolver, this, id);
         return ready;
     }
 
-    /**
-     * Callback per sincronizzazione
-     */
+
     @Override
     public void onSuccessSyncRemote(List<Post> pl){
         res = pl;
         latch.countDown();
     }
-
-    //TODO: duplicato?
     @Override
     public void onSuccessSyncLocal(List<Post> pl){
         res = pl;
@@ -273,7 +318,7 @@ public class PostRepository implements CallbackPosts {
         res = null;
         latch.countDown();
     }
-
+    */
     @Override
     public void onSuccessAdv(Post p) {
         List<Post> pl = new ArrayList<>();

@@ -2,6 +2,7 @@ package com.example.mobileproject.UI.Home;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Bundle;
 import android.view.View;
 
 import com.example.mobileproject.models.Post.Post;
@@ -27,17 +28,25 @@ public final class PostGalleryFragment extends GenericGalleryFragment{
         return fragment;
     }
     @Override
-    protected void FetchAction(View v) {
-        PVM.getPosts().observe(getViewLifecycleOwner(), result -> {
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        postList = PVM.getSavedPosts(0);
+    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        PVM.savePosts(postList, 0);
+    }
+    @Override
+    protected void fetchAction(View v) {
+        if (PVM.areAllPosts()){
+            return;
+        }
+        PVM.getPosts(PostsViewModel.FragmentType.GLOBAL).observe(getViewLifecycleOwner(), result -> {
             if(result.successful()){//Successo nel recuperare i dati
                 PostResp resp = ((Result.PostResponseSuccess) result).getData();
                 List<Post> res = resp.getPostList();
                 if(!PVM.isLoading()){ //Se non è attiva una chiamata
-                    /*if(res.size() == 0){
-                        PVM.setAllPosts(true);
-                        postList.remove(null);
-                        return;
-                    }*/
                     if(PVM.isFirstLoading()){ //Se è il primo caricamento -> lista interna vuota o aggiornamento completo richiesto
                         PVM.setFirstLoading(false);
                         int lastSize = postList.size();
@@ -89,5 +98,10 @@ public final class PostGalleryFragment extends GenericGalleryFragment{
                 Snackbar.make(v, "Error while retrieving posts", Snackbar.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void findAction() {
+        PVM.findPosts(PostsViewModel.FragmentType.GLOBAL);
     }
 }
