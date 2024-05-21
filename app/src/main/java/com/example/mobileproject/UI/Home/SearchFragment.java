@@ -45,7 +45,6 @@ public class SearchFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
-        PVM.setCurrentFragment(1);
         return binding.getRoot();
     }
 
@@ -58,19 +57,9 @@ public class SearchFragment extends Fragment {
             f.loadPosts(binding.inputSearch.getText().toString());
         });
         PVM.getSponsoredPosts().observe(getViewLifecycleOwner(), post -> {
-            if(post.successful()) {
-                PostResp sponsoredPost = ((Result.PostResponseSuccess) post).getData();
-                List<Post> sponsored = sponsoredPost.getPostList();
-                Post finalPost = sponsored.get((int) (Math.random()*sponsored.size()));
-                Glide.with(this).load(finalPost.getImage()).placeholder(R.drawable.ic_launcher_foreground).into(binding.sponsorImage);
-                binding.sponsorText.setText(finalPost.getAutore());
-                binding.sponsorLayout.setVisibility(View.VISIBLE);
-                /*if (finalPost.getImage() == null)
-                    //FragmentUtils.loadImage(storageRef, "POSTS/" + finalPost.getId() + ".png", view, R.id.sponsorImage);
-                else
-                    FragmentUtils.loadImage(finalPost.getImage(), view, R.id.sponsorImage);
-                FragmentUtils.updateTextById(view, R.id.sponsorText, "Sponsor: " + finalPost.getDescrizione());
-                t.setVisibility(View.VISIBLE);*/
-            }});
+            Glide.with(this).load(post.getImage()).placeholder(R.drawable.ic_launcher_foreground).into(binding.sponsorImage);
+            binding.sponsorText.setText(post.getAutore());
+            binding.sponsorLayout.setVisibility(View.VISIBLE);
+        });
     }
 }

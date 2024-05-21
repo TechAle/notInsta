@@ -14,6 +14,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileproject.R;
+import com.example.mobileproject.utils.Result;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -73,7 +75,12 @@ public class CameraActivity extends AppCompatActivity {
                     photo = BitmapFactory.decodeStream(inputStream);
                 }
             } else {
-                photo = (Bitmap) data.getExtras().get("data");
+                Bundle b = data.getExtras();
+                if(b == null){
+                    photo = null;
+                } else {
+                    photo = (Bitmap) b.get("data");
+                }
             }
             //imageView.setImageBitmap(photo);
             viewModel.getProcessedImage().setValue(photo);
@@ -116,12 +123,33 @@ public class CameraActivity extends AppCompatActivity {
                 break;
             case 3:
                 // Send post
-                viewModel.postImage(this);
-                // Go back to main
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainerView, ImageChooserFragment.class, null)
-                        .commit();
-                currentFragment = 0;
+                viewModel.postImage(this).observe(this, result -> {
+                    String text = "";
+                    if(result.successful()){
+                        Result.PostCreationSuccess.ResponseType type = ((Result.PostCreationSuccess) result).getData();
+                        switch(type){
+                            case SUCCESS:
+                                text = getResources().getString(R.string.post_created);
+                                break;
+                            case LOCAL:
+                                text = getResources().getString(R.string.post_created_local_only);
+                                break;
+                            case REMOTE:
+                                text = getResources().getString(R.string.post_created_remote_only);
+                                break;
+                            case NO_REMOTE_IMAGE:
+                                text = getResources().getString(R.string.post_created_no_remote_image);
+                                break;
+                        }
+                    } else {
+                        text = getResources().getString(R.string.post_not_created);
+                    }
+                    Snackbar.make(findViewById(android.R.id.content), text, Snackbar.LENGTH_SHORT).show();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragmentContainerView, ImageChooserFragment.class, null)
+                            .commit();
+                    currentFragment = 0;
+                });
                 break;
         }
     }

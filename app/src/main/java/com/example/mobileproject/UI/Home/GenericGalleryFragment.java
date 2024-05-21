@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -19,10 +18,10 @@ import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.databinding.FragmentPostGalleryBinding;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.utils.PostAdapter;
-import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,6 +29,7 @@ import javax.annotation.Nullable;
 
 public abstract class GenericGalleryFragment extends Fragment {
     protected FragmentPostGalleryBinding binding;
+    protected PostsViewModel.FragmentType type;
     protected List<Post> postList;
     protected PostAdapter pa;
     protected PostsViewModel PVM;
@@ -47,6 +47,7 @@ public abstract class GenericGalleryFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
         }
+        postList = new ArrayList<>();
     }
 
     @Override
@@ -75,13 +76,12 @@ public abstract class GenericGalleryFragment extends Fragment {
         posts.setLayoutManager(lmp);
         posts.setAdapter(pa);
         fetchAction(v);
-
         posts.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (internetConnection()                //la connessione deve esserci, altrimenti nulla avrebbe senso
-                        && !PVM.areAllPosts()) //se non sono tutti i risultati
+                        && !PVM.areAllPosts(type)) //se non sono tutti i risultati
                 {
                     itemLoaded = lmp.getItemCount();
                     int pastVisiblesItems = Arrays.stream(lmp.findLastVisibleItemPositions(new int[2])).sum();
@@ -89,32 +89,26 @@ public abstract class GenericGalleryFragment extends Fragment {
                     int visibleItemCount = lmp.getChildCount();
 
                     // Condition to enable the loading of other news while the user is scrolling the list
-                    if (!PVM.isLoading()
-                            && !PVM.areAllPosts()
+                    if (!PVM.isLoading(type)
+                            && !PVM.areAllPosts(type) //avrei qualche dubbio su questa condizione...
                             && (itemLoaded == visibleItemCount
-                            || (itemLoaded <= (pastVisiblesItems))
-                            && dy > 0)
-                            && PVM.getActualPosts().getValue() != null
+                               || (itemLoaded <= (pastVisiblesItems))
+                               && dy > 0)
                     ) {
-                        MutableLiveData<Result> m = PVM.getActualPosts();
-
-                        if (m.getValue() != null && m.getValue().successful()) {
-                            PVM.setLoading(true);
-                            postList.add(null);
-                            pa.notifyItemRangeInserted(postList.size(), postList.size() + 1);
-                            PVM.setPage(PVM.getPage() + 1); //"giro" la pagina
-                            //Inizio ad andare a prendere altri post
-                            findAction();//TODO: Sistemare qua
-                        }
+                        PVM.setLoading(type, true);
+                        postList.add(null);
+                        pa.notifyItemRangeInserted(postList.size(), postList.size() + 1);
+                        PVM.setPage(type,PVM.getPage(type) + 1); //"giro" la pagina
+                        findAction(); //Inizio ad andare a prendere altri post
                     }
                 }
             }
         });
     }
-    @Override
+    /*@Override
     public void onDestroy(){
         super.onDestroy();
-    }
+    }*/
 
     private boolean internetConnection(){
         ConnectivityManager cm =

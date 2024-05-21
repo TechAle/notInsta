@@ -38,6 +38,7 @@ public class PostLocalSource extends GeneralPostLocalSource{
     public void insertPost(Post p){
         PostRoomDatabase.databaseWriteExecutor.execute(() -> {
             d.insertPost(p);
+            c.onLocalSaveSuccess();
         });
     }
     @Override

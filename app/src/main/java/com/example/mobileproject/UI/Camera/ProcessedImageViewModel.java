@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostResponseCallback;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.utils.BitmapUtils;
 import com.example.mobileproject.utils.FilterUtils;
@@ -23,10 +24,9 @@ import java.io.FileOutputStream;
 import java.util.Arrays;
 
 //TODO: sistemare bug relativi all'applicazione dei filtri
-public class ProcessedImageViewModel extends ViewModel {
+public class ProcessedImageViewModel extends ViewModel implements PostResponseCallback{
 
     // Live Data
-    //Credo mi serva una spiegazione... [CCL]
     private MutableLiveData<Bitmap> processedImage;
     private MutableLiveData<Bitmap> tempImage;
     private MutableLiveData<String> filter;
@@ -36,6 +36,7 @@ public class ProcessedImageViewModel extends ViewModel {
     private MutableLiveData<String> description;
     private MutableLiveData<String[]> tags;
     private MutableLiveData<Boolean> isPromotional;
+    private final MutableLiveData<Result> creationResponse = new MutableLiveData<>();
 
     public MutableLiveData<Bitmap> getProcessedImage() {
         if (processedImage == null) {
@@ -137,7 +138,8 @@ public class ProcessedImageViewModel extends ViewModel {
             PostRepository pr = ServiceLocator.getInstance().getPostRepo(t.getApplication());
             if(pr != null){
                 Post p = new Post(null, desc, null, Arrays.asList(tagArr), isProm);
-                return pr.createPost(p, image);
+                pr.createPost(p, image);
+                return creationResponse;
                 //TODO: Decommentare qua
                 /*PostsViewModel PVM = new ViewModelProvider(t, new PostsVMFactory(pr)).get(PostsViewModel.class);
 
@@ -172,5 +174,10 @@ public class ProcessedImageViewModel extends ViewModel {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public void onResponseCreation(Result r){
+        creationResponse.postValue(r);
     }
 }

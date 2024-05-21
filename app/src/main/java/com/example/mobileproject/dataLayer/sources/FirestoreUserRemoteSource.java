@@ -128,7 +128,7 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user != null) user.updatePassword(newPassword);
     }
-    @Override
+    /*@Override
     protected void createDocument(String collectionName, Map<String, Object> documentFields, CallbackInterface ci) {
         // Add the new document to our shared collection
         db.collection(collectionName)
@@ -139,7 +139,7 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                     else
                         ci.onUploadFailure(new Exception("Error creating document"));
                 });
-    }
+    }*/
     private void updateField(String collectionName, String documentId, String fieldToUpdate, Object newValue, CallbackInterface c) {
         // Create a map to represent the field to be updated
         Map<String, Object> updates = new HashMap<>();
@@ -242,7 +242,7 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
     public void getLoggedUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {
-            c.onFailureFromRemoteDatabase("aaa");
+            c.onFailureFromRemoteDatabase2("aaa");
         }
         else {
             Map<String, Object> documentFields = new HashMap<>();
@@ -251,36 +251,12 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     if (documentSnapshot.exists()) {
-                        // User found, extract data
                         Map<String, Object> m = documentSnapshot.getData();
                         m.put("immagine", getUriFromId(firebaseAuth.getUid()));
-                        m.put("followers", null);
-                        m.put("following", null);
-                        m.put("tags", null);
-                        c.onSuccessFromRemoteDatabase(new Users(m, firebaseAuth.getUid()));
-                        /*
-                        String email = documentSnapshot.getString("email");
-                        String cognome = documentSnapshot.getString("cognome");
-                        String nome = documentSnapshot.getString("nome");
-                        String username = documentSnapshot.getString("username");
-                        String descrizione = documentSnapshot.getString("descrizione");
-                        Date dataNascita = documentSnapshot.getDate("dataNascita");
-                        ArrayList<String> followers = null; //placeholder
-                        ArrayList<String> following = null; //placeholder
-                        ArrayList<DocumentReference> followers = (ArrayList<DocumentReference>) documentSnapshot.get("followers");
-                        ArrayList<DocumentReference> following = (ArrayList<DocumentReference>) documentSnapshot.get("following");
-                        ArrayList<String> tags = (ArrayList<String>) documentSnapshot.get("following");
-                        Map<String, Object> documentFields = new HashMap<>();
-                        documentFields.put("email", email);
-                        documentFields.put("cognome", cognome);
-                        documentFields.put("nome", nome);
-                        documentFields.put("dataNascita", dataNascita);
-                        documentFields.put("descrizione", descrizione);
-                        documentFields.put("followers", followers);
-                        documentFields.put("following", following);
-                        documentFields.put("tags", tags);
-                        documentFields.put("username", username);
-                        */
+                        m.put("followers", null);//TODO: sistemare
+                        m.put("following", null);//TODO: sistemare
+                        m.put("tags", null);//TODO: sistemare
+                        c.onSuccessFromRemoteDatabase2(new Users(m, firebaseAuth.getUid()));
                     }
                 }
             });
@@ -320,18 +296,18 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                if (firebaseUser != null) {
-                    c.onSuccessFromAuthentication(new Users(firebaseUser.getUid(), email));
-                } else {
-                    c.onFailureFromAuthentication(getErrorMessage(task.getException()));
-                }
-            } else {
-                c.onFailureFromAuthentication(getErrorMessage(task.getException()));
-            }
-        });
+        if (firebaseUser != null) {
+            c.onSuccessFromAuthentication(new Users(firebaseUser.getUid(), email));
+        } else {
+            c.onFailureFromAuthentication(getErrorMessage(task.getException()));
+        }
+    } else {
+        c.onFailureFromAuthentication(getErrorMessage(task.getException()));
     }
-    @Override
-    public void signInWithGoogle(String idToken) {
+});
+        }
+@Override
+public void signInWithGoogle(String idToken) {
         if (idToken != null) {
             AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
             firebaseAuth.signInWithCredential(firebaseCredential).addOnCompleteListener(task -> {

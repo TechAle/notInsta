@@ -47,12 +47,18 @@ public abstract class Result {
     }
 
     public static final class PostCreationSuccess extends Result {
-        private final String id;
-        public PostCreationSuccess(String id) {
-            this.id = id;
+        public enum ResponseType{
+            SUCCESS,
+            LOCAL,
+            REMOTE,
+            NO_REMOTE_IMAGE
         }
-        public String getData() {
-            return id;
+        private final ResponseType t;
+        public PostCreationSuccess(ResponseType t) {
+            this.t = t;
+        }
+        public ResponseType getData() {
+            return t;
         }
     }
 

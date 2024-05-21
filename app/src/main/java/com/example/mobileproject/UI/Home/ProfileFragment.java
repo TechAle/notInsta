@@ -41,9 +41,6 @@ public class ProfileFragment extends Fragment {
         ProfileFragment fragment = new ProfileFragment();
         return fragment;
     }
-    /*
-    private PostsViewModel ref_underlying_fragment;
-    private Users current_user;*/
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +76,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
-        PVM.setCurrentFragment(2);
+        //PVM.setCurrentFragment(2);
         return binding.getRoot();
     }
 }

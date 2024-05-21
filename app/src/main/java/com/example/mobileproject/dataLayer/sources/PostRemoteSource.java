@@ -1,9 +1,7 @@
 package com.example.mobileproject.dataLayer.sources;
 
-import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 
@@ -21,15 +19,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 /**
  * Classe per il recupero remoto dei post da Firebase
@@ -142,8 +135,8 @@ public class PostRemoteSource extends GeneralPostRemoteSource{
     @Override
     public void createPost(Post post) {
         Map<String, Object> documentFields = new HashMap<>();
-        //documentFields.put("autore", FirebaseAuth.getInstance().getCurrentUser().getUid());
-        documentFields.put("autore", post.getAutore());
+        documentFields.put("autore", db.collection("utenti").document(FirebaseAuth.getInstance().getCurrentUser().getUid()));//TODO: controllare qua
+        //documentFields.put("autore", post.getAutore());
         documentFields.put("likes", post.getLikes());
         documentFields.put("promozionale", post.isPromozionale());
         documentFields.put("tags", post.getTags());
@@ -156,7 +149,7 @@ public class PostRemoteSource extends GeneralPostRemoteSource{
                         //c.onUploadSuccess(task.getResult().getId());
                         c.onUploadPostSuccess(task.getResult().getId());
                     else
-                        c.onUploadFailure(new Exception("Error creating document"));
+                        c.onUploadPostFailure();
                 });
     }
 
@@ -180,18 +173,13 @@ public class PostRemoteSource extends GeneralPostRemoteSource{
                 storage.getReference("POSTS")
                         .child(fileName)
                         .putBytes(data)
-                        .addOnSuccessListener(r -> {
-                            c.onUploadImageSuccess();
-                        })
-                        .addOnFailureListener(r -> {
-                            c.onUploadFailure(new Exception("Caricamento fallito"));
-                        });
+                        .addOnSuccessListener(r -> c.onUploadImageSuccess())
+                        .addOnFailureListener(r -> c.onUploadImageFailure());
             /*} catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }*/
     }
-
     @Override
     public void retrievePostsWithTagsLL(String[] tags, int page) {//mero segnaposto, è come quello normale
         db.collection("post")

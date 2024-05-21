@@ -28,6 +28,11 @@ public interface CallbackUsers extends CallbackInterface {
     void onFailureFromAuthentication(String message);
     void onSuccessFromRemoteDatabase(Users user);
     void onFailureFromRemoteDatabase(String message);
+
+    void onSuccessFromRemoteDatabase2(Users user);
+
+    void onFailureFromRemoteDatabase2(String message);
+
     void onSuccessLogout();
 
     void passwordReset(String email);

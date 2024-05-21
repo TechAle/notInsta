@@ -21,7 +21,6 @@ import com.example.mobileproject.R;
 import com.example.mobileproject.UI.Settings.SettingsActivity;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.databinding.FragmentStartingBinding;
-import com.example.mobileproject.utils.PostAdapter;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.example.mobileproject.utils.TagsAdapter;
 import com.google.android.material.snackbar.Snackbar;
@@ -37,8 +36,6 @@ import java.util.List;
 public class StartingFragment extends Fragment {
 
     private FragmentStartingBinding binding;
-    //private List<Post> postList;
-    private PostAdapter pa;
     private PostsViewModel PVM;
     //private int itemLoaded;
     private List<String> arrayTags;
@@ -65,15 +62,6 @@ public class StartingFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
         }
-        //postList = new ArrayList<>();
-        /*UserRepository ur = ServiceLocator.getInstance().getUserRepo(this.getActivity().getApplication());
-        if (ur != null) {
-            UVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ur)).get(UsersViewModel.class);
-        } else {
-            Snackbar.make(requireActivity().findViewById(android.R.id.content),
-                    "Unexpected Error", Snackbar.LENGTH_SHORT).show();
-        }*/
-
         //TODO: Sostituire questi metodi stub
         arrayTags = new ArrayList<>();
         arrayTags.add("Tag di prova");
@@ -85,7 +73,6 @@ public class StartingFragment extends Fragment {
         arrayTags.add("Tag 7");
         arrayTags.add("Impariamo a usare Github");
     }
-
     @Override
     public View onCreateView(
             LayoutInflater inflater,
@@ -93,10 +80,8 @@ public class StartingFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         binding = FragmentStartingBinding.inflate(inflater, container, false);
-        PVM.setCurrentFragment(0);
         return binding.getRoot();
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -114,20 +99,6 @@ public class StartingFragment extends Fragment {
                 return false;
             }
         });
-
-        /*RecyclerView posts = binding.GalleryStart;
-        StaggeredGridLayoutManager lmp = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        pa = new PostAdapter(postList, requireActivity().getApplication(), new PostAdapter.OnItemClickListener() {
-            //Qua non metto una funzione anonima
-            @Override
-            public void onItemClicked() {
-                //Volendo si può sostituire questa linea con qualcosa di altro
-                Snackbar.make(view, "Item Clicked", Snackbar.LENGTH_SHORT).show();
-            }
-        });
-        posts.setLayoutManager(lmp);
-        posts.setAdapter(pa);*/
-
         RecyclerView tags = binding.tags;
         RecyclerView.LayoutManager lmt = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.HORIZONTAL, false);

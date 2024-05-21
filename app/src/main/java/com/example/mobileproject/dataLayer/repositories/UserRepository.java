@@ -66,7 +66,6 @@ public class UserRepository implements CallbackUsers {
 
     @Override
     public void onSuccess(List<Users> res) {
-
         if (users.getValue() != null && users.getValue().successful()) { //Lazy Loading
             List<Users> l = ((Result.UserResponseSuccess) users.getValue()).getData().getUsersList();
             l.addAll(res);
@@ -159,16 +158,29 @@ public class UserRepository implements CallbackUsers {
 
     @Override
     public void onSuccessFromRemoteDatabase(Users user) {
-        List<Users> l = new ArrayList<>();
+        /*List<Users> l = new ArrayList<>();
         l.add(user);
         Result.UserResponseSuccess result = new Result.UserResponseSuccess(new UsersResp(l));
-        c.onResponseUser(result);
-        /*Result.UserResponseSuccessUser result = new Result.UserResponseSuccessUser(user);
-        users.postValue(result);*/
+        c.onResponseUser(result);*/
+        Result.UserResponseSuccessUser result = new Result.UserResponseSuccessUser(user);
+        users.postValue(result);
     }
 
     @Override
     public void onFailureFromRemoteDatabase(String message) {
+        Result.Error result = new Result.Error(message);
+        users.postValue(result);
+    }
+    @Override
+    public void onSuccessFromRemoteDatabase2(Users user) {
+        List<Users> l = new ArrayList<>();
+        l.add(user);
+        Result.UserResponseSuccess result = new Result.UserResponseSuccess(new UsersResp(l));
+        c.onResponseUser(result);
+    }
+
+    @Override
+    public void onFailureFromRemoteDatabase2(String message) {
         Result.Error result = new Result.Error(message);
         c.onResponseUser(result);
     }

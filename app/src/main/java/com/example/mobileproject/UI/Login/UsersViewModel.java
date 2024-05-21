@@ -6,20 +6,24 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
+import com.example.mobileproject.dataLayer.repositories.UserResponseCallback;
 import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.utils.Result;
 
 //TODO: Usata in più parti, ho il sospetto che vada divisa (non era un ViewModel per activity?)
-public class UsersViewModel extends ViewModel {
+public class UsersViewModel extends ViewModel /*implements UserResponseCallback*/ {
     private final UserRepository repoU;
-    private final PostRepository repoP;
+    //private final PostRepository repoP;
     private MutableLiveData<Result> users;
+    //private final MutableLiveData<Users> user;
     private MutableLiveData<Result> selectedUsers;
     private boolean authenticationError;
     public UsersViewModel(UserRepository repoU, PostRepository repoP) {
         this.repoU = repoU;
-        this.repoP = repoP;
+        //repoU.setCallback(this);
+        //this.repoP = repoP;
         authenticationError = false;
+        //user = new MutableLiveData<>();
     }
     //getters & setters
     public MutableLiveData<Result> getUsers(){
@@ -91,4 +95,9 @@ public class UsersViewModel extends ViewModel {
     public void changeImage(Uri selectedImageUri) {
         repoU.changeImage(selectedImageUri);
     }
+
+    /*@Override
+    public void onResponseUser(Result r) {
+
+    }*/
 }

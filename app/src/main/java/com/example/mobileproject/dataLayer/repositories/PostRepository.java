@@ -1,9 +1,7 @@
 package com.example.mobileproject.dataLayer.repositories;
 
-import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.util.Pair;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -15,32 +13,22 @@ import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Post.PostResp;
 import com.example.mobileproject.utils.Result;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.CyclicBarrier;
 
 public class PostRepository implements CallbackPosts {
-
-    private final MutableLiveData<Result> postsG;
-    private final MutableLiveData<Result> postsO;
-    private final MutableLiveData<Result> postsF;
+    private static class data_structure{
+        Post post;
+        Bitmap image;
+        int[] loadProgress = new int[]{0,0,0,0};
+    }
+    private PostResponseCallback c;
     private final MutableLiveData<Result> ready;
-    private final MutableLiveData<Result> ad;
     private final GeneralPostRemoteSource rem;
     private final GeneralPostLocalSource loc;
     private final GeneralAdvSource ads;
-    private final Queue< Pair<Post, Bitmap> > q;
+    private final data_structure d;
 
-    /*private List<Post> res;
-
-    /**
-     * Latch per permettere la chiamata sincrona da remoto
-     */
-    //private final CyclicBarrier barrier;
-    //private CountDownLatch latch;
     /**
      * Costruttore
      */
@@ -51,51 +39,72 @@ public class PostRepository implements CallbackPosts {
         this.rem.setCallback(this);
         this.loc.setCallback(this);
         this.ads.setCallback(this);
-        postsG = new MutableLiveData<>();
-        postsO = new MutableLiveData<>();
-        postsF = new MutableLiveData<>();
+        this.d = new data_structure();
         ready = new MutableLiveData<>();
-        ad = new MutableLiveData<>();
-        q = new ArrayDeque<>();
         //barrier = new CyclicBarrier(1);
     }
 
-    public void setCallback(){
-
+    private void controlComplete(){
+        for(int i = 0; i < 4; i++){
+            if(d.loadProgress[i] == 0){
+                return;
+            }
+        }
+        d.post = null;
+        Result res;
+        if(d.loadProgress[0] == 1){
+            if(d.loadProgress[1] == 1){
+                if(d.loadProgress[2] == 1){
+                    res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.SUCCESS);
+                } else {
+                    res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.REMOTE);
+                    //TODO: gestione della non sincronizzazione
+                }
+            } else {
+                if(d.loadProgress[2] == 1){
+                    res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.NO_REMOTE_IMAGE);
+                    //TODO: gestione della non sincronizzazione
+                } else {
+                    res = new Result.Error("Not created");
+                    //TODO: gestione della non sincronizzazione
+                }
+            }
+        }
+        else{
+            if(d.loadProgress[2] == 1){
+                res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.LOCAL);
+                //TODO: gestione della non sincronizzazione
+            }else{
+                res = new Result.Error("Not created");
+            }
+        }
+        c.onResponseCreation(res);
     }
-    //assegnamento in callback
-    /*public MutableLiveData<Result> retrievePosts(){
-        rem.retrievePosts();
-        return posts;
-    }
 
+    public void setCallback(PostResponseCallback c){
+        this.c = c;
+    }
+    /*
     //WTF
     public MutableLiveData<Result> retrievePosts(String tag){
         rem.retrievePostByDocumentId(tag);
         return posts;
     }*/
 
-    //TODO: Attenzione a questi due
-    public MutableLiveData<Result> retrievePostsbyAuthor(String idUser, int page){
+    public void retrievePostsbyAuthor(String idUser, int page){
         rem.retrievePostsByAuthor(idUser, page);
-        return postsO;
     }
-    public MutableLiveData<Result> retrieveUserPosts(int page){
+    public void retrieveUserPosts(int page){
         loc.retrievePosts(page);
-        //rem.retrievePostsByAuthor(idUser, page);
-        return postsO;
     }
 
     /**
      * Prende alcuni post, preferibilmente non dell'utente stesso. Usa il Lazy loading
      *
      * @param page Numero di pagina
-     *
-     * @return Un MutableLiveData contenente il risultato. Settato tramite callback
      */
-    public MutableLiveData<Result> retrievePostsLL(int page){ //Lazy Loading
+    public void retrievePosts(int page){ //Lazy Loading
         rem.retrievePosts(page);
-        return postsG;
     }
 
     /**
@@ -103,35 +112,30 @@ public class PostRepository implements CallbackPosts {
      *
      * @param tags Lista di tag
      * @param page Numero di pagina
-     *
-     * @return Un MutableLiveData contenente il risultato. Settato tramite callback
      */
-    public MutableLiveData<Result> retrievePostsWithTagsLL(String tags[], int page){ //Lazy Loading
+    public void retrievePostsWithTagsLL(String tags[], int page){
         rem.retrievePostsWithTagsLL(tags, page);
-        return postsG;
     }
     /**
      * Prende un solo post sponsorizzato
-     *
-     * @return Un MutableLiveData contenente il post
      */
-    public MutableLiveData<Result> retrieveSponsoredPosts(){
+    public void retrieveSponsoredPosts(){
         if ((int) (Math.random() * 3) == 1) {
             ads.getAdvPost();
-        } else
-            rem.retrievePostsSponsor();
-        return ad;
+        } else rem.retrievePostsSponsor();
     }
 
-    public MutableLiveData<Result> createPost(Post post) {
+    /*public MutableLiveData<Result> createPost(Post post) {
         rem.createPost(post);
         return ready;
-    }
+    }*/
 
-    public MutableLiveData<Result> createPost(Post post, Bitmap bmp) {
-        q.add(new Pair<>(post, bmp));
-        rem.createPost(post);
-        return ready;
+    public void createPost(Post post, Bitmap bmp) {
+        if(d.post == null){
+            d.post = post;
+            d.image = bmp;
+            rem.createPost(post);
+        }
     }
 
     //TODO: valutare se serve questa funzione (verrà chiamata da un worker?)
@@ -193,53 +197,44 @@ public class PostRepository implements CallbackPosts {
         }
         return res;
     }*/
-    public void substitutePost(Post p1, Post p2){
+    /*public void substitutePost(Post p1, Post p2){
         //TODO: implementare questa parte
-    }
+    }*/
     //Callbacks
 
     public void onSuccessG(List<Post> res) {
         Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(res));
-        postsG.postValue(result);
+        c.onResponseGlobalPost(result);
     }
     public void onSuccessO(List<Post> res) {
         Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(res));
-        postsO.postValue(result);
+        c.onResponseOwnedPosts(result);
     }
-    public void onSuccessF(List<Post> res) {/*
-        if (posts.getValue() != null && posts.getValue().successful()) { //Lazy Loading
-            List<Post> l = ((Result.PostResponseSuccess)posts.getValue()).getData().getPostList();
-            l.addAll(res);
-            Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(l));
-            posts.postValue(result);
-        } else {*/
+    public void onSuccessF(List<Post> res) {
         Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(res));
-        postsF.postValue(result);
-        //}
+        c.onResponseFoundPosts(result);
     }
-
     @Override
     public void onFailureG(Exception e) {
         Result.Error resultError = new Result.Error(e.getMessage());
-        postsG.postValue(resultError);
+        c.onResponseGlobalPost(resultError);
     }
-
     @Override
     public void onFailureO(Exception e) {
         Result.Error resultError = new Result.Error(e.getMessage());
-        postsO.postValue(resultError);
+        c.onResponseOwnedPosts(resultError);
     }
-
     @Override
     public void onFailureF(Exception e) {
         Result.Error resultError = new Result.Error(e.getMessage());
-        postsF.postValue(resultError);
+        c.onResponseFoundPosts(resultError);
     }
 
     @Override
     public void onSuccess() { //Perchè???
     }
 
+    @Deprecated
     @Override
     public void onUploadFailure(Exception e) {
         Result.Error resultError = new Result.Error(e.getMessage());
@@ -253,47 +248,60 @@ public class PostRepository implements CallbackPosts {
         */
         ready.postValue(resultError);
     }
-
-    @Override
     @Deprecated
+    @Override
     public void onUploadSuccess(String id) {
-        Result.PostCreationSuccess result = new Result.PostCreationSuccess(id);
+        Result.PostCreationSuccess result = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.SUCCESS);
         ready.postValue(result);
     }
+    @Override
     public void onUploadImageSuccess(){
-        Result.PostCreationSuccess result = new Result.PostCreationSuccess("immagine");
-        ready.postValue(result);
+        d.loadProgress[1] = 1;
+        controlComplete();
+    }
+    @Override
+    public void onUploadImageFailure(){
+        d.loadProgress[1] = 2;
+        controlComplete();
     }
     @Override
     public void onUploadPostSuccess(String id){
-        Pair<Post, Bitmap> p = q.remove();
-        p.first.setId(id);
-        rem.createImage(id, p.second);
-        Uri img = loc.createImage(p.second);
+        d.post.setId(id);
+        d.loadProgress[0] = 1;
+        rem.createImage(id, d.image);
+        Uri img = loc.createImage(d.image);
         if (img == null){
-            Result.Error res = new Result.Error("Saving image error");
-            ready.postValue(res);
-            return;
+            d.loadProgress[2] = 2;
+            d.loadProgress[3] = 2;
+            controlComplete();
         }
-        p.first.setImage(img);
-        loc.insertPost(p.first);
+        d.loadProgress[2] = 1;
+        d.post.setImage(img);
+        loc.insertPost(d.post);
+    }
+    @Override
+    public void onUploadPostFailure(){
+        d.loadProgress[0] = 2;
+        d.loadProgress[1] = 2;
+        d.post.setId("???" + System.currentTimeMillis());//La prima cosa venuta in mente
+        Uri img = loc.createImage(d.image);
+        if (img == null){
+            d.loadProgress[2] = 2;
+            d.loadProgress[3] = 2;
+            controlComplete();
+        }
+        d.loadProgress[2] = 1;
+        d.post.setImage(img);
+        loc.insertPost(d.post);
     }
     @Override
     public void onLocalSaveSuccess(){
-        Result.PostCreationSuccess res = new Result.PostCreationSuccess("aaa");
-        ready.postValue(res);
+        d.loadProgress[3] = 1;
+        controlComplete();
     }
     public void onLocalSaveFailure(){
-        Result.Error resultError = new Result.Error("Qualcosa è andato storto in locale");
-        /*
-        DataStoreSingleton ds = DataStoreSingleton.getInstance();
-        long temp = ds.readLongData("postsNotLoaded");
-        p.setId("???" + temp);
-        ds.writeLongData("postsNotLoaded", temp+1);
-        p.setImage(loc.createImage());
-        loc.insertPost(p);
-        */
-        ready.postValue(resultError);
+        d.loadProgress[3] = 2;
+        controlComplete();
     }
 
     /*public MutableLiveData<Result> createImage(Uri imageUri, String document, ContentResolver contentResolver, String id) {
@@ -324,11 +332,12 @@ public class PostRepository implements CallbackPosts {
         List<Post> pl = new ArrayList<>();
         pl.add(p);
         Result.PostResponseSuccess res = new Result.PostResponseSuccess(new PostResp(pl));
-        ad.postValue(res);
+        c.onResponseAdvPost(res);
+        //ad.postValue(res);
     }
     @Override
     public void onFailureAdv(Exception e){
         Result.Error resultError = new Result.Error(e.getMessage());
-        ad.postValue(resultError);
+        c.onResponseAdvPost(resultError);
     }
 }

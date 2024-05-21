@@ -24,13 +24,18 @@ public interface CallbackPosts extends CallbackInterface {
     void onFailureO(Exception e);
     void onFailureF(Exception e);
 
+    void onUploadImageFailure();
+
     /*void onSuccessSyncRemote(List<Post> res);
 
-    void onSuccessSyncLocal(List<Post> res);
+        void onSuccessSyncLocal(List<Post> res);
 
-    void onFailureSync();*/
+        void onFailureSync();*/
     void onUploadPostSuccess(String id);
     void onUploadImageSuccess();
+
+    void onUploadPostFailure();
+
     void onLocalSaveSuccess();
 
     //Set di callback per lo sponsor
