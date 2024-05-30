@@ -1,6 +1,5 @@
 package com.example.mobileproject.UI.Camera;
 
-import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
@@ -18,13 +17,11 @@ import com.example.mobileproject.utils.FilterUtils;
 import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.FileOutputStream;
 import java.util.Arrays;
 
 //TODO: sistemare bug relativi all'applicazione dei filtri
-public class ProcessedImageViewModel extends ViewModel implements PostResponseCallback{
+public final class ProcessedImageViewModel extends ViewModel implements PostResponseCallback{
 
     // Live Data
     private MutableLiveData<Bitmap> processedImage;
@@ -40,61 +37,61 @@ public class ProcessedImageViewModel extends ViewModel implements PostResponseCa
 
     public MutableLiveData<Bitmap> getProcessedImage() {
         if (processedImage == null) {
-            processedImage = new MutableLiveData<Bitmap>();
+            processedImage = new MutableLiveData<>();
         }
         return processedImage;
     }
     public MutableLiveData<Bitmap> getTempImage() {
         if (tempImage == null) {
-            tempImage = new MutableLiveData<Bitmap>();
+            tempImage = new MutableLiveData<>();
         }
         return tempImage;
     }
     public MutableLiveData<String> getFilter() {
         if (filter == null) {
-            filter = new MutableLiveData<String>();
+            filter = new MutableLiveData<>();
             filter.setValue("hue");
         }
         return filter;
     }
     public MutableLiveData<Integer> getParam1() {
         if (param1 == null) {
-            param1 = new MutableLiveData<Integer>();
+            param1 = new MutableLiveData<>();
             param1.setValue(0);
         }
         return param1;
     }
     public MutableLiveData<Integer> getParam2() {
         if (param2 == null) {
-            param2 = new MutableLiveData<Integer>();
+            param2 = new MutableLiveData<>();
             param2.setValue(0);
         }
         return param2;
     }
     public MutableLiveData<Integer> getParam3() {
         if (param3 == null) {
-            param3 = new MutableLiveData<Integer>();
+            param3 = new MutableLiveData<>();
             param3.setValue(0);
         }
         return param3;
     }
     public MutableLiveData<String> getDescription() {
         if (description == null) {
-            description = new MutableLiveData<String>();
+            description = new MutableLiveData<>();
             description.setValue("");
         }
         return description;
     }
     public MutableLiveData<String[]> getTags() {
         if (tags == null) {
-            tags = new MutableLiveData<String[]>();
+            tags = new MutableLiveData<>();
             tags.setValue(new String[0]);
         }
         return tags;
     }
     public MutableLiveData<Boolean> getIsPromotional() {
         if (isPromotional == null) {
-            isPromotional = new MutableLiveData<Boolean>();
+            isPromotional = new MutableLiveData<>();
             isPromotional.setValue(false);
         }
         return isPromotional;
@@ -140,36 +137,9 @@ public class ProcessedImageViewModel extends ViewModel implements PostResponseCa
                 Post p = new Post(null, desc, null, Arrays.asList(tagArr), isProm);
                 pr.createPost(p, image);
                 return creationResponse;
-                //TODO: Decommentare qua
-                /*PostsViewModel PVM = new ViewModelProvider(t, new PostsVMFactory(pr)).get(PostsViewModel.class);
-
-                Post toCreate = new Post("0TsbiPUaL5qfFQiH6572", desc,
-                                                Arrays.asList(tagArr), isProm, FirebaseFirestore.getInstance());
-
-                PVM.createPost(toCreate).observe(t, task -> {
-                    if (task.successful()) {
-                        PVM.createImage(imageUri, "POSTS", t.getContentResolver(), ((Result.PostCreationSuccess) task).getData())
-                                .observe(t, imageTask -> {
-                                    if (imageTask.successful()) {
-                                        int f = 0;
-                                    } else {
-                                        int b = 0;
-                                    }
-
-                                });
-                    } else {
-                        int c = 0;
-                    }
-                });
-                */
-
             } else {
                 return null;
             }
-            //FileOutputStream out = new FileOutputStream(file);
-            //image.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            //out.flush();
-            //out.close();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

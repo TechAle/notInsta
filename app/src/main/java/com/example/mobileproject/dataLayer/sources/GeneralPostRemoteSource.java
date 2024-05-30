@@ -1,8 +1,6 @@
 package com.example.mobileproject.dataLayer.sources;
 
-import android.content.ContentResolver;
 import android.graphics.Bitmap;
-import android.net.Uri;
 
 import com.example.mobileproject.models.Post.Post;
 
@@ -23,10 +21,8 @@ public abstract class GeneralPostRemoteSource {
         this.c = call;
     }
 
-    //TODO: javadoc non conclusa
     /**
      * Metodo che prende da remoto un post sponsorizzato.
-     * Chiama il metodo di callback
      */
     public abstract void retrievePostsSponsor();
 
@@ -41,8 +37,8 @@ public abstract class GeneralPostRemoteSource {
      */
     public abstract void createPost(Post post);
     public abstract void createPosts(List<Post> p);
-//    protected abstract void createDocument(String collectionName, Map<String, Object> documentFields, CallbackInterface ci);
-    public abstract void createImage(/*Uri imageUri, String document, ContentResolver contentResolver, CallbackInterface postRepository,*/ String id, Bitmap bmp);
+//    protected abstract void createDocument(String collectionName, Map<String, Object> documentFields);
+    public abstract void createImage(/*Uri imageUri, String document, ContentResolver contentResolver,*/ String id, Bitmap bmp);
 
     /**
      * Metodo per prendere tutti i post

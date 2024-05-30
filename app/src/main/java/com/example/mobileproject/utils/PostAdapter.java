@@ -82,7 +82,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         public void bind(Post p){
             //Caricamento immagine da URL con Glide
-            //TODO: sistemare riferimento ad Application e cambiare foto di rimpiazzo (se qualcuno vuole)
             Glide.with(appl).load(p.getImage()).placeholder(R.drawable.baseline_photo_camera_24).into(iv);
         }
 

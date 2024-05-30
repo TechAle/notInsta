@@ -26,11 +26,11 @@ public class PostLocalSource extends GeneralPostLocalSource{
         this.context = c;
     }
 
-
     @Override
     public void insertPosts(List<Post> l){
         PostRoomDatabase.databaseWriteExecutor.execute(() -> {
             d.insertAll(l);
+            c.onLocalSaveSuccess();
         });
     }
 
@@ -51,14 +51,12 @@ public class PostLocalSource extends GeneralPostLocalSource{
 
     @Override
     public void retrieveNoSyncPosts() {
-        /*
         PostRoomDatabase.databaseWriteExecutor.execute(() -> {
             List<Post> res = d.getNoSyncPosts();
-            c.onSuccessSyncLocal(res);
+            //c.onSuccessSyncLocal(res);
         });
-        */
-    }
 
+    }
     @Override
     public void deletePosts() {
         PostRoomDatabase.databaseWriteExecutor.execute(d::deleteAll);

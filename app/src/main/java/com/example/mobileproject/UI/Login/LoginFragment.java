@@ -45,6 +45,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
+//TODO: da qualche parte mettere un worker per caricare i post
 public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;

@@ -246,7 +246,7 @@ public class PostsViewModel extends ViewModel implements UserResponseCallback, P
             }
             livedata.postValue(newList);
         } else {
-            //TODO
+            //TODO: gestione errore
         }
     }
     @Override
@@ -263,7 +263,7 @@ public class PostsViewModel extends ViewModel implements UserResponseCallback, P
             }
             livedata.postValue(newList);
         } else {
-            //TODO
+            //TODO: gestione errore
         }
     }
     @Override

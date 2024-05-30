@@ -12,7 +12,7 @@ import java.util.List;
  */
 
 //Nel caso dovessero servire altre chiamate di ritorno, inseritele qua
-public interface CallbackUsers extends CallbackInterface {
+public interface CallbackUsers{
     void onSuccess(List<Users> res);
 
     //TODO: Controllare qua, non tutte sono chiamate di ritorno
@@ -36,4 +36,7 @@ public interface CallbackUsers extends CallbackInterface {
     void onSuccessLogout();
 
     void passwordReset(String email);
+    void onSuccess();
+    void onUploadFailure(Exception e);
+    void onUploadSuccess(String id);
 }

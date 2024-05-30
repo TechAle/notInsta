@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 //Nel caso dovessero servire altre chiamate di ritorno, inseritele qua
-public interface CallbackPosts extends CallbackInterface {
+public interface CallbackPosts{
     //void onSuccess(List<Post> res);
     void onSuccessG(List<Post> res);
     void onSuccessO(List<Post> res);
@@ -37,8 +37,10 @@ public interface CallbackPosts extends CallbackInterface {
     void onUploadPostFailure();
 
     void onLocalSaveSuccess();
+    void onLocalSaveFailure(); //messo per completezza
 
     //Set di callback per lo sponsor
     void onSuccessAdv(Post p);
     void onFailureAdv(Exception e);
+
 }

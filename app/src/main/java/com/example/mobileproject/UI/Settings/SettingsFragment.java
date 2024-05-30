@@ -52,7 +52,7 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ctrl = NavHostFragment.findNavController(this);
 
-        UserRepository ur = ServiceLocator.getInstance().getUserRepo(/*this.requireActivity().getApplication()*/);
+        UserRepository ur = ServiceLocator.getInstance().getUserRepo();
         PostRepository pr = ServiceLocator.getInstance().getPostRepo(this.requireActivity().getApplication());
         if (ur != null && pr != null) {
             PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ur, pr)).get(UsersViewModel.class);
@@ -119,7 +119,7 @@ public class SettingsFragment extends Fragment {
 
 
         binding.signOutButton.setOnClickListener(v -> {
-            PVM.signOut();
+            PVM.signOut(requireActivity().getApplicationContext());
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             intent.putExtra((String) getText(R.string.success_logout), getText(R.string.success_logout));
             startActivity(intent);

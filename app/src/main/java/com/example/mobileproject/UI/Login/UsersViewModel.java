@@ -1,19 +1,23 @@
 package com.example.mobileproject.UI.Login;
 
 import android.net.Uri;
+import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
-import com.example.mobileproject.dataLayer.repositories.UserResponseCallback;
+//import com.example.mobileproject.dataLayer.repositories.UserResponseCallback;
 import com.example.mobileproject.models.Users.Users;
+import com.example.mobileproject.utils.DataStoreSingleton;
 import com.example.mobileproject.utils.Result;
+
+import static com.example.mobileproject.utils.Constants.SP_FILENAME;
 
 //TODO: Usata in più parti, ho il sospetto che vada divisa (non era un ViewModel per activity?)
 public class UsersViewModel extends ViewModel /*implements UserResponseCallback*/ {
     private final UserRepository repoU;
-    //private final PostRepository repoP;
+    private final PostRepository repoP;
     private MutableLiveData<Result> users;
     //private final MutableLiveData<Users> user;
     private MutableLiveData<Result> selectedUsers;
@@ -21,7 +25,7 @@ public class UsersViewModel extends ViewModel /*implements UserResponseCallback*
     public UsersViewModel(UserRepository repoU, PostRepository repoP) {
         this.repoU = repoU;
         //repoU.setCallback(this);
-        //this.repoP = repoP;
+        this.repoP = repoP;
         authenticationError = false;
         //user = new MutableLiveData<>();
     }
@@ -86,7 +90,9 @@ public class UsersViewModel extends ViewModel /*implements UserResponseCallback*
     public void sendPasswordReset(String email){
         repoU.passwordReset(email);
     }
-    public void signOut() {
+    public void signOut(Context c) {
+        repoP.deleteData(); //TODO: implement this
+        new DataStoreSingleton(c).deleteAll(SP_FILENAME);
         repoU.signOut();
     }
     public void deleteAccount() {
@@ -96,6 +102,9 @@ public class UsersViewModel extends ViewModel /*implements UserResponseCallback*
         repoU.changeImage(selectedImageUri);
     }
 
+    public boolean isLogged(){
+        return repoU.isLogged();
+    }
     /*@Override
     public void onResponseUser(Result r) {
 

@@ -1,7 +1,5 @@
 package com.example.mobileproject.dataLayer.sources;
 
-import android.app.Application;
-
 import android.net.Uri;
 
 import android.util.Log;
@@ -33,12 +31,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
+public final class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
 
     FirebaseFirestore db;
     FirebaseStorage storage;
@@ -115,7 +112,7 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().isEmpty()) {
-                                updateField("utenti", user.getUid(), "username", newUsername, c);
+                                updateField("utenti", user.getUid(), "username", newUsername);
                             } else c.onUploadFailure(new Exception("Someone already has this error"));
                         } else c.onUploadFailure(new Exception("Firebase error"));
                     });
@@ -129,7 +126,7 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
         if (user != null) user.updatePassword(newPassword);
     }
     /*@Override
-    protected void createDocument(String collectionName, Map<String, Object> documentFields, CallbackInterface ci) {
+    protected void createDocument(String collectionName, Map<String, Object> documentFields) {
         // Add the new document to our shared collection
         db.collection(collectionName)
                 .add(documentFields)
@@ -140,7 +137,7 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                         ci.onUploadFailure(new Exception("Error creating document"));
                 });
     }*/
-    private void updateField(String collectionName, String documentId, String fieldToUpdate, Object newValue, CallbackInterface c) {
+    private void updateField(String collectionName, String documentId, String fieldToUpdate, Object newValue) {
         // Create a map to represent the field to be updated
         Map<String, Object> updates = new HashMap<>();
         updates.put(fieldToUpdate, newValue);
@@ -296,18 +293,18 @@ public class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if (firebaseUser != null) {
-            c.onSuccessFromAuthentication(new Users(firebaseUser.getUid(), email));
-        } else {
-            c.onFailureFromAuthentication(getErrorMessage(task.getException()));
-        }
-    } else {
-        c.onFailureFromAuthentication(getErrorMessage(task.getException()));
+                if (firebaseUser != null) {
+                    c.onSuccessFromAuthentication(new Users(firebaseUser.getUid(), email));
+                } else {
+                    c.onFailureFromAuthentication(getErrorMessage(task.getException()));
+                }
+            } else {
+                c.onFailureFromAuthentication(getErrorMessage(task.getException()));
+            }
+        });
     }
-});
-        }
-@Override
-public void signInWithGoogle(String idToken) {
+    @Override
+    public void signInWithGoogle(String idToken) {
         if (idToken != null) {
             AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
             firebaseAuth.signInWithCredential(firebaseCredential).addOnCompleteListener(task -> {
@@ -348,6 +345,10 @@ public void signInWithGoogle(String idToken) {
                         }
                     });
         }
+    }
+    @Override
+    public boolean isLogged(){
+        return firebaseAuth.getCurrentUser()!=null;
     }
     private Uri getUriFromId(String id){
         return Uri.parse("https://firebasestorage.googleapis.com/v0/b/notinsta-941ae.appspot.com/o/PFP%2F" + id + ".png?alt=media");

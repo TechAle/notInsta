@@ -12,15 +12,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.work.Constraints;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.example.mobileproject.R;
+import com.example.mobileproject.service.SyncLTRWorker;
 import com.example.mobileproject.utils.Result;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class CameraActivity extends AppCompatActivity {
+public final class CameraActivity extends AppCompatActivity {
 
     int SELECT_PICTURE = 200;
     int TAKE_PICTURE = 100;
@@ -132,12 +138,20 @@ public class CameraActivity extends AppCompatActivity {
                                 text = getResources().getString(R.string.post_created);
                                 break;
                             case LOCAL:
+                                Constraints constraints = new Constraints.Builder()
+                                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                                        .build();
+                                OneTimeWorkRequest syncWorkRequest =
+                                        new OneTimeWorkRequest.Builder(SyncLTRWorker.class)
+                                                .setConstraints(constraints)
+                                                .build();
+                                WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork("LTR", ExistingWorkPolicy.KEEP, syncWorkRequest);
                                 text = getResources().getString(R.string.post_created_local_only);
                                 break;
                             case REMOTE:
                                 text = getResources().getString(R.string.post_created_remote_only);
                                 break;
-                            case NO_REMOTE_IMAGE:
+                            case NO_REMOTE_IMAGE: //spero non esca mai
                                 text = getResources().getString(R.string.post_created_no_remote_image);
                                 break;
                         }

@@ -1,91 +1,47 @@
 package com.example.mobileproject.utils;
 
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.datastore.preferences.core.MutablePreferences;
-import androidx.datastore.preferences.core.Preferences;
-import androidx.datastore.preferences.core.PreferencesKeys;
-import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder;
-import androidx.datastore.rxjava3.RxDataStore;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Single;
+import android.content.SharedPreferences;
 
 /**
  * Classe di utilità per il salvataggio di coppie chiave-valore non crittate. Utilizza la API DataStore.
  */
 
 public class DataStoreSingleton {
-    private static volatile DataStoreSingleton INSTANCE = null;
-    private final RxDataStore<Preferences> ds;
-    private final Preferences error = new Preferences(){
-        @Override
-        public <T> boolean contains(@NonNull Key<T> key) {
-            return false;
-        }
-        @Nullable
-        @Override
-        public <T> T get(@NonNull Key<T> key) {
-            return null;
-        }
-        @NonNull
-        @Override
-        public Map<Key<?>, Object> asMap() {
-            return new HashMap<>();
-        }
-    };
-    private DataStoreSingleton(Context c){
-        ds = new RxPreferenceDataStoreBuilder(c, "Nome").build();//TODO: controllare
+
+    private final Context c;
+    public DataStoreSingleton(Context c){
+        this.c = c;
     }
-    public static DataStoreSingleton getInstance(Context c){
-        if (INSTANCE == null) {
-            synchronized (DataStoreSingleton.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new DataStoreSingleton(c);
-                }
-            }
-        }
-        return INSTANCE;
+    public void writeStringData(String sharedPreferencesFileName, String key, String value) {
+        SharedPreferences sharedPref = c.getSharedPreferences(sharedPreferencesFileName,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(key, value);
+        editor.apply();
     }
-    public Long readLongData(String keyName){
-        Preferences.Key<Long> val = PreferencesKeys.longKey(keyName);
-        Single<Long> value = ds.data().firstOrError().map(x -> x.get(val));
-        return value.blockingGet();//TODO: valutare una non bloccante
+    public String readStringData(String sharedPreferencesFileName, String key) {
+        SharedPreferences sharedPref = c.getSharedPreferences(sharedPreferencesFileName,
+                Context.MODE_PRIVATE);
+        return sharedPref.getString(key, null);
     }
-    public boolean writeLongData(String keyName, Long value){
-        Preferences.Key<Long> val = PreferencesKeys.longKey(keyName);
-        Single<Preferences> res = ds.updateDataAsync(p -> {
-            MutablePreferences mp = p.toMutablePreferences();
-            mp.set(val, value);
-            return Single.just(mp);
-        }).onErrorReturnItem(error);
-        return res.blockingGet() != error;
+    public long readLongData(String sharedPreferencesFileName, String key){
+        SharedPreferences sharedPref = c.getSharedPreferences(sharedPreferencesFileName,
+                Context.MODE_PRIVATE);
+        return sharedPref.getLong(key, 0);
     }
-    public String readStringData(String keyname){
-        Preferences.Key<String> val = PreferencesKeys.stringKey(keyname);
-        Single<Preferences> valq = ds.data().first(error);
-        Single<String> value = ds.data().firstOrError().map(x -> x.get(val));
-        String s;
-        try{
-            s = value.blockingGet();
-        } catch(Exception e){
-            s = "bug";
-        }
-        return s;
+    public void writeLongData(String sharedPreferencesFileName, String key, long value) {
+        SharedPreferences sharedPref = c.getSharedPreferences(sharedPreferencesFileName,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putLong(key, value);
+        editor.apply();
     }
-    public boolean writeStringData(String keyname, String value){
-        Preferences.Key<String> val = PreferencesKeys.stringKey(keyname);
-        Single<Preferences> res = ds.updateDataAsync(p -> {
-            MutablePreferences mp = p.toMutablePreferences();
-            mp.set(val, value);
-            return Single.just(mp);
-        }).onErrorReturnItem(error);
-        return res.blockingGet() != error;
+    public void deleteAll(String sharedPreferencesFileName) {
+        SharedPreferences sharedPref = c.getSharedPreferences(sharedPreferencesFileName,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear();
+        editor.apply();
     }
-    //Possibile aggiunta di valori
 }

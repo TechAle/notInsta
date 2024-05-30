@@ -3,8 +3,6 @@ package com.example.mobileproject.dataLayer.repositories;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
-import androidx.lifecycle.MutableLiveData;
-
 import com.example.mobileproject.dataLayer.sources.CallbackPosts;
 import com.example.mobileproject.dataLayer.sources.GeneralAdvSource;
 import com.example.mobileproject.dataLayer.sources.GeneralPostLocalSource;
@@ -15,15 +13,75 @@ import com.example.mobileproject.utils.Result;
 
 import java.util.ArrayList;
 import java.util.List;
+//import java.net.URL;
 
-public class PostRepository implements CallbackPosts {
+public final class PostRepository implements CallbackPosts {
+
+    //LiveData non presenti("https://developer.android.com/topic/libraries/architecture/livedata#livedata-in-architecture")
+    //TODO: maybe a byte[] data type is better than a android.graphics.Bitmap?
+    //TODO: maybe a java.net.URL/java.net.URI data type is better than a android.net.Uri?
     private static class data_structure{
-        Post post;
-        Bitmap image;
-        int[] loadProgress = new int[]{0,0,0,0};
+        enum ResultType{
+            NOT_AVAILABLE,
+            SUCCESS,
+            FAILURE
+        }
+        private Post post;
+        private Bitmap image;
+        private ResultType remote;
+        private ResultType local;
+        boolean isBusy(){
+            return post==null;
+        }
+        void setPost(Post post) {
+            this.post = post;
+        }
+        public void setRemote(ResultType remote) {
+            this.remote = remote;
+        }
+        public void setLocal(ResultType local) {
+            this.local = local;
+        }
+        boolean loadComplete(){
+            if(post == null) throw new RuntimeException();
+            if(local == ResultType.NOT_AVAILABLE || remote == ResultType.NOT_AVAILABLE) return false;
+            return true;
+        }
+        Result getResponse(){
+            if(post == null) throw new RuntimeException();
+            Result res;
+            switch(remote){
+                case SUCCESS:
+                    switch(local){
+                        case SUCCESS:
+                            res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.SUCCESS);
+                            break;
+                        case FAILURE:
+                            res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.REMOTE);
+                            break;
+                        default:
+                            throw new RuntimeException();
+                    }
+                    break;
+                case FAILURE:
+                    switch(local){
+                        case SUCCESS:
+                            res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.LOCAL);
+                            break;
+                        case FAILURE:
+                            res = new Result.Error("Post not loaded");
+                            break;
+                        default:
+                            throw new RuntimeException();
+                    }
+                    break;
+                default:
+                    throw new RuntimeException();
+            }
+            return res;
+        }
     }
     private PostResponseCallback c;
-    private final MutableLiveData<Result> ready;
     private final GeneralPostRemoteSource rem;
     private final GeneralPostLocalSource loc;
     private final GeneralAdvSource ads;
@@ -40,45 +98,6 @@ public class PostRepository implements CallbackPosts {
         this.loc.setCallback(this);
         this.ads.setCallback(this);
         this.d = new data_structure();
-        ready = new MutableLiveData<>();
-        //barrier = new CyclicBarrier(1);
-    }
-
-    private void controlComplete(){
-        for(int i = 0; i < 4; i++){
-            if(d.loadProgress[i] == 0){
-                return;
-            }
-        }
-        d.post = null;
-        Result res;
-        if(d.loadProgress[0] == 1){
-            if(d.loadProgress[1] == 1){
-                if(d.loadProgress[2] == 1){
-                    res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.SUCCESS);
-                } else {
-                    res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.REMOTE);
-                    //TODO: gestione della non sincronizzazione
-                }
-            } else {
-                if(d.loadProgress[2] == 1){
-                    res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.NO_REMOTE_IMAGE);
-                    //TODO: gestione della non sincronizzazione
-                } else {
-                    res = new Result.Error("Not created");
-                    //TODO: gestione della non sincronizzazione
-                }
-            }
-        }
-        else{
-            if(d.loadProgress[2] == 1){
-                res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.LOCAL);
-                //TODO: gestione della non sincronizzazione
-            }else{
-                res = new Result.Error("Not created");
-            }
-        }
-        c.onResponseCreation(res);
     }
 
     public void setCallback(PostResponseCallback c){
@@ -124,82 +143,35 @@ public class PostRepository implements CallbackPosts {
             ads.getAdvPost();
         } else rem.retrievePostsSponsor();
     }
-
-    /*public MutableLiveData<Result> createPost(Post post) {
-        rem.createPost(post);
-        return ready;
-    }*/
-
     public void createPost(Post post, Bitmap bmp) {
-        if(d.post == null){
+        if(d.isBusy()){
+            c.onResponseCreation(new Result.Error("Busy"));
+        } else {
             d.post = post;
             d.image = bmp;
             rem.createPost(post);
         }
     }
-
-    //TODO: valutare se serve questa funzione (verrà chiamata da un worker?)
-    /*
-    /**
-     * Metodo che prende i post dell'utente loggato.
-     * @param page pagina di caricamento
-     *
-     * @implNote ATTENZIONE: questa è una chiamata sincrona, non deve essere utilizzata dal thread UI
-     * (infatti è chiamata da un worker)
-     */
-    /*public List<Post> retrieveUserPostSynchronously(int page){
-        latch = new CountDownLatch(1);
-        rem.retrieveUserPostsForSync(page);
-        try{
-            latch.await();
-        } catch (InterruptedException e){
-            return null;
-        }
-        if(res == null){
-            return new ArrayList<>();
-        }
-        return res;
-    }
-    public void loadPostsInLocal(List<Post> p){
-        loc.insertPosts(p);
-    }*/
-
-    /*
-    /**
-     * Metodo che prende i post dell'utente loggato postati dopo una certa data.
-     *
-     * @implNote ATTENZIONE: questa è una chiamata sincrona, non deve essere utilizzata dal thread UI
-     * (infatti è chiamata da un worker)
-     */
-    /*public List<Post> retrievePostsForSync(int page, long lastUpdate){
-        latch = new CountDownLatch(1);
-        rem.retrieveUserPostsForSync(page, lastUpdate);
-        try{
-            latch.await();
-        } catch (InterruptedException e){
-            return null;
-        }
-        if(res == null){
-            return new ArrayList<>();
-        }
-        return res;
-    }*/
-    /*public List<Post> syncPostsFromLocal(){
-        latch = new CountDownLatch(1);
+    public void getNoSyncPostsFromLocal(){
         loc.retrieveNoSyncPosts();
-        try{
-            latch.await();
-        } catch (InterruptedException e){
-            return null;
-        }
-        if(res == null){
-            return new ArrayList<>();
-        }
-        return res;
-    }*/
-    /*public void substitutePost(Post p1, Post p2){
+    }
+    public void getNoSyncPostsFromRemote(int page, long lastUpdate){
+        rem.retrieveUserPostsForSync(page, lastUpdate);
+    }
+    public void putPosts(List<Post> pl){
+        loc.insertPosts(pl);
+    }
+    public void substitutePost(Post oldPost, Post newPost){
         //TODO: implementare questa parte
-    }*/
+        c.onResponseAdvPost(new Result.Error(oldPost.getId()));//Anche questo nome non ha senso...
+    }
+    public void loadPost(Post p) {
+        //rem.createPost(p, <recupero l'immagine da locale>); //TODO: recuperare immagine da locale
+    }
+    public void deleteData() {
+        loc.deletePosts();
+        //loc.deleteImages(); //TODO: implementare
+    }
     //Callbacks
 
     public void onSuccessG(List<Post> res) {
@@ -229,111 +201,68 @@ public class PostRepository implements CallbackPosts {
         Result.Error resultError = new Result.Error(e.getMessage());
         c.onResponseFoundPosts(resultError);
     }
-
-    @Override
-    public void onSuccess() { //Perchè???
-    }
-
-    @Deprecated
-    @Override
-    public void onUploadFailure(Exception e) {
-        Result.Error resultError = new Result.Error(e.getMessage());
-        /*
-        DataStoreSingleton ds = DataStoreSingleton.getInstance();
-        long temp = ds.readLongData("postsNotLoaded");
-        p.setId("???" + temp);
-        ds.writeLongData("postsNotLoaded", temp+1);
-        p.setImage(loc.createImage());
-        loc.insertPost(p);
-        */
-        ready.postValue(resultError);
-    }
-    @Deprecated
-    @Override
-    public void onUploadSuccess(String id) {
-        Result.PostCreationSuccess result = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.SUCCESS);
-        ready.postValue(result);
-    }
     @Override
     public void onUploadImageSuccess(){
-        d.loadProgress[1] = 1;
-        controlComplete();
+        d.setRemote(data_structure.ResultType.SUCCESS);
+        if(d.loadComplete()) c.onResponseCreation(d.getResponse());
     }
     @Override
     public void onUploadImageFailure(){
-        d.loadProgress[1] = 2;
-        controlComplete();
+        d.setRemote(data_structure.ResultType.FAILURE);
+        //TODO: gestione non sincronizzazione
+        if(d.loadComplete()) c.onResponseCreation(d.getResponse());
     }
     @Override
     public void onUploadPostSuccess(String id){
-        d.post.setId(id);
-        d.loadProgress[0] = 1;
-        rem.createImage(id, d.image);
-        Uri img = loc.createImage(d.image);
-        if (img == null){
-            d.loadProgress[2] = 2;
-            d.loadProgress[3] = 2;
-            controlComplete();
+        if (d.post == null){
+            c.onResponseCreation(new Result.UserCreationSuccess(id));
+        } else {
+            d.post.setId(id);
+            rem.createImage(id, d.image);
+            Uri img = loc.createImage(d.image);
+            if (img == null) {
+                d.setLocal(data_structure.ResultType.FAILURE);
+                if (d.loadComplete()) c.onResponseCreation(d.getResponse());
+                return;
+            }
+            d.post.setImage(img);
+            loc.insertPost(d.post);
         }
-        d.loadProgress[2] = 1;
-        d.post.setImage(img);
-        loc.insertPost(d.post);
     }
     @Override
     public void onUploadPostFailure(){
-        d.loadProgress[0] = 2;
-        d.loadProgress[1] = 2;
+        d.setRemote(data_structure.ResultType.FAILURE);
         d.post.setId("???" + System.currentTimeMillis());//La prima cosa venuta in mente
         Uri img = loc.createImage(d.image);
         if (img == null){
-            d.loadProgress[2] = 2;
-            d.loadProgress[3] = 2;
-            controlComplete();
+            c.onResponseCreation(new Result.Error("Not created"));
+            d.setPost(null);
+            return;
         }
-        d.loadProgress[2] = 1;
         d.post.setImage(img);
         loc.insertPost(d.post);
     }
     @Override
     public void onLocalSaveSuccess(){
-        d.loadProgress[3] = 1;
-        controlComplete();
+        if(d.post == null){//Ovvero: è chiamato da un worker
+            c.onResponseCreation(new Result.UserEditSuccess());//Il nome non ci azzecca niente, però è quella più leggera...
+            return;
+        }
+        d.setLocal(data_structure.ResultType.SUCCESS);
+        if(d.loadComplete()) c.onResponseCreation(d.getResponse());
     }
+    @Override
     public void onLocalSaveFailure(){
-        d.loadProgress[3] = 2;
-        controlComplete();
+        d.setLocal(data_structure.ResultType.SUCCESS);
+        //TODO (forse): gestione non sincronizzazione
+        if(d.loadComplete()) c.onResponseCreation(d.getResponse());
     }
-
-    /*public MutableLiveData<Result> createImage(Uri imageUri, String document, ContentResolver contentResolver, String id) {
-        rem.createImage(imageUri, document, contentResolver, this, id);
-        return ready;
-    }
-
-
-    @Override
-    public void onSuccessSyncRemote(List<Post> pl){
-        res = pl;
-        latch.countDown();
-    }
-    @Override
-    public void onSuccessSyncLocal(List<Post> pl){
-        res = pl;
-        latch.countDown();
-    }
-
-    @Override
-    public void onFailureSync(){
-        res = null;
-        latch.countDown();
-    }
-    */
     @Override
     public void onSuccessAdv(Post p) {
         List<Post> pl = new ArrayList<>();
         pl.add(p);
         Result.PostResponseSuccess res = new Result.PostResponseSuccess(new PostResp(pl));
         c.onResponseAdvPost(res);
-        //ad.postValue(res);
     }
     @Override
     public void onFailureAdv(Exception e){

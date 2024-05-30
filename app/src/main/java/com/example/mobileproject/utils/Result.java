@@ -13,6 +13,7 @@ public abstract class Result {
     private Result() {}
     public boolean successful(){
         // TODO make superclass, this is ugly
+        //return !(this instanceof Error);  I think THIS is better [CCL]
         return this instanceof PostResponseSuccess || this instanceof UserResponseSuccessUser || this instanceof UserResponseSuccess || this instanceof UserEditSuccess || this instanceof PostCreationSuccess || this instanceof UserCreationSuccess || this instanceof ProductSuccess;
     }
 
@@ -62,7 +63,7 @@ public abstract class Result {
         }
     }
 
-    public static final class UserEditSuccess extends Result {
+    public static final class UserEditSuccess extends Result {//Propongo di cambiarla con GenericSuccess
     }
 
     public static final class Error extends Result {

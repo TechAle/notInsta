@@ -26,7 +26,7 @@ import com.example.mobileproject.R;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-public class LoginActivity extends AppCompatActivity {
+public final class LoginActivity extends AppCompatActivity {
 
     private UsersViewModel UVM;
     private ActivityLoginBinding binding;
@@ -49,10 +49,15 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ServiceLocator sl = ServiceLocator.getInstance();
-        UVM = new ViewModelProvider(this, new UsersVMFactory(sl.getUserRepo(/*getApplication()*/), sl.getPostRepo(getApplication())))
+        UVM = new ViewModelProvider(this, new UsersVMFactory(sl.getUserRepo(), sl.getPostRepo(getApplication())))
                 .get(UsersViewModel.class);
+        if(UVM.isLogged()){
+            startActivity(new Intent(this, HomeActivity.class));
+            finish();
+            return;
+        }
         //TODO: dare un occhiata qua che non so se è giusto
-        try{
+        /*try{
             DataEncryptionUtil u = new DataEncryptionUtil(getApplication());
             u.readSecretDataOnFile("com.example.mobileproject.encrypted_preferences");
             startActivity(new Intent(this, HomeActivity.class));

@@ -25,7 +25,7 @@ import java.util.Objects;
  * Use the {@link ImageViewerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ImageViewerFragment extends Fragment {
+public final class ImageViewerFragment extends Fragment {
 
     private String filter;
     private int numberOfSeekBars;
