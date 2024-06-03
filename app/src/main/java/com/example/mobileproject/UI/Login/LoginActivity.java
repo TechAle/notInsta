@@ -83,7 +83,6 @@ public final class LoginActivity extends AppCompatActivity {
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         String selectedLanguage = sharedPref.getString("selected_language", "en");
         FragmentUtils.loadLanguage(selectedLanguage, this, getResources());
-
         Toolbar t = binding.toolbar2;
         setSupportActionBar(t);
         AppBarConfiguration config = new AppBarConfiguration

@@ -45,7 +45,7 @@ public class SettingsFragment extends Fragment {
     private FragmentSettingsBinding binding;
     private Spinner languagesSpinner;
     private boolean firstSelected = true;
-    private UsersViewModel PVM;
+    private UsersViewModel UVM;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,9 +55,10 @@ public class SettingsFragment extends Fragment {
         UserRepository ur = ServiceLocator.getInstance().getUserRepo();
         PostRepository pr = ServiceLocator.getInstance().getPostRepo(this.requireActivity().getApplication());
         if (ur != null && pr != null) {
-            PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ur, pr)).get(UsersViewModel.class);
+            UVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ur, pr)).get(UsersViewModel.class);
         }
         else{
+            return;
             //TODO: gestione eccezioni
         }
         SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
@@ -119,13 +120,13 @@ public class SettingsFragment extends Fragment {
 
 
         binding.signOutButton.setOnClickListener(v -> {
-            PVM.signOut(requireActivity().getApplicationContext());
+            UVM.signOut(requireActivity().getApplicationContext());
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             intent.putExtra((String) getText(R.string.success_logout), getText(R.string.success_logout));
             startActivity(intent);
             requireActivity().finish();
         });
-        binding.DeleteAccountButton.setOnClickListener(v -> PVM.deleteAccount());
+        binding.DeleteAccountButton.setOnClickListener(v -> UVM.deleteAccount());
         return view;
     }
 
@@ -135,7 +136,7 @@ public class SettingsFragment extends Fragment {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
-            PVM.changeImage(selectedImageUri);
+            UVM.changeImage(selectedImageUri);
         }
     }
 }

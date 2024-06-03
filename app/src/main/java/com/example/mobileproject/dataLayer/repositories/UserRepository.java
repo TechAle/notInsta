@@ -96,7 +96,6 @@ public class UserRepository implements CallbackUsers {
         return ready;
     }
 
-    @Override
     public MutableLiveData<Result> getUser(String email, String password, boolean isUserRegistered) {
         if (isUserRegistered) {
             signIn(email, password);
@@ -106,7 +105,6 @@ public class UserRepository implements CallbackUsers {
         return users;
     }
 
-    @Override
     public MutableLiveData<Result> getGoogleUser(String idToken) {
         signInWithGoogle(idToken);
         return users;
@@ -122,27 +120,22 @@ public class UserRepository implements CallbackUsers {
         rem.getLoggedUser();
     }
 
-    @Override
     public MutableLiveData<Result> logout() {
         rem.logout();
         return users;
     }
 
-    @Override
     public void signUp(String email, String password) {
         rem.signUp(email, password);
     }
 
-    @Override
     public void signIn(String email, String password) {
         rem.signIn(email, password);
     }
 
-    @Override
     public void signInWithGoogle(String token) {
         rem.signInWithGoogle(token);
     }
-
 
     @Override
     public void onSuccessFromAuthentication(Users user) {

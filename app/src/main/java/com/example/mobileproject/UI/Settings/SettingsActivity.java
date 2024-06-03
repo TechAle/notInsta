@@ -12,7 +12,7 @@ import android.os.Bundle;
 import com.example.mobileproject.R;
 import com.example.mobileproject.databinding.ActivitySettingsBinding;
 
-public class SettingsActivity extends AppCompatActivity {
+public final class SettingsActivity extends AppCompatActivity {
     private NavController ctrl;
 
     @Override
@@ -22,6 +22,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         Toolbar t = binding.toolbar;
         setSupportActionBar(t);
+
         AppBarConfiguration config = new AppBarConfiguration
                 .Builder()
                 .setFallbackOnNavigateUpListener(() -> {

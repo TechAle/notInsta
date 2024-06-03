@@ -26,9 +26,9 @@ public final class Post {
     @PrimaryKey
     @NonNull
     private String id;
-    private String autore;
+    private String autore; //null: immagine non caricata
     private String descrizione;
-    private Date pubblicazione;
+    private Date pubblicazione; // null: mai caricato
     private List<String> tags;
     private List<String> likes;
     private Uri image;

@@ -1,6 +1,7 @@
 package com.example.mobileproject.dataLayer.sources;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import com.example.mobileproject.models.Post.Post;
@@ -58,10 +59,22 @@ public class PostLocalSource extends GeneralPostLocalSource{
 
     }
     @Override
+    public void modifyId(String oldId, String newId){
+        PostRoomDatabase.databaseWriteExecutor.execute(() -> {
+           //d.deletePost();
+        });
+    }
+    @Override
     public void deletePosts() {
         PostRoomDatabase.databaseWriteExecutor.execute(d::deleteAll);
     }
 
+    @Override
+    public Bitmap getImage(String id){
+        //TODO: controllare
+        File f = new File(context.getFilesDir(), id + ".png");
+        return BitmapFactory.decodeFile(f.getPath());
+    }
     public Uri createImage(Bitmap bmp){
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";

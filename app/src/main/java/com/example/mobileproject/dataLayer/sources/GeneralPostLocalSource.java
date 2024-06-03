@@ -16,6 +16,12 @@ public abstract class GeneralPostLocalSource {
     public abstract void retrieveNoSyncPosts();
     public abstract void insertPosts(List<Post> l);
     public abstract void insertPost(Post p);
+
+    public abstract void modifyId(String oldId, String newId);
+
     public abstract void deletePosts();
+
+    public abstract Bitmap getImage(String id);
+
     public abstract Uri createImage(Bitmap bmp);
 }

@@ -32,7 +32,6 @@ public class SyncLTRWorker extends ListenableWorker{
     public SyncLTRWorker(@NonNull Context appContext, @NonNull WorkerParameters workerParams) {
         super(appContext, workerParams);
     }
-    //TODO: strategia quando viene fermato
     @NonNull
     @Override
     public ListenableFuture<Result> startWork() {
@@ -91,6 +90,8 @@ public class SyncLTRWorker extends ListenableWorker{
                     }
                 }
             };
+            //TODO: strategia di cancellazione (se serve)
+            //completer.addCancellationListener(???, ???);
             pr.setCallback(c);
             pr.getNoSyncPostsFromLocal();
             return c;

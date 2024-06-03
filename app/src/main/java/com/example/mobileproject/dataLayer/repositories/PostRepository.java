@@ -9,6 +9,7 @@ import com.example.mobileproject.dataLayer.sources.GeneralPostLocalSource;
 import com.example.mobileproject.dataLayer.sources.GeneralPostRemoteSource;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Post.PostResp;
+import com.example.mobileproject.utils.DBConverter;
 import com.example.mobileproject.utils.Result;
 
 import java.util.ArrayList;
@@ -21,65 +22,9 @@ public final class PostRepository implements CallbackPosts {
     //TODO: maybe a byte[] data type is better than a android.graphics.Bitmap?
     //TODO: maybe a java.net.URL/java.net.URI data type is better than a android.net.Uri?
     private static class data_structure{
-        enum ResultType{
-            NOT_AVAILABLE,
-            SUCCESS,
-            FAILURE
-        }
         private Post post;
         private Bitmap image;
-        private ResultType remote;
-        private ResultType local;
-        boolean isBusy(){
-            return post==null;
-        }
-        void setPost(Post post) {
-            this.post = post;
-        }
-        public void setRemote(ResultType remote) {
-            this.remote = remote;
-        }
-        public void setLocal(ResultType local) {
-            this.local = local;
-        }
-        boolean loadComplete(){
-            if(post == null) throw new RuntimeException();
-            if(local == ResultType.NOT_AVAILABLE || remote == ResultType.NOT_AVAILABLE) return false;
-            return true;
-        }
-        Result getResponse(){
-            if(post == null) throw new RuntimeException();
-            Result res;
-            switch(remote){
-                case SUCCESS:
-                    switch(local){
-                        case SUCCESS:
-                            res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.SUCCESS);
-                            break;
-                        case FAILURE:
-                            res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.REMOTE);
-                            break;
-                        default:
-                            throw new RuntimeException();
-                    }
-                    break;
-                case FAILURE:
-                    switch(local){
-                        case SUCCESS:
-                            res = new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.LOCAL);
-                            break;
-                        case FAILURE:
-                            res = new Result.Error("Post not loaded");
-                            break;
-                        default:
-                            throw new RuntimeException();
-                    }
-                    break;
-                default:
-                    throw new RuntimeException();
-            }
-            return res;
-        }
+        private boolean remoteResult;
     }
     private PostResponseCallback c;
     private final GeneralPostRemoteSource rem;
@@ -144,10 +89,12 @@ public final class PostRepository implements CallbackPosts {
         } else rem.retrievePostsSponsor();
     }
     public void createPost(Post post, Bitmap bmp) {
-        if(d.isBusy()){
+        if(d.post == null){
             c.onResponseCreation(new Result.Error("Busy"));
         } else {
             d.post = post;
+            d.post.setPubblicazione(DBConverter.dateFromTimestamp(System.currentTimeMillis()));
+            //TODO: vedere la data di pubblicazione come cambia
             d.image = bmp;
             rem.createPost(post);
         }
@@ -174,14 +121,17 @@ public final class PostRepository implements CallbackPosts {
     }
     //Callbacks
 
+    @Override
     public void onSuccessG(List<Post> res) {
         Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(res));
         c.onResponseGlobalPost(result);
     }
+    @Override
     public void onSuccessO(List<Post> res) {
         Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(res));
         c.onResponseOwnedPosts(result);
     }
+    @Override
     public void onSuccessF(List<Post> res) {
         Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(res));
         c.onResponseFoundPosts(result);
@@ -203,22 +153,49 @@ public final class PostRepository implements CallbackPosts {
     }
     @Override
     public void onUploadImageSuccess(){
-        d.setRemote(data_structure.ResultType.SUCCESS);
-        if(d.loadComplete()) c.onResponseCreation(d.getResponse());
+        if(d.post == null){
+            c.onResponseCreation(new Result.UserEditSuccess());
+            return;
+        }
+        //d.setRemote(data_structure.ResultType.SUCCESS);
+        Uri img = loc.createImage(d.image);
+        if (img == null) {
+            d.post = null;
+            c.onResponseCreation(new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.SUCCESS));
+            return;
+        }
+        d.post.setImage(img);
+        loc.insertPost(d.post);
     }
     @Override
     public void onUploadImageFailure(){
-        d.setRemote(data_structure.ResultType.FAILURE);
+        d.remoteResult = false;
+        d.post.setPubblicazione(null);
         //TODO: gestione non sincronizzazione
-        if(d.loadComplete()) c.onResponseCreation(d.getResponse());
+        Uri img = loc.createImage(d.image);
+        if (img == null) {
+            d.post = null;
+            c.onResponseCreation(new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.SUCCESS));
+            /*d.setLocal(data_structure.ResultType.FAILURE);
+            if (d.loadComplete()) c.onResponseCreation(d.getResponse());*/
+            return;
+        }
+        d.post.setImage(img);
+        loc.insertPost(d.post);
+        //if(d.loadComplete()) c.onResponseCreation(d.getResponse());
     }
+    //TODO: far ritornare il vecchio id
     @Override
     public void onUploadPostSuccess(String id){
         if (d.post == null){
-            c.onResponseCreation(new Result.UserCreationSuccess(id));
+            //loc.modifyId(oldId, id);
+            Bitmap img = loc.getImage(id);
+            rem.createImage(id, img);
+            //c.onResponseCreation(new Result.UserCreationSuccess(id));
         } else {
             d.post.setId(id);
             rem.createImage(id, d.image);
+        /*
             Uri img = loc.createImage(d.image);
             if (img == null) {
                 d.setLocal(data_structure.ResultType.FAILURE);
@@ -226,17 +203,18 @@ public final class PostRepository implements CallbackPosts {
                 return;
             }
             d.post.setImage(img);
-            loc.insertPost(d.post);
+            loc.insertPost(d.post);*/
         }
     }
     @Override
     public void onUploadPostFailure(){
-        d.setRemote(data_structure.ResultType.FAILURE);
+        d.remoteResult = false;
         d.post.setId("???" + System.currentTimeMillis());//La prima cosa venuta in mente
+        d.post.setPubblicazione(null);
         Uri img = loc.createImage(d.image);
         if (img == null){
             c.onResponseCreation(new Result.Error("Not created"));
-            d.setPost(null);
+            d.post = null;
             return;
         }
         d.post.setImage(img);
@@ -248,14 +226,22 @@ public final class PostRepository implements CallbackPosts {
             c.onResponseCreation(new Result.UserEditSuccess());//Il nome non ci azzecca niente, però è quella più leggera...
             return;
         }
-        d.setLocal(data_structure.ResultType.SUCCESS);
-        if(d.loadComplete()) c.onResponseCreation(d.getResponse());
+        d.post = null;
+        if(d.remoteResult){
+            c.onResponseCreation(new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.LOCAL));
+        } else {
+            c.onResponseCreation(new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.REMOTE));
+        }
+        /*d.setLocal(data_structure.ResultType.SUCCESS);
+        if(d.loadComplete()) c.onResponseCreation(d.getResponse());*/
     }
     @Override
-    public void onLocalSaveFailure(){
-        d.setLocal(data_structure.ResultType.SUCCESS);
-        //TODO (forse): gestione non sincronizzazione
-        if(d.loadComplete()) c.onResponseCreation(d.getResponse());
+    public void onLocalSaveFailure(){ //nessuna immagine creata
+        if(d.remoteResult){
+            c.onResponseCreation(new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.REMOTE));
+        } else {
+            c.onResponseCreation(new Result.Error(""));
+        }
     }
     @Override
     public void onSuccessAdv(Post p) {
