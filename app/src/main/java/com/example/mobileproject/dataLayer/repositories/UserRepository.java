@@ -13,7 +13,7 @@ import com.example.mobileproject.utils.Result;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserRepository implements CallbackUsers {
+public final class UserRepository implements CallbackUsers {
     //TODO: remove LiveData ("https://developer.android.com/topic/libraries/architecture/livedata#livedata-in-architecture")
     private final MutableLiveData<Result> users;
     private final GeneralUserRemoteSource rem;

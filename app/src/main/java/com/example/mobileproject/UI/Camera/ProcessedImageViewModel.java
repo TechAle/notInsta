@@ -132,7 +132,7 @@ public final class ProcessedImageViewModel extends ViewModel implements PostResp
         Boolean isProm = getIsPromotional().getValue();
         try{
             //Uri imageUri = BitmapUtils.getUriFromBitmap(t, image);
-            PostRepository pr = ServiceLocator.getInstance().getPostRepo(t.getApplication());
+            PostRepository pr = ServiceLocator.getInstance().getPostRepo(t.getApplicationContext());
             if(pr != null){
                 Post p = new Post(null, desc, null, Arrays.asList(tagArr), isProm);
                 pr.createPost(p, image);

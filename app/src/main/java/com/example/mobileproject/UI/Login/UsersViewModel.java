@@ -12,10 +12,10 @@ import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.utils.DataStoreSingleton;
 import com.example.mobileproject.utils.Result;
 
-import static com.example.mobileproject.utils.Constants.SP_FILENAME;
+import static com.example.mobileproject.utils.Constants.SHARED_PREFERENCES_FILENAME;
 
 //TODO: Usata in più parti, ho il sospetto che vada divisa (non era un ViewModel per activity?)
-public class UsersViewModel extends ViewModel /*implements UserResponseCallback*/ {
+public final class UsersViewModel extends ViewModel /*implements UserResponseCallback*/ {
     private final UserRepository repoU;
     private final PostRepository repoP;
     private MutableLiveData<Result> users;
@@ -91,8 +91,8 @@ public class UsersViewModel extends ViewModel /*implements UserResponseCallback*
         repoU.passwordReset(email);
     }
     public void signOut(Context c) {
-        repoP.deleteData(); //TODO: implement this
-        new DataStoreSingleton(c).deleteAll(SP_FILENAME);
+        repoP.deleteData();
+        new DataStoreSingleton(c).deleteAll(SHARED_PREFERENCES_FILENAME);
         repoU.signOut();
     }
     public void deleteAccount() {

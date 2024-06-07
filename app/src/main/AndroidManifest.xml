@@ -17,9 +17,6 @@
         android:theme="@style/Theme.MobileProject"
         tools:targetApi="34">
         <activity
-            android:name=".UI.MainActivity"
-            android:exported="false" />
-        <activity
             android:name=".UI.Settings.SettingsActivity"
             android:exported="false" />
         <activity

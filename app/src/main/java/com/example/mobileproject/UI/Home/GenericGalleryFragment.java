@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.example.mobileproject.R;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.databinding.FragmentPostGalleryBinding;
 import com.example.mobileproject.models.Post.Post;
@@ -43,9 +44,9 @@ public abstract class GenericGalleryFragment extends Fragment {
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
 
-        } else { //TODO: Sostituire testo con una risorsa
+        } else {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
-                    "Unexpected Error", Snackbar.LENGTH_SHORT).show();
+                    getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
         postList = new ArrayList<>();
     }

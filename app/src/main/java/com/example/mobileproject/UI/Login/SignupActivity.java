@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import com.example.mobileproject.R;
 
-public class SignupActivity extends AppCompatActivity {
+public final class SignupActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 

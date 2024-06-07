@@ -27,7 +27,7 @@ import java.util.Map;
  * Use the {@link PostDescriptionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PostDescriptionFragment extends Fragment {
+public final class PostDescriptionFragment extends Fragment {
 
     private ProcessedImageViewModel viewModel;
 

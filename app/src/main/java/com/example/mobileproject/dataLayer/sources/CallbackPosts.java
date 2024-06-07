@@ -1,12 +1,6 @@
 package com.example.mobileproject.dataLayer.sources;
 
-import android.content.ContentResolver;
-import android.net.Uri;
-
-import androidx.lifecycle.MutableLiveData;
-
 import com.example.mobileproject.models.Post.Post;
-import com.example.mobileproject.utils.Result;
 
 import java.util.List;
 
@@ -23,23 +17,7 @@ public interface CallbackPosts{
     void onFailureG(Exception e);
     void onFailureO(Exception e);
     void onFailureF(Exception e);
-
-    void onUploadImageFailure();
-
-    /*void onSuccessSyncRemote(List<Post> res);
-
-        void onSuccessSyncLocal(List<Post> res);
-
-        void onFailureSync();*/
-    void onUploadPostSuccess(String id);
-    void onUploadImageSuccess();
-
-    void onUploadPostFailure();
-
     void onLocalSaveSuccess();
-    void onLocalSaveFailure(); //messo per completezza
-
-    //Set di callback per lo sponsor
     void onSuccessAdv(Post p);
     void onFailureAdv(Exception e);
 

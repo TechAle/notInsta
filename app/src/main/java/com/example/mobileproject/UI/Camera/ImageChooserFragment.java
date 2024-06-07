@@ -18,7 +18,7 @@ import com.example.mobileproject.R;
  * Use the {@link ImageChooserFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ImageChooserFragment extends Fragment {
+public final class ImageChooserFragment extends Fragment {
 
     private final int SELECT_PICTURE = 200;
     private final int TAKE_PICTURE = 100;

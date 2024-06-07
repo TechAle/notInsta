@@ -13,12 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.work.Constraints;
+import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import com.example.mobileproject.R;
+import com.example.mobileproject.service.ImageWorker;
 import com.example.mobileproject.service.SyncLTRWorker;
 import com.example.mobileproject.utils.Result;
 import com.google.android.material.snackbar.Snackbar;
@@ -132,29 +134,7 @@ public final class CameraActivity extends AppCompatActivity {
                 viewModel.postImage(this).observe(this, result -> {
                     String text = "";
                     if(result.successful()){
-                        Result.PostCreationSuccess.ResponseType type = ((Result.PostCreationSuccess) result).getData();
-                        switch(type){
-                            case SUCCESS:
-                                text = getResources().getString(R.string.post_created);
-                                break;
-                            case LOCAL:
-                                Constraints constraints = new Constraints.Builder()
-                                        .setRequiredNetworkType(NetworkType.CONNECTED)
-                                        .build();
-                                OneTimeWorkRequest syncWorkRequest =
-                                        new OneTimeWorkRequest.Builder(SyncLTRWorker.class)
-                                                .setConstraints(constraints)
-                                                .build();
-                                WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork("LTR", ExistingWorkPolicy.KEEP, syncWorkRequest);
-                                text = getResources().getString(R.string.post_created_local_only);
-                                break;
-                            case REMOTE:
-                                text = getResources().getString(R.string.post_created_remote_only);
-                                break;
-                            case NO_REMOTE_IMAGE: //spero non esca mai
-                                text = getResources().getString(R.string.post_created_no_remote_image);
-                                break;
-                        }
+                        text = getResources().getString(R.string.post_created);
                     } else {
                         text = getResources().getString(R.string.post_not_created);
                     }
@@ -167,5 +147,4 @@ public final class CameraActivity extends AppCompatActivity {
                 break;
         }
     }
-
 }

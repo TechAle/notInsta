@@ -17,7 +17,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class AdvertisementSource extends GeneralAdvSource {
+public final class AdvertisementSource extends GeneralAdvSource {
 
     private final StoreAPIService storeAPIService;
 

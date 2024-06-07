@@ -4,11 +4,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
+import androidx.concurrent.futures.CallbackToFutureAdapter;
 
 import static com.example.mobileproject.utils.Constants.ELEMENTS_LAZY_LOADING;
 
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.utils.DBConverter;
+import com.google.common.util.concurrent.SettableFuture;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -20,12 +22,15 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.Future;
 
 /**
  * Classe per il recupero remoto dei post da Firebase
@@ -37,10 +42,12 @@ public final class PostRemoteSource extends GeneralPostRemoteSource{
     private DocumentSnapshot lastPostSync;
     private DocumentSnapshot lastPostTag;
     private final Map<String, DocumentSnapshot> lastElementPerAuthor;
+    private final Queue<String> uploadingPost;
     public PostRemoteSource(){
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         lastElementPerAuthor = new HashMap<>();
+        uploadingPost = new ArrayDeque<>();
     }
     @Override
     public void retrievePosts(int page){
@@ -78,7 +85,6 @@ public final class PostRemoteSource extends GeneralPostRemoteSource{
                                     i.contains("tags") ? i.getBoolean("tags") : null,
                                     getUriFromId(i.getId()));*/
                             Map<String, Object> m = i.getData();
-                            //m.put("immagine", getUriFromIdAndToken(i.getId(), (String) m.get("immagine")));
                             m.put("immagine", getUriFromId(i.getId()));
                             m.replace("autore", ((DocumentReference) m.get("autore")).getId());
                             m.put("data", ((Timestamp) m.get("data")).toDate());
@@ -151,7 +157,9 @@ public final class PostRemoteSource extends GeneralPostRemoteSource{
                 });
     }
     @Override
-    public void createPost(Post post) {
+    public Future<String> createPost(Post post) {
+        SettableFuture<String> f = SettableFuture.create();
+        uploadingPost.add(post.getId());
         Map<String, Object> documentFields = new HashMap<>();
         documentFields.put("autore", db.collection("utenti").document(FirebaseAuth.getInstance().getCurrentUser().getUid()));//TODO: controllare qua
         documentFields.put("likes", post.getLikes());
@@ -163,40 +171,39 @@ public final class PostRemoteSource extends GeneralPostRemoteSource{
                 .add(documentFields)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful())
-                        //c.onUploadSuccess(task.getResult().getId());
-                        c.onUploadPostSuccess(task.getResult().getId());
+                        f.set(task.getResult().getId());
+                        //c.onUploadPostSuccess(uploadingPost.remove(), task.getResult().getId());
+                        //c.onUploadPostSuccess(task.getResult().getId());
                     else
-                        c.onUploadPostFailure();
+                        f.set(null);
+                        //c.onUploadPostFailure();
                 });
+        return f;
     }
 
-    @Override
+    /*@Override
     public void createPosts(List<Post> pl){//TODO: controllare qua
         for (Post p : pl){
             createPost(p);
         }
-    }
+    }*/
     @Override
-    public void createImage(String id, Bitmap bmp) {
-        /*if (imageUri != null) {
-            try {
-                // Convert the image to PNG format
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context, imageUri);*/
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                byte[] data = baos.toByteArray();
-                // Create a unique filename for the uploaded image
-                String fileName = id + ".png";
-                storage.getReference("POSTS")
-                        .child(fileName)
-                        .putBytes(data)
-                        .addOnSuccessListener(r -> c.onUploadImageSuccess())
-                        .addOnFailureListener(r -> c.onUploadImageFailure());
-            /*} catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }*/
+    public Future<Boolean> createImage(String id, Bitmap bmp) {
+        return CallbackToFutureAdapter.getFuture(completer -> {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+            // Create a unique filename for the uploaded image
+            String fileName = id + ".png";
+            storage.getReference("POSTS")
+                    .child(fileName)
+                    .putBytes(data)
+                    .addOnSuccessListener(r -> completer.set(true))
+                    .addOnFailureListener(r -> completer.set(false));
+            return "Image creation";
+        });
     }
+    //TODO: substitute this
     @Override
     public void retrievePostsWithTagsLL(String[] tags, int page) {//mero segnaposto, è come quello normale
         db.collection("post")
@@ -252,33 +259,10 @@ public final class PostRemoteSource extends GeneralPostRemoteSource{
                 }
             });
     }
-
-
-
-    //TODO: avevo in mente di utilizzare retrieveUserPosts(), ma mi servono callback diverse.
-    // Se funziona tutto pensavo di chiamare quella (e di riscrivere in parte il codice) [CCL]
+    
     @Override
-    public void retrieveUserPostsForSync(int page){/*//TODO: fixare
-        db.collection("posts")
-                .whereEqualTo("autore", FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .get()
-                .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
-                        List<Post> results = new ArrayList<>();
-                        for(QueryDocumentSnapshot i : task.getResult()){
-                            Map<String, Object> m = i.getData();
-                            Post p = new Post(m, i.getId());
-                            results.add(p);
-                        }
-                        c.onSuccessO(results);
-                    }
-                    else{
-                        c.onFailureO(new Exception("fail to get posts"));
-                    }
-                });*/
-    }
-    @Override
-    public void retrieveUserPostsForSync(int page, long lastUpdate){
+    public Future<List<Post>> retrieveUserPostsForSync(int page, long lastUpdate){
+        //SettableFuture<List<Post>> f = SettableFuture.create();
         if(page == 0){
             lastPostSync = null;
         }
@@ -290,34 +274,49 @@ public final class PostRemoteSource extends GeneralPostRemoteSource{
         if(lastPostSync != null){
             q = q.startAfter(lastPostSync);
         }
-        q.limit(ELEMENTS_LAZY_LOADING*5)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
-                        List<Post> results = new ArrayList<>();
-                        for(QueryDocumentSnapshot i : task.getResult()){
-                            Map<String, Object> m = i.getData();
-                            m.put("immagine", getUriFromId(i.getId()));
-                            m.replace("autore", ((DocumentReference) m.get("autore")).getId());
-                            m.replace("data", ((Timestamp) m.get("data")).toDate());
-                            Post p = new Post(m, i.getId());
-                            results.add(p);
-                            lastPostSync = i;
+        Query finalQ = q;
+        return CallbackToFutureAdapter.getFuture(completer -> {
+            finalQ.limit(ELEMENTS_LAZY_LOADING*5)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if(task.isSuccessful()){
+                            List<Post> results = new ArrayList<>();
+                            for(QueryDocumentSnapshot i : task.getResult()){
+                                Map<String, Object> m = i.getData();
+                                m.put("immagine", getUriFromId(i.getId()));
+                                m.replace("autore", ((DocumentReference) m.get("autore")).getId());
+                                m.replace("data", ((Timestamp) m.get("data")).toDate());
+                                Post p = new Post(m, i.getId());
+                                results.add(p);
+                                lastPostSync = i;
+                            }
+                            completer.set(results);
+                            //c.onSuccessO(results);
+                        } else {
+                            completer.set(null);
+                            //c.onFailureO(new Exception());
                         }
-                        c.onSuccessO(results);
-                    } else {
-                        c.onFailureO(new Exception());
-                    }
-                });
+                    });
+            return "Sync posts - Remote";
+        });
+        //return f;
     }
 
-    public void retrieveImage(String id, File dst){
-        storage.getReference().child("POSTS/" + id).getFile(dst).addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
-                c.onLocalSaveSuccess();
-            } else {
-                c.onLocalSaveFailure();
-            }
+    @Override
+    public Future<Bitmap> getImage(String id) {
+        return null;
+    }
+
+    public Future<Boolean> retrieveImage(String id, File dst){
+        return CallbackToFutureAdapter.getFuture(completer -> {
+            storage.getReference().child("POSTS/" + id).getFile(dst).addOnCompleteListener(task -> {
+                if(task.isSuccessful()){
+                    completer.set(true);
+                } else {
+                    completer.set(false);
+                }
+            });
+            return "Remote image";
         });
     }
     private Uri getUriFromId(String id){

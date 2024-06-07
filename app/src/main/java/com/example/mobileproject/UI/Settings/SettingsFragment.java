@@ -39,7 +39,7 @@ import com.example.mobileproject.utils.ServiceLocator;
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment {
+public final class SettingsFragment extends Fragment {
 
     private NavController ctrl;
     private FragmentSettingsBinding binding;

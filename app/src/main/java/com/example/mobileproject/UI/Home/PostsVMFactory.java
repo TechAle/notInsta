@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
 
-public class PostsVMFactory implements ViewModelProvider.Factory {
+public final class PostsVMFactory implements ViewModelProvider.Factory {
     private final PostRepository pr;
     private final UserRepository ur;
 

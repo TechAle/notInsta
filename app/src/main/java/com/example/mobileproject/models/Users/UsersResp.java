@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
-public class UsersResp implements Parcelable {
+public final class UsersResp implements Parcelable {
     //private boolean is_loading;
     private List<Users> l;
     protected UsersResp(Parcel in) {

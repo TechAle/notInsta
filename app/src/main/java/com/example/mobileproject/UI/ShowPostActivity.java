@@ -6,7 +6,8 @@ import android.os.Bundle;
 
 import com.example.mobileproject.R;
 
-public class ShowPostActivity extends AppCompatActivity {
+//TODO: farlo
+public final class ShowPostActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

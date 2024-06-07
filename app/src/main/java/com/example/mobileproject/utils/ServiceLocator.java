@@ -1,6 +1,5 @@
 package com.example.mobileproject.utils;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
@@ -10,6 +9,7 @@ import com.example.mobileproject.dataLayer.sources.PostRemoteSource;
 import com.example.mobileproject.dataLayer.sources.FirestoreUserRemoteSource;
 import com.example.mobileproject.dataLayer.sources.PostRoomDatabase;
 import com.example.mobileproject.dataLayer.sources.PostLocalSource;
+import com.example.mobileproject.dataLayer.sources.PostWorkerSource;
 import com.example.mobileproject.service.StoreAPIService;
 
 import retrofit2.Retrofit;
@@ -36,11 +36,16 @@ public class ServiceLocator {
 
 
     public PostRepository getPostRepo(Context c){
-        return new PostRepository(new PostRemoteSource(), new PostLocalSource(getPostDao(c), c), new AdvertisementSource());
+        return new PostRepository(
+                new PostRemoteSource(),
+                new PostLocalSource(getPostDao(c), c),
+                new AdvertisementSource(),
+                new PostWorkerSource(c)
+        );
     }
 
-    public UserRepository getUserRepo(/*Application app*/){
-        return new UserRepository(new FirestoreUserRemoteSource(/*app*/));
+    public UserRepository getUserRepo(){
+        return new UserRepository(new FirestoreUserRemoteSource());
     }
 
     public StoreAPIService getProductsApiService() {

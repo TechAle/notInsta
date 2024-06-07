@@ -1,18 +1,11 @@
 package com.example.mobileproject.UI.Home;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration;
+//import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.work.Constraints;
-import androidx.work.ExistingWorkPolicy;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 //import androidx.activity.EdgeToEdge;
 //import androidx.core.graphics.Insets;
 //import androidx.core.view.ViewCompat;
@@ -29,16 +22,12 @@ import com.example.mobileproject.R;
 import com.example.mobileproject.UI.Camera.CameraActivity;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
-import com.example.mobileproject.models.Users.Users;
-import com.example.mobileproject.service.SyncRTLWorker;
-import com.example.mobileproject.utils.DataStoreSingleton;
 import com.example.mobileproject.utils.FragmentUtils;
-import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class HomeActivity extends AppCompatActivity {
+public final class HomeActivity extends AppCompatActivity {
 
     private PostsViewModel PVM;
     @Override
@@ -53,16 +42,8 @@ public class HomeActivity extends AppCompatActivity {
             finish();
             return;
         }
-
         //Fai partire il worker di sincronizzazione
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-        OneTimeWorkRequest syncWorkRequest =
-                new OneTimeWorkRequest.Builder(SyncRTLWorker.class)
-                        .setConstraints(constraints)
-                        .build();
-        WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork("RTL", ExistingWorkPolicy.REPLACE, syncWorkRequest);
+        PVM.startSync();
 
         PVM = new ViewModelProvider(this, new PostsVMFactory(pr, ur))
             .get(PostsViewModel.class);

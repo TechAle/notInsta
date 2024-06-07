@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
-//@Entity
-public class Users {
+public final class Users {
 
     String email, cognome, nome, username, descrizione, id;
     Date dataNascita;

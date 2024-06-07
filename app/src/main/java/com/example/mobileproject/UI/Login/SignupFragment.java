@@ -28,7 +28,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-public class SignupFragment extends Fragment {
+public final class SignupFragment extends Fragment {
 
     private NavController ctrl;
     private FragmentSignupBinding binding;

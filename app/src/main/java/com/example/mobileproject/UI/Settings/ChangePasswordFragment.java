@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * Use the {@link ChangePasswordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ChangePasswordFragment extends Fragment {
+public final class ChangePasswordFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";

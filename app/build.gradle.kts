@@ -39,7 +39,7 @@ android {
 
 dependencies {
 
-    //TODO: se qualcuno ha voglia lo aggiorni alla 2.8.0
+    //TODO: se qualcuno ha voglia lo aggiorni alla 2.8.1
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     val fragmentVersion = "1.7.1"
@@ -78,7 +78,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.6.1")
 
     //Credential Manager
-    implementation("androidx.credentials:credentials:1.5.0-alpha01")
+    //implementation("androidx.credentials:credentials:1.5.0-alpha01")
 
     //WorkManager
     implementation("androidx.work:work-runtime:$workVersion")

@@ -23,7 +23,7 @@ import com.google.android.material.textfield.TextInputLayout;
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class ChangeUsernameFragment extends Fragment {
+public final class ChangeUsernameFragment extends Fragment {
 
 
     private Button changeButton;

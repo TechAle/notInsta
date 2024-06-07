@@ -6,7 +6,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 
-public class FilterUtils {
+public final class FilterUtils {
 
     public static Bitmap applyFilter(Bitmap bitmap, String filter, int x, int y, int z) {
         Bitmap filtered = null;

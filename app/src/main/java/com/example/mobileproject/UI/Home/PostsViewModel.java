@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * Classe ViewModel per l'attività principale
  */
-public class PostsViewModel extends ViewModel implements UserResponseCallback, PostResponseCallback {
+public final class PostsViewModel extends ViewModel implements UserResponseCallback, PostResponseCallback {
 
     private static final int fragmentNumber = 3; //uguale alla dimensione di FragmentType
     private final PostRepository repoP;
@@ -206,6 +206,9 @@ public class PostsViewModel extends ViewModel implements UserResponseCallback, P
             repoU.getLoggedUser();
         }
         return user;
+    }
+    public void startSync(){
+        repoP.scheduleSync();
     }
     @Override
     public void onResponseUser(Result r) {

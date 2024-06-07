@@ -5,12 +5,18 @@ import android.view.View;
 
 import static com.example.mobileproject.utils.Constants.ELEMENTS_LAZY_LOADING;
 
+import androidx.annotation.NonNull;
+
+import org.jetbrains.annotations.Contract;
+
 public final class ProfileGalleryFragment extends GenericGalleryFragment {
     public ProfileGalleryFragment() {
         super();
         type = PostsViewModel.FragmentType.OWNED;
     }
 
+    @NonNull
+    @Contract(" -> new")
     public static ProfileGalleryFragment newInstance() {
         return new ProfileGalleryFragment();
     }

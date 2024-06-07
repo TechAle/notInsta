@@ -12,9 +12,7 @@ import java.util.List;
 public abstract class Result {
     private Result() {}
     public boolean successful(){
-        // TODO make superclass, this is ugly
-        //return !(this instanceof Error);  I think THIS is better [CCL]
-        return this instanceof PostResponseSuccess || this instanceof UserResponseSuccessUser || this instanceof UserResponseSuccess || this instanceof UserEditSuccess || this instanceof PostCreationSuccess || this instanceof UserCreationSuccess || this instanceof ProductSuccess;
+        return !(this instanceof Error);
     }
 
     public static final class PostResponseSuccess extends Result {
@@ -55,11 +53,20 @@ public abstract class Result {
             NO_REMOTE_IMAGE
         }
         private final ResponseType t;
+        private final String id;
         public PostCreationSuccess(ResponseType t) {
             this.t = t;
+            this.id = null;
+        }
+        public PostCreationSuccess(ResponseType t, String id){
+            this.t = t;
+            this.id = id;
         }
         public ResponseType getData() {
             return t;
+        }
+        public String getId(){
+            return id;
         }
     }
 

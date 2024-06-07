@@ -4,7 +4,7 @@ import android.view.View;
 
 import static com.example.mobileproject.utils.Constants.ELEMENTS_LAZY_LOADING;
 
-public class SearchGalleryFragment extends GenericGalleryFragment {
+public final class SearchGalleryFragment extends GenericGalleryFragment {
     public SearchGalleryFragment() {
         super();
         type = PostsViewModel.FragmentType.FOUND;

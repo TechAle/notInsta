@@ -8,10 +8,12 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Classe di conversione dei tipi, principalmente per Room
+ * */
 public class DBConverter {
     @TypeConverter
     public static Date dateFromTimestamp(Long value) {

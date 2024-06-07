@@ -22,7 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends Fragment {
+public final class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
     private PostsViewModel PVM;

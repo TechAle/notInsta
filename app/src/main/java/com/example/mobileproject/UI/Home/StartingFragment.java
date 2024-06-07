@@ -33,7 +33,7 @@ import java.util.List;
  * Use the {@link StartingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StartingFragment extends Fragment {
+public final class StartingFragment extends Fragment {
 
     private FragmentStartingBinding binding;
     private PostsViewModel PVM;

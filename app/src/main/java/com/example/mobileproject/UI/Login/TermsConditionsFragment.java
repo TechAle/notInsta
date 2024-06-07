@@ -17,7 +17,7 @@ import com.example.mobileproject.R;
  * Use the {@link TermsConditionsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TermsConditionsFragment extends Fragment {
+public final class TermsConditionsFragment extends Fragment {
 
     public TermsConditionsFragment() {
     }

@@ -7,7 +7,7 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.Objects;
 
-public class Product implements Parcelable {
+public final class Product implements Parcelable {
 
     private int id;
     private String title;

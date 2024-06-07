@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment {
+public final class SearchFragment extends Fragment {
 
     private FragmentSearchBinding binding;
     private PostsViewModel PVM;

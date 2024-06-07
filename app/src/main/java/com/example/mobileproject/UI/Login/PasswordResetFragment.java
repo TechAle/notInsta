@@ -20,7 +20,7 @@ import com.example.mobileproject.utils.DataEncryptionUtil;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
-public class PasswordResetFragment extends Fragment {
+public final class PasswordResetFragment extends Fragment {
 
     private NavController ctrl;
     private TextInputLayout inputEmail;

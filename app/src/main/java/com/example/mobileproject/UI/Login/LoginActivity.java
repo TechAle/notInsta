@@ -49,7 +49,7 @@ public final class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ServiceLocator sl = ServiceLocator.getInstance();
-        UVM = new ViewModelProvider(this, new UsersVMFactory(sl.getUserRepo(), sl.getPostRepo(getApplication())))
+        UVM = new ViewModelProvider(this, new UsersVMFactory(sl.getUserRepo(), sl.getPostRepo(getApplicationContext())))
                 .get(UsersViewModel.class);
         if(UVM.isLogged()){
             startActivity(new Intent(this, HomeActivity.class));
@@ -79,7 +79,7 @@ public final class LoginActivity extends AppCompatActivity {
             // Oggetto o = savedInstanceState.getParcelable("OGGETTO_SALVATO");
         }
 
-        //TODO: incapsulare la SharedPreferences in un altra classe (propongo di utilizzare DataStore);
+        //TODO: incapsulare la SharedPreferences in un altra classe;
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         String selectedLanguage = sharedPref.getString("selected_language", "en");
         FragmentUtils.loadLanguage(selectedLanguage, this, getResources());

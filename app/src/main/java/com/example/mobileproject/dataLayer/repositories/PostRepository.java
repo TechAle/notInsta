@@ -7,13 +7,19 @@ import com.example.mobileproject.dataLayer.sources.CallbackPosts;
 import com.example.mobileproject.dataLayer.sources.GeneralAdvSource;
 import com.example.mobileproject.dataLayer.sources.GeneralPostLocalSource;
 import com.example.mobileproject.dataLayer.sources.GeneralPostRemoteSource;
+import com.example.mobileproject.dataLayer.sources.PostWorkerSource;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Post.PostResp;
-import com.example.mobileproject.utils.DBConverter;
 import com.example.mobileproject.utils.Result;
 
+import org.jetbrains.annotations.Blocking;
+
+import java.io.File;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.ArrayList;
 import java.util.List;
+
 //import java.net.URL;
 
 public final class PostRepository implements CallbackPosts {
@@ -21,43 +27,41 @@ public final class PostRepository implements CallbackPosts {
     //LiveData non presenti("https://developer.android.com/topic/libraries/architecture/livedata#livedata-in-architecture")
     //TODO: maybe a byte[] data type is better than a android.graphics.Bitmap?
     //TODO: maybe a java.net.URL/java.net.URI data type is better than a android.net.Uri?
-    private static class data_structure{
-        private Post post;
-        private Bitmap image;
-        private boolean remoteResult;
-    }
     private PostResponseCallback c;
     private final GeneralPostRemoteSource rem;
     private final GeneralPostLocalSource loc;
     private final GeneralAdvSource ads;
-    private final data_structure d;
+    private final PostWorkerSource w;
 
-    /**
-     * Costruttore
-     */
-    public PostRepository(GeneralPostRemoteSource rem, GeneralPostLocalSource loc, GeneralAdvSource ads){
+    public PostRepository(GeneralPostRemoteSource rem, GeneralPostLocalSource loc, GeneralAdvSource ads, PostWorkerSource postWorkerSource){
         this.rem = rem;
         this.loc = loc;
         this.ads = ads;
+        this.w = postWorkerSource;
         this.rem.setCallback(this);
         this.loc.setCallback(this);
         this.ads.setCallback(this);
-        this.d = new data_structure();
     }
 
     public void setCallback(PostResponseCallback c){
         this.c = c;
     }
-    /*
-    //WTF
-    public MutableLiveData<Result> retrievePosts(String tag){
-        rem.retrievePostByDocumentId(tag);
-        return posts;
-    }*/
 
+    /**
+     * Prende tutti i post di un determinato utente
+     *
+     * @param idUser ID dell'utente di cui si vogliono recuperare i post
+     * @param page   numero di pagina
+     * */
     public void retrievePostsbyAuthor(String idUser, int page){
         rem.retrievePostsByAuthor(idUser, page);
     }
+
+    /**
+     * Prende tutti i post in locale
+     *
+     * @param page pagina
+     * */
     public void retrieveUserPosts(int page){
         loc.retrievePosts(page);
     }
@@ -77,50 +81,127 @@ public final class PostRepository implements CallbackPosts {
      * @param tags Lista di tag
      * @param page Numero di pagina
      */
-    public void retrievePostsWithTagsLL(String tags[], int page){
+    public void retrievePostsWithTagsLL(String[] tags, int page){
         rem.retrievePostsWithTagsLL(tags, page);
     }
+
     /**
      * Prende un solo post sponsorizzato
      */
+    //TODO: controllare, mi sa che ho sbagliato qualcosa...
     public void retrieveSponsoredPosts(){
         if ((int) (Math.random() * 3) == 1) {
             ads.getAdvPost();
         } else rem.retrievePostsSponsor();
     }
+
+    /**
+     * Crea un post in locale e accoda la scrittura in remoto. Utilizza callbacks
+     *
+     * @param post dati del post
+     * @param bmp  immagine
+     * */
     public void createPost(Post post, Bitmap bmp) {
-        if(d.post == null){
-            c.onResponseCreation(new Result.Error("Busy"));
-        } else {
-            d.post = post;
-            d.post.setPubblicazione(DBConverter.dateFromTimestamp(System.currentTimeMillis()));
-            //TODO: vedere la data di pubblicazione come cambia
-            d.image = bmp;
-            rem.createPost(post);
+        post.setPubblicazione(null);
+        Uri img = loc.createImage(bmp);
+        if(img == null){
+            c.onResponseCreation(new Result.Error(""));
         }
+        post.setImage(img);
+        loc.insertPost(post);
     }
-    public void getNoSyncPostsFromLocal(){
-        loc.retrieveNoSyncPosts();
+
+    /**
+     * Inizia a mandare in esecuzione la sincronizzazione da remoto
+     * */
+    //TODO: implementarlo
+    public void scheduleSync(){
+        w.enqueueRemoteRead();
     }
-    public void getNoSyncPostsFromRemote(int page, long lastUpdate){
-        rem.retrieveUserPostsForSync(page, lastUpdate);
+    /**
+     * Sincronizza i post da locale. Operazione bloccante
+     *
+     * @return successo nel sincronizzare tutti i post
+     * */
+    @Blocking
+    public boolean syncPostsFromLocal(){
+        List<Post> pl;
+        try{
+            pl = loc.retrieveNoSyncPosts().get();
+        } catch (ExecutionException | InterruptedException e){
+            return false;
+        }
+        for(Post p : pl){
+            Future<String> fs = rem.createPost(p);
+            Bitmap bmp = loc.getImage(p.getImage());
+            try {
+                String newId = fs.get();
+                if(newId != null){
+                    rem.createImage(newId, bmp);
+                    loc.modifyId(p.getId(), newId);
+                    //TODO: modifica immagine
+                }
+            } catch (ExecutionException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return true;
     }
-    public void putPosts(List<Post> pl){
-        loc.insertPosts(pl);
+    /**
+     * Sincronizza tutti i post da remoto a partire da un dato momento. Operazione bloccante
+     *
+     * @param lastUpdate Marca temporale da cui partire per prendere i post
+     *
+     * @return L'ultima marca temporale salvata nel DB
+     * */
+    //TODO: le immagini non scaricate per qualunque motivo chi le scarica?
+    @Blocking
+    public long syncPostsFromRemote(long lastUpdate) throws ExecutionException, InterruptedException {
+        int page = 0;
+        long time = lastUpdate;
+        try {
+            List<Post> pl = rem.retrieveUserPostsForSync(page, lastUpdate).get();
+            while (pl.size() != 0) {
+                for (Post p : pl) {
+                    p.setImage(null);
+                }
+                loc.insertPosts(pl);
+                time = pl.get(pl.size() - 1).getData().getTime();
+                for (Post p : pl) {
+                    File f = loc.createEmptyImageFile();
+                    if(rem.retrieveImage(p.getId(), f).get()){
+                        loc.modifyImage(p.getId(), Uri.fromFile(f));
+                    };
+                }
+                page++;
+                pl = rem.retrieveUserPostsForSync(page, lastUpdate).get();
+            }
+        } catch (InterruptedException e){
+            return time;
+        }
+        return time;
     }
-    public void substitutePost(Post oldPost, Post newPost){
-        //TODO: implementare questa parte
-        c.onResponseAdvPost(new Result.Error(oldPost.getId()));//Anche questo nome non ha senso...
-    }
-    public void loadPost(Post p) {
-        //rem.createPost(p, <recupero l'immagine da locale>); //TODO: recuperare immagine da locale
-    }
+
+    /**
+     * Cancella tutti i dati in locale
+     * */
     public void deleteData() {
         loc.deletePosts();
-        //loc.deleteImages(); //TODO: implementare
+        loc.deleteImages();
     }
-    //Callbacks
 
+    //TODO: modificare
+    @Blocking
+    public void syncImage(String id){
+        rem.retrieveImage(id, loc.createEmptyImageFile());
+        try {
+            loc.modifyImage(id, loc.createImage(rem.getImage(id).get()));
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //Callbacks
     @Override
     public void onSuccessG(List<Post> res) {
         Result.PostResponseSuccess result = new Result.PostResponseSuccess(new PostResp(res));
@@ -152,96 +233,9 @@ public final class PostRepository implements CallbackPosts {
         c.onResponseFoundPosts(resultError);
     }
     @Override
-    public void onUploadImageSuccess(){
-        if(d.post == null){
-            c.onResponseCreation(new Result.UserEditSuccess());
-            return;
-        }
-        //d.setRemote(data_structure.ResultType.SUCCESS);
-        Uri img = loc.createImage(d.image);
-        if (img == null) {
-            d.post = null;
-            c.onResponseCreation(new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.SUCCESS));
-            return;
-        }
-        d.post.setImage(img);
-        loc.insertPost(d.post);
-    }
-    @Override
-    public void onUploadImageFailure(){
-        d.remoteResult = false;
-        d.post.setPubblicazione(null);
-        //TODO: gestione non sincronizzazione
-        Uri img = loc.createImage(d.image);
-        if (img == null) {
-            d.post = null;
-            c.onResponseCreation(new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.SUCCESS));
-            /*d.setLocal(data_structure.ResultType.FAILURE);
-            if (d.loadComplete()) c.onResponseCreation(d.getResponse());*/
-            return;
-        }
-        d.post.setImage(img);
-        loc.insertPost(d.post);
-        //if(d.loadComplete()) c.onResponseCreation(d.getResponse());
-    }
-    //TODO: far ritornare il vecchio id
-    @Override
-    public void onUploadPostSuccess(String id){
-        if (d.post == null){
-            //loc.modifyId(oldId, id);
-            Bitmap img = loc.getImage(id);
-            rem.createImage(id, img);
-            //c.onResponseCreation(new Result.UserCreationSuccess(id));
-        } else {
-            d.post.setId(id);
-            rem.createImage(id, d.image);
-        /*
-            Uri img = loc.createImage(d.image);
-            if (img == null) {
-                d.setLocal(data_structure.ResultType.FAILURE);
-                if (d.loadComplete()) c.onResponseCreation(d.getResponse());
-                return;
-            }
-            d.post.setImage(img);
-            loc.insertPost(d.post);*/
-        }
-    }
-    @Override
-    public void onUploadPostFailure(){
-        d.remoteResult = false;
-        d.post.setId("???" + System.currentTimeMillis());//La prima cosa venuta in mente
-        d.post.setPubblicazione(null);
-        Uri img = loc.createImage(d.image);
-        if (img == null){
-            c.onResponseCreation(new Result.Error("Not created"));
-            d.post = null;
-            return;
-        }
-        d.post.setImage(img);
-        loc.insertPost(d.post);
-    }
-    @Override
-    public void onLocalSaveSuccess(){
-        if(d.post == null){//Ovvero: è chiamato da un worker
-            c.onResponseCreation(new Result.UserEditSuccess());//Il nome non ci azzecca niente, però è quella più leggera...
-            return;
-        }
-        d.post = null;
-        if(d.remoteResult){
-            c.onResponseCreation(new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.LOCAL));
-        } else {
-            c.onResponseCreation(new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.REMOTE));
-        }
-        /*d.setLocal(data_structure.ResultType.SUCCESS);
-        if(d.loadComplete()) c.onResponseCreation(d.getResponse());*/
-    }
-    @Override
-    public void onLocalSaveFailure(){ //nessuna immagine creata
-        if(d.remoteResult){
-            c.onResponseCreation(new Result.PostCreationSuccess(Result.PostCreationSuccess.ResponseType.REMOTE));
-        } else {
-            c.onResponseCreation(new Result.Error(""));
-        }
+    public void onLocalSaveSuccess(){//prima callback di creazione
+        w.enqueueRemoteWrite();
+        c.onResponseCreation(new Result.UserEditSuccess());
     }
     @Override
     public void onSuccessAdv(Post p) {
