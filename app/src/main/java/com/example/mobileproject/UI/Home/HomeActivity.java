@@ -42,11 +42,9 @@ public final class HomeActivity extends AppCompatActivity {
             finish();
             return;
         }
-        //Fai partire il worker di sincronizzazione
-        PVM.startSync();
-
         PVM = new ViewModelProvider(this, new PostsVMFactory(pr, ur))
             .get(PostsViewModel.class);
+        PVM.startSync();
         setContentView(R.layout.activity_home);
         //Questa cosa la avrei anche fatta, ma da problemi sul mio telefono (Android 9)
         /*ViewCompat.setOnApplyWindowInsetsListener( findViewById(R.id.globalView) , (v, windowInsets) -> {

@@ -126,4 +126,7 @@
     <string name="post_not_created">Not able to create this post</string>
     <string name="unexpected_error">Unexpected error</string>
     <string name="error_no_google_account_found_message">No Google account found</string>
+    <string name="likes">Likes:</string>
+    <string name="Author">Author:</string>
+    <string name="publish">Published at:</string>
 </resources>

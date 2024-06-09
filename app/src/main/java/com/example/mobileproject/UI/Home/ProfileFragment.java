@@ -76,7 +76,6 @@ public final class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
-        //PVM.setCurrentFragment(2);
         return binding.getRoot();
     }
 }

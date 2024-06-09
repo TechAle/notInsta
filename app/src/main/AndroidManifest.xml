@@ -37,6 +37,9 @@
         <activity
             android:name=".UI.Login.SignupActivity"
             android:exported="true" />
+        <activity
+            android:name=".UI.ShowPostActivity"
+            android:exported = "true" />
     </application>
 
 </manifest>

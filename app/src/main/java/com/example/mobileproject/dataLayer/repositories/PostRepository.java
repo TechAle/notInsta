@@ -10,6 +10,7 @@ import com.example.mobileproject.dataLayer.sources.GeneralPostRemoteSource;
 import com.example.mobileproject.dataLayer.sources.PostWorkerSource;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Post.PostResp;
+import com.example.mobileproject.utils.DBConverter;
 import com.example.mobileproject.utils.Result;
 
 import org.jetbrains.annotations.Blocking;
@@ -102,8 +103,9 @@ public final class PostRepository implements CallbackPosts {
      * @param bmp  immagine
      * */
     public void createPost(Post post, Bitmap bmp) {
+        post.setId("???" + System.currentTimeMillis());
         post.setPubblicazione(null);
-        Uri img = loc.createImage(bmp);
+        Uri img = loc.createImage(bmp, post.getId());
         if(img == null){
             c.onResponseCreation(new Result.Error(""));
         }
@@ -114,7 +116,6 @@ public final class PostRepository implements CallbackPosts {
     /**
      * Inizia a mandare in esecuzione la sincronizzazione da remoto
      * */
-    //TODO: implementarlo
     public void scheduleSync(){
         w.enqueueRemoteRead();
     }
@@ -132,15 +133,24 @@ public final class PostRepository implements CallbackPosts {
             return false;
         }
         for(Post p : pl){
-            Future<String> fs = rem.createPost(p);
+            long now = System.currentTimeMillis();
+            p.setPubblicazione(DBConverter.dateFromTimestamp(now));
+            Future<String> fs = rem.createPost(p);//tanto in remoto non ha l'immagine...
             Bitmap bmp = loc.getImage(p.getImage());
             try {
                 String newId = fs.get();
                 if(newId != null){
-                    rem.createImage(newId, bmp);
-                    loc.modifyId(p.getId(), newId);
-                    //TODO: modifica immagine
+                    Future<Boolean> f = rem.createImage(newId, bmp);
+                    Uri newImg = loc.renameImage(p.getImage(), newId);
+                    if(f.get() && newImg != null){
+                        loc.modifyId(p.getId(), newId);
+                        p.setImage(newImg);
+                        //loc.modifyImage(p.getId(), newImg);
+                        loc.updatePost(p);
+                    }
+                    //TODO: else
                 }
+                //se fallisce: non faccio nulla, ritento la prossima volta
             } catch (ExecutionException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -159,6 +169,7 @@ public final class PostRepository implements CallbackPosts {
     public long syncPostsFromRemote(long lastUpdate) throws ExecutionException, InterruptedException {
         int page = 0;
         long time = lastUpdate;
+        long now = System.currentTimeMillis();
         try {
             List<Post> pl = rem.retrieveUserPostsForSync(page, lastUpdate).get();
             while (pl.size() != 0) {
@@ -168,18 +179,24 @@ public final class PostRepository implements CallbackPosts {
                 loc.insertPosts(pl);
                 time = pl.get(pl.size() - 1).getData().getTime();
                 for (Post p : pl) {
-                    File f = loc.createEmptyImageFile();
+                    File f = loc.createEmptyImageFile(p.getId());
                     if(rem.retrieveImage(p.getId(), f).get()){
-                        loc.modifyImage(p.getId(), Uri.fromFile(f));
-                    };
+                        p.setImage(Uri.fromFile(f));
+                        loc.updatePost(p);
+                        //loc.modifyImage(p.getId(), Uri.fromFile(f));
+                    }
+                    else {
+                        w.startFinishingDownload();
+                    }
                 }
                 page++;
                 pl = rem.retrieveUserPostsForSync(page, lastUpdate).get();
             }
         } catch (InterruptedException e){
             return time;
+            //TODO: come faccio a capire se ha fallito?
         }
-        return time;
+        return now;
     }
 
     /**
@@ -189,16 +206,25 @@ public final class PostRepository implements CallbackPosts {
         loc.deletePosts();
         loc.deleteImages();
     }
-
-    //TODO: modificare
     @Blocking
-    public void syncImage(String id){
-        rem.retrieveImage(id, loc.createEmptyImageFile());
+    public boolean syncImages(){
+        List<String> ids;
         try {
-            loc.modifyImage(id, loc.createImage(rem.getImage(id).get()));
+            ids = loc.retrieveIDsWithNoImage().get();
         } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
+            return false;
         }
+        for(String s : ids){
+            File f = loc.createEmptyImageFile(s);
+            try {
+                if(rem.retrieveImage(s, f).get()){
+                    loc.modifyImage(s, Uri.fromFile(f));
+                }
+            } catch (ExecutionException | InterruptedException e) {
+                return false;
+            }
+        }
+        return true;
     }
 
     //Callbacks

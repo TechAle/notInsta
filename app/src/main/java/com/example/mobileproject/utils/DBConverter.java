@@ -29,7 +29,7 @@ public class DBConverter {
     }
     @TypeConverter
     public static String fromUri(Uri u){
-        return u.toString();
+        return u == null ? null : u.toString();
     }
     @TypeConverter
     public static List<String> toList(String s){

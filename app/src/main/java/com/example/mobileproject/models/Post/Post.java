@@ -1,6 +1,8 @@
 package com.example.mobileproject.models.Post;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.example.mobileproject.utils.DBConverter;
 
@@ -14,15 +16,13 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import org.jetbrains.annotations.Contract;
-
 @Entity (tableName = "posts")
 @TypeConverters(DBConverter.class)
 
 /**
  * Classe che rappresenta i posts
  */
-public final class Post {
+public final class Post implements Parcelable {
     @PrimaryKey
     @NonNull
     private String id;
@@ -49,7 +49,7 @@ public final class Post {
         this.promozionale = p.promozionale;
         this.image = p.image;
     }
-    public Post(String id, String autore, String descrizione, Date pubblicazione, List<String> tags, boolean promozionale, Uri imageURI) {
+    public Post(@NonNull String id, String autore, String descrizione, Date pubblicazione, List<String> tags, boolean promozionale, Uri imageURI) {
         this.id = id;
         this.autore = autore;
         this.descrizione = descrizione;
@@ -68,15 +68,26 @@ public final class Post {
         this.likes = new ArrayList<>();
         this.promozionale = promo;
     }
-    public Post(Map<String, Object> m, String id) {
+    public Post(Map<String, Object> m, @NonNull String id) {
         this.descrizione = (String) m.get("descrizione");
         this.pubblicazione = (Date) m.get("data");
-        this.autore = (String) m.get("creatoreId"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
-        this.tags = (ArrayList<String>) m.get("tag");
+        this.autore = (String) m.get("autore"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
+        this.tags = (ArrayList<String>) m.get("tags");
         this.likes = (ArrayList<String>) m.get("likes");
         this.id = id;
         this.promozionale = (Boolean) m.get("promozionale");
         this.image = (Uri) m.get("immagine");
+    }
+
+    private Post(Parcel in) {
+        id = in.readString();
+        autore = in.readString();
+        descrizione = in.readString();
+        tags = in.createStringArrayList();
+        likes = in.createStringArrayList();
+        image = in.readParcelable(Uri.class.getClassLoader());
+        pubblicazione = new Date(in.readLong());
+        promozionale = in.readByte() != 0;
     }
 
     public void setAutore(String autore) {
@@ -107,10 +118,8 @@ public final class Post {
     public void setId(String id) {
         this.id = id;
     }
-    @NonNull
-    @Contract(" -> new")
     public List<String> getTags() {
-        return new ArrayList<>(tags);
+        return tags == null ? null : new ArrayList<>(tags);
     }
     public String getId() {
         return id;
@@ -124,10 +133,8 @@ public final class Post {
     public Date getPubblicazione() {
         return pubblicazione;
     }
-    @NonNull
-    @Contract(" -> new")
     public List<String> getLikes() {
-        return new ArrayList<>(likes);
+        return likes == null ? null : new ArrayList<>(likes);
     }
     public boolean isPromozionale() {
         return promozionale;
@@ -136,4 +143,32 @@ public final class Post {
         return this.pubblicazione;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Post> CREATOR = new Creator<Post>() {
+        @Override
+        public Post createFromParcel(Parcel in) {
+            return new Post(in);
+        }
+
+        @Override
+        public Post[] newArray(int size) {
+            return new Post[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(autore);
+        dest.writeString(descrizione);
+        dest.writeStringList(tags);
+        dest.writeStringList(likes);
+        dest.writeParcelable(image, flags);
+        dest.writeLong(pubblicazione.getTime());
+        dest.writeByte((byte) (promozionale ? 1 : 0));
+    }
 }

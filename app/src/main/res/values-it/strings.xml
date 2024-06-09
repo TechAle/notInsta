@@ -42,4 +42,7 @@
     <string name="post_created_remote_only">Post creato in remoto</string>
     <string name="post_created_no_remote_image">Il post è stato creato, ma l\'immagine non è stata caricata in remoto</string>
     <string name="post_not_created">Non è stato possibile creare il post</string>
+    <string name="likes">n° Like:</string>
+    <string name="Author">Autore</string>
+    <string name="publish">Pubblicato il:</string>
 </resources>

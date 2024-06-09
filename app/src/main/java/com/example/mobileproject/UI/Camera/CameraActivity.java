@@ -20,9 +20,11 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import com.example.mobileproject.R;
+import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.service.ImageWorker;
 import com.example.mobileproject.service.SyncLTRWorker;
 import com.example.mobileproject.utils.Result;
+import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.FileNotFoundException;
@@ -50,8 +52,9 @@ public final class CameraActivity extends AppCompatActivity {
         
         currentFragment = 0;
         changeFragment();
-
-        viewModel = new ViewModelProvider(this).get(ProcessedImageViewModel.class);
+        PostRepository pr = ServiceLocator.getInstance().getPostRepo(getApplicationContext());
+        if(pr == null) return;
+        viewModel = new ViewModelProvider(this, new ProcessedImageVMFactory(pr)).get(ProcessedImageViewModel.class);
         recover();
         final Observer<Bitmap> observer = bitmap -> imageView.setImageBitmap(bitmap);
         viewModel.getTempImage().observe(this, observer);

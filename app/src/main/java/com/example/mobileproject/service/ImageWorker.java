@@ -4,7 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.concurrent.futures.CallbackToFutureAdapter;
-import androidx.work.ListenableWorker;
+import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
@@ -12,8 +12,8 @@ import com.example.mobileproject.dataLayer.repositories.PostResponseCallback;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.common.util.concurrent.ListenableFuture;
 
-//TODO: vedere se serve
-public final class ImageWorker extends ListenableWorker {
+//TODO: modificare
+public final class ImageWorker extends Worker {
 
     /**
      * @param appContext   The application {@link Context}
@@ -25,25 +25,9 @@ public final class ImageWorker extends ListenableWorker {
 
     @NonNull
     @Override
-    public ListenableFuture<Result> startWork() {
-        return CallbackToFutureAdapter.getFuture(completer -> {
-            //TODO: prendere in input il parametro ID
-            String s = getInputData().getString("id");
-            PostRepository pr = ServiceLocator.getInstance().getPostRepo(getApplicationContext());
-            PostResponseCallback c = new PostResponseCallback() {
-                @Override
-                public void onResponseCreation(com.example.mobileproject.utils.Result r) {
-                    if(r.successful()){
-                        completer.set(Result.success());
-                    } else {
-                        completer.set(Result.retry());
-                    }
-                }
-            };
-            pr.setCallback(c);
-            //TODO: implementare
-            pr.syncImage(getInputData().getString("id"));
-            return c;
-        });
+    public Result doWork() {
+        PostRepository pr = ServiceLocator.getInstance().getPostRepo(getApplicationContext());
+        if (pr.syncImages()) return Result.success();
+        else return Result.failure();
     }
 }

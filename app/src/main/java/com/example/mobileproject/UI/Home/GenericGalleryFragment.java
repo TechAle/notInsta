@@ -1,6 +1,7 @@
 package com.example.mobileproject.UI.Home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.mobileproject.R;
+import com.example.mobileproject.UI.ShowPostActivity;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.databinding.FragmentPostGalleryBinding;
 import com.example.mobileproject.models.Post.Post;
@@ -71,7 +73,10 @@ public abstract class GenericGalleryFragment extends Fragment {
             @Override
             public void onItemClicked(Post p) {
                 //Volendo si può sostituire questa linea con qualcosa di altro
-                Snackbar.make(v, "Item Clicked", Snackbar.LENGTH_SHORT).show();
+                Intent i = new Intent(requireActivity(), ShowPostActivity.class);
+                i.putExtra("post", p);
+                startActivity(i);
+                //Snackbar.make(v, "Item Clicked", Snackbar.LENGTH_SHORT).show();
             }
         });
         posts.setLayoutManager(lmp);

@@ -23,7 +23,7 @@ public abstract class PostRoomDatabase extends RoomDatabase {
         if(instance == null){
             synchronized (PostRoomDatabase.class){
                 if(instance == null){
-                    instance = Room.databaseBuilder(c.getApplicationContext(), PostRoomDatabase.class, DB_NAME).build(); //TODO: change this name...
+                    instance = Room.databaseBuilder(c.getApplicationContext(), PostRoomDatabase.class, DB_NAME).build();
                 }
             }
         }

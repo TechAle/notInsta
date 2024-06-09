@@ -1,27 +1,22 @@
 package com.example.mobileproject.UI.Camera;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.dataLayer.repositories.PostResponseCallback;
 import com.example.mobileproject.models.Post.Post;
-import com.example.mobileproject.utils.BitmapUtils;
 import com.example.mobileproject.utils.FilterUtils;
 import com.example.mobileproject.utils.Result;
-import com.example.mobileproject.utils.ServiceLocator;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Arrays;
 
 //TODO: sistemare bug relativi all'applicazione dei filtri
 public final class ProcessedImageViewModel extends ViewModel implements PostResponseCallback{
+    private final PostRepository pr;
 
     // Live Data
     private MutableLiveData<Bitmap> processedImage;
@@ -35,6 +30,10 @@ public final class ProcessedImageViewModel extends ViewModel implements PostResp
     private MutableLiveData<Boolean> isPromotional;
     private final MutableLiveData<Result> creationResponse = new MutableLiveData<>();
 
+    public ProcessedImageViewModel(PostRepository pr){
+        this.pr = pr;
+        pr.setCallback(this);
+    }
     public MutableLiveData<Bitmap> getProcessedImage() {
         if (processedImage == null) {
             processedImage = new MutableLiveData<>();
@@ -131,8 +130,6 @@ public final class ProcessedImageViewModel extends ViewModel implements PostResp
         String[] tagArr = getTags().getValue();
         Boolean isProm = getIsPromotional().getValue();
         try{
-            //Uri imageUri = BitmapUtils.getUriFromBitmap(t, image);
-            PostRepository pr = ServiceLocator.getInstance().getPostRepo(t.getApplicationContext());
             if(pr != null){
                 Post p = new Post(null, desc, null, Arrays.asList(tagArr), isProm);
                 pr.createPost(p, image);
