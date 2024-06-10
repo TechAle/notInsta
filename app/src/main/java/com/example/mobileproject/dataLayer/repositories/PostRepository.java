@@ -145,7 +145,6 @@ public final class PostRepository implements CallbackPosts {
                     if(f.get() && newImg != null){
                         loc.modifyId(p.getId(), newId);
                         p.setImage(newImg);
-                        //loc.modifyImage(p.getId(), newImg);
                         loc.updatePost(p);
                     }
                     //TODO: else
@@ -183,7 +182,6 @@ public final class PostRepository implements CallbackPosts {
                     if(rem.retrieveImage(p.getId(), f).get()){
                         p.setImage(Uri.fromFile(f));
                         loc.updatePost(p);
-                        //loc.modifyImage(p.getId(), Uri.fromFile(f));
                     }
                     else {
                         w.startFinishingDownload();

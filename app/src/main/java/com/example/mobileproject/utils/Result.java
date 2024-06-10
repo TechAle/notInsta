@@ -45,31 +45,6 @@ public abstract class Result {
         }
     }
 
-    public static final class PostCreationSuccess extends Result {
-        public enum ResponseType{
-            SUCCESS,
-            LOCAL,
-            REMOTE,
-            NO_REMOTE_IMAGE
-        }
-        private final ResponseType t;
-        private final String id;
-        public PostCreationSuccess(ResponseType t) {
-            this.t = t;
-            this.id = null;
-        }
-        public PostCreationSuccess(ResponseType t, String id){
-            this.t = t;
-            this.id = id;
-        }
-        public ResponseType getData() {
-            return t;
-        }
-        public String getId(){
-            return id;
-        }
-    }
-
     public static final class UserEditSuccess extends Result {//Propongo di cambiarla con GenericSuccess
     }
 

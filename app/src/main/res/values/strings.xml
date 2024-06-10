@@ -129,4 +129,6 @@
     <string name="likes">Likes:</string>
     <string name="Author">Author:</string>
     <string name="publish">Published at:</string>
+    <string name="Followers">Followers: %1$d</string>
+    <string name="Followee">Followee: %1$d</string>
 </resources>

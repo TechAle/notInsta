@@ -60,8 +60,6 @@ public final class HomeActivity extends AppCompatActivity {
         BottomNavigationView bottomBar = findViewById(R.id.bottomNavigationView);
         NavHostFragment n = (NavHostFragment) getSupportFragmentManager().
                 findFragmentById(R.id.fragment_window_host);
-        /*AppBarConfiguration barConfig = new AppBarConfiguration.Builder(R.id.startingFragment,
-                R.id.searchFragment, R.id.profileFragment).build();*/
         NavController ctrl = n.getNavController();
         NavigationUI.setupWithNavController(bottomBar, ctrl);
         //TODO: cambiare la chiamate SharedPreferences con una a DataStore

@@ -22,6 +22,7 @@ public final class PostGalleryFragment extends GenericGalleryFragment{
     }
     @Override
     protected void fetchAction(View v) {
+        binding.progressBar.setVisibility(View.VISIBLE);
         PVM.getGlobalPosts().observe(getViewLifecycleOwner(), list -> {
             if (!PVM.isLoading(type)) { //Se non è attiva una chiamata
                 if (PVM.isFirstLoading(type)) { //Se è il primo caricamento -> lista interna vuota o aggiornamento completo richiesto
@@ -42,7 +43,7 @@ public final class PostGalleryFragment extends GenericGalleryFragment{
                         PVM.setAllPosts(type, true);
                     }
                 }
-                //TODO bindings
+                binding.progressBar.setVisibility(View.GONE);
             } else {
                 PVM.setLoading(type, false); //rendo disponibile un altra chiamata
                 int initial_size = postList.size();

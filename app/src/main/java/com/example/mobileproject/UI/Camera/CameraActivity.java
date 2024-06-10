@@ -12,18 +12,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.work.Constraints;
-import androidx.work.Data;
-import androidx.work.ExistingWorkPolicy;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
-import com.example.mobileproject.service.ImageWorker;
-import com.example.mobileproject.service.SyncLTRWorker;
-import com.example.mobileproject.utils.Result;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -35,8 +26,6 @@ public final class CameraActivity extends AppCompatActivity {
     int SELECT_PICTURE = 200;
     int TAKE_PICTURE = 100;
     private ImageView imageView;
-    private Button nextButton;
-    private Button prevButton;
     private Bitmap photo;
     private ProcessedImageViewModel viewModel;
     private int currentFragment;
@@ -47,8 +36,8 @@ public final class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
 
         imageView = findViewById(R.id.imageView);
-        nextButton = findViewById(R.id.next_button);
-        prevButton = findViewById(R.id.prev_button);
+        Button nextButton = findViewById(R.id.next_button);
+        Button prevButton = findViewById(R.id.prev_button);
         
         currentFragment = 0;
         changeFragment();
@@ -135,7 +124,7 @@ public final class CameraActivity extends AppCompatActivity {
             case 3:
                 // Send post
                 viewModel.postImage(this).observe(this, result -> {
-                    String text = "";
+                    String text;
                     if(result.successful()){
                         text = getResources().getString(R.string.post_created);
                     } else {

@@ -34,7 +34,6 @@ public final class PostDescriptionFragment extends Fragment {
     // View Elements
     private TextInputEditText textInput;
     private TextInputEditText tagInput;
-    private Button addTag;
     private LinearLayout linearLayout;
     private Map<String, Button> tags;
     private CheckBox isPromotionalCheckbox;
@@ -60,10 +59,10 @@ public final class PostDescriptionFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_post_description, container, false);
         textInput = view.findViewById(R.id.textInput);
         tagInput = view.findViewById(R.id.tagInput);
-        addTag = view.findViewById(R.id.addTagButton);
+        Button addTag = view.findViewById(R.id.addTagButton);
         linearLayout = view.findViewById(R.id.tagLayout);
         isPromotionalCheckbox = view.findViewById(R.id.checkBoxPromotional);
-        tags = new HashMap<String, Button>();
+        tags = new HashMap<>();
 
         recoverView(view);
 

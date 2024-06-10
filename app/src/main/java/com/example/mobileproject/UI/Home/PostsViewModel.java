@@ -12,9 +12,7 @@ import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.utils.Result;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Classe ViewModel per l'attività principale
@@ -24,7 +22,6 @@ public final class PostsViewModel extends ViewModel implements UserResponseCallb
     private static final int fragmentNumber = 3; //uguale alla dimensione di FragmentType
     private final PostRepository repoP;
     private final UserRepository repoU;
-    private final Set<String> userTags;
     private String tag;
     private final int[] page;
     private final boolean[] allPosts; //Vero se sono stati recuperati tutti i post oppure se è cambiato qualcosa nei tag
@@ -54,13 +51,10 @@ public final class PostsViewModel extends ViewModel implements UserResponseCallb
         this.loading = new boolean[fragmentNumber];
         this.firstLoading = new boolean[fragmentNumber];
         for(int i = 0; i < fragmentNumber; i++){
-            this.page[i] = 0;
             this.firstLoading[i] = true;
-            this.loading[i] = false;
-            this.allPosts[i] = false;
             posts.add(null);
         }
-        this.userTags = new HashSet<>();
+        posts.set(1, new MutableLiveData<>());
         this.user = new MutableLiveData<>();
         this.adv = new MutableLiveData<>();
     }
@@ -77,30 +71,10 @@ public final class PostsViewModel extends ViewModel implements UserResponseCallb
                 throw new RuntimeException();
         }
     }
-    public boolean setSearchTag(String tag){
+    public void setSearchTag(String tag){
         this.tag = tag;
-        flush(1);
-        return true; //in questo caso può essere anche buttato
+        flushPosts(1);
     }
-    public boolean addTag(String tag){
-        if(userTags.add(tag)){
-            flush(0);
-            return true;
-        }
-        return false;
-    }
-    public void removeTag(){
-        userTags.clear();
-        flush(0);
-    }
-    /*public boolean removeTag(String tag){//TODO
-        boolean success = userTags.remove(tag);
-        if(success){
-            flush(fragment);
-            getPosts();
-        }
-        return success;
-    }*/
 
     /**
      * Metodo getter del MutableLiveData relativo ai post generici
@@ -110,38 +84,22 @@ public final class PostsViewModel extends ViewModel implements UserResponseCallb
         if(l == null){
             posts.set(0, new MutableLiveData<>());
             l = posts.get(0);
-            if(userTags.size() != 0){//TODO
-                repoP.retrievePostsWithTagsLL(userTags.toArray(new String[userTags.size()]), page[0]);
-            } else {
-                findGlobalPosts();
-            }
+            findGlobalPosts();
         }
         return l;
     }
     public void findGlobalPosts(){
         repoP.retrievePosts(page[0]);
     }
-    public MutableLiveData<List<Post>> getFoundPosts(){
-        MutableLiveData<List<Post>> l = posts.get(1);
-        if(l == null){
-            l = new MutableLiveData<>();
-            posts.set(1, l);
-            if(this.tag != null && !this.tag.isEmpty()){//TODO
-                if(tag.startsWith("#")){
-                    String[] s = new String[1];
-                    s[0] = tag;
-                    repoP.retrievePostsWithTagsLL(s, page[1]);
-                }
-                repoP.retrievePostsbyAuthor(tag, page[1]);
-            }
-        }
-        return l;
+    public MutableLiveData<List<Post>> getActualFoundPosts(){
+        return posts.get(1);
     }
     public void findFoundPosts(){
         if(this.tag != null && !this.tag.isEmpty()){
             if(tag.startsWith("#")){
                 String[] s = new String[1];
-                s[0] = tag;
+                s[0] = tag.substring(1);
+                if(s[0] == null) return;
                 repoP.retrievePostsWithTagsLL(s, page[1]);
             }
             else{
@@ -190,17 +148,13 @@ public final class PostsViewModel extends ViewModel implements UserResponseCallb
     public boolean areAllPosts(FragmentType f) {
         return allPosts[fromEnumToInt(f)];
     }
-    private void flush(int fragmentNum){
-        this.posts.set(fragmentNum, null);
+    private void flushPosts(int fragmentNum){
+        this.posts.get(fragmentNum).postValue(null);
         this.page[fragmentNum] = 0;
         this.allPosts[fragmentNum] = false;
         this.loading[fragmentNum] = false;
         this.firstLoading[fragmentNum] = true;
     }
-    /*
-    public void setCurrentFragment(int fragment){
-        this.fragment = fragment;
-    }*/
     public MutableLiveData<Users> getUser(){
         if(user.getValue() == null){
             repoU.getLoggedUser();
@@ -232,7 +186,7 @@ public final class PostsViewModel extends ViewModel implements UserResponseCallb
             }
             livedata.postValue(newList);
         } else {
-            //TODO
+            //TODO gestione errore
         }
     }
     @Override

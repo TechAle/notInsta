@@ -249,7 +249,7 @@ public final class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     if (documentSnapshot.exists()) {
                         Map<String, Object> m = documentSnapshot.getData();
-                        m.put("immagine", getUriFromId(firebaseAuth.getUid()));
+                        m.put("immagine", getUriFromId(firebaseAuth.getUid())); //false warning: existence of document tested
                         m.put("followers", null);//TODO: sistemare
                         m.put("following", null);//TODO: sistemare
                         m.put("tags", null);//TODO: sistemare

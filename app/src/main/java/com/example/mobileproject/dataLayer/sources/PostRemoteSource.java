@@ -196,7 +196,6 @@ public final class PostRemoteSource extends GeneralPostRemoteSource{
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] data = baos.toByteArray();
-            // Create a unique filename for the uploaded image
             String fileName = id + ".png";
             storage.getReference("POSTS")
                     .child(fileName)
@@ -212,7 +211,7 @@ public final class PostRemoteSource extends GeneralPostRemoteSource{
             lastPostTag = null;
         }
         Query q = db.collection("post")
-            .whereArrayContainsAny("tag", Arrays.asList(tags))
+            .whereArrayContainsAny("tags", Arrays.asList(tags))
             .orderBy("data");
         if(lastPostTag != null){
             q = q.startAfter(lastPostTag);

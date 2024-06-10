@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mobileproject.R;
 import com.example.mobileproject.models.Post.Post;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int LOADING_TYPE = 1;
     private final List<Post> postSet;
     private final OnItemClickListener l;
-    private final Application appl; //per il caricamento con Glide
+    private final Application appl;
 
     public PostAdapter(List<Post> pl, Application a, OnItemClickListener l){
         this.postSet = pl;
@@ -36,7 +35,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public int getItemViewType(int position){ // lazy loading
+    public int getItemViewType(int position){
         if (postSet.get(position) == null){
             return LOADING_TYPE;
         }
@@ -81,14 +80,12 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             item.setOnClickListener(this);
         }
         public void bind(Post p){
-            //Caricamento immagine da URL con Glide
             Glide.with(appl).load(p.getImage()).placeholder(R.drawable.baseline_photo_camera_24).into(iv);
         }
 
         @Override
         public void onClick(View v) {
             l.onItemClicked(postSet.get(getAdapterPosition()));
-            //Snackbar.make(v, "Item clicked", Snackbar.LENGTH_SHORT).show();
         }
     }
     public static class LoadingPostViewHolder extends RecyclerView.ViewHolder {

@@ -99,6 +99,7 @@ public final class StartingFragment extends Fragment {
                 return false;
             }
         });
+        /*
         RecyclerView tags = binding.tags;
         RecyclerView.LayoutManager lmt = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.HORIZONTAL, false);
@@ -106,75 +107,16 @@ public final class StartingFragment extends Fragment {
             @Override
             public void onTagClicked(String s, boolean selected){
                 //Snackbar.make(view, s, Snackbar.LENGTH_SHORT).show();
-                /*if(selected){
+                if(selected){
                     PVM.addTag(s);
                 } else {
                     PVM.removeTag(s);
-                }*/
+                }
             }
         });
         tags.setLayoutManager(lmt);
-        tags.setAdapter(ta);
-
-        /*Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);*/
+        tags.setAdapter(ta);*/
     }
-/*
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-
-            imageUri = data.getData();
-
-
-            /*Post toCreate = new Post("0TsbiPUaL5qfFQiH6572", "Bella descrizione",
-                    new ArrayList<>(Arrays.asList("tag1", "ciao")), true, FirebaseFirestore.getInstance());
-
-            PVM.createPost(toCreate).observe(getViewLifecycleOwner(), task -> {
-                if (task.successful()) {
-                    PVM.createImage(imageUri, "POSTS", requireActivity().getContentResolver(), ((Result.PostCreationSuccess) task).getData())
-                            .observe(getViewLifecycleOwner(), imageTask -> {
-                                if (imageTask.successful()) {
-                                    int a = 0;
-                                } else {
-                                    int b = 0;
-                                }
-
-                    });
-                } else {
-                    int c = 0;
-                }
-            });*/
-            /*
-            Users toCreate = new Users("cognome", "nome", "username", "descrizione", Calendar.getInstance().getTime(), new ArrayList<>(Arrays.asList("lol")));
-            UVM.createUser(toCreate).observe(getViewLifecycleOwner(), task -> {
-                if (task.successful()) {
-                    PVM.createImage(imageUri, "PFP", requireActivity().getContentResolver(), ((Result.UserCreationSuccess) task).getData())
-                            .observe(getViewLifecycleOwner(), imageTask -> {
-                                if (imageTask.successful()) {
-                                    int a = 0;
-                                } else {
-                                    int b = 0;
-                                }
-
-                            });
-                } else {
-                    int c = 0;
-                }
-            });
-        }
-    }
-
-
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView imageView;
-    private Uri imageUri;
-*/
     private boolean internetConnection(){
         ConnectivityManager cm =
                 (ConnectivityManager)requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);

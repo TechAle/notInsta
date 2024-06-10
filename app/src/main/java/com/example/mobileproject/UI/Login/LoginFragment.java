@@ -45,8 +45,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-//TODO: da qualche parte mettere un worker per caricare i post
-//TODO: mettere risorse al posto di stringhe hardcoded (snackbar)
 public final class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;

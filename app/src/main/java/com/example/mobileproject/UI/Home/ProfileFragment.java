@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.example.mobileproject.R;
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
 import com.example.mobileproject.databinding.FragmentProfileBinding;
 import com.example.mobileproject.utils.ServiceLocator;
@@ -27,7 +28,6 @@ public final class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
     private PostsViewModel PVM;
     public ProfileFragment() {
-        // Required empty public constructor
     }
 
     /**
@@ -36,7 +36,6 @@ public final class ProfileFragment extends Fragment {
      *
      * @return A new instance of fragment ProfileFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
         return fragment;
@@ -64,16 +63,14 @@ public final class ProfileFragment extends Fragment {
             binding.Nome.setText(user.getNome());
             binding.username.setText(user.getUsername());
             binding.descrizione.setText(user.getDescrizione());
-            binding.seguaci.setText(/*R.string.followers*/"Followers:" +
-                    (user.getFollowers() == null ? "0" : user.getFollowers().size())); //TODO: sistemare questa linea
-            binding.seguiti.setText(/*R.string.followers*/"Followee:" +
-                    (user.getFollowing() == null ? "0" : user.getFollowing().size())); //TODO: sistemare questa linea
+            binding.seguaci.setText(String.format(getResources().getString(R.string.Followers), user.getFollowers() == null ? 0 : user.getFollowers().size()));
+            binding.seguiti.setText(String.format(getResources().getString(R.string.Followee), user.getFollowing() == null ? 0 : user.getFollowing().size()));
             Glide.with(this).load(user.getImageUri()).into(binding.pfp);
         });
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         return binding.getRoot();

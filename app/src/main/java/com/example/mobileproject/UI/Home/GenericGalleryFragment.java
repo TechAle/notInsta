@@ -55,7 +55,7 @@ public abstract class GenericGalleryFragment extends Fragment {
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater,
+            @NonNull LayoutInflater inflater,
             ViewGroup container,
             Bundle savedInstanceState
     ) {
@@ -68,16 +68,10 @@ public abstract class GenericGalleryFragment extends Fragment {
         super.onViewCreated(v, savedInstanceState);
         RecyclerView posts = binding.gallery;
         StaggeredGridLayoutManager lmp = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        pa = new PostAdapter(postList, requireActivity().getApplication(), new PostAdapter.OnItemClickListener() {
-            //Qua non metto una funzione anonima
-            @Override
-            public void onItemClicked(Post p) {
-                //Volendo si può sostituire questa linea con qualcosa di altro
-                Intent i = new Intent(requireActivity(), ShowPostActivity.class);
-                i.putExtra("post", p);
-                startActivity(i);
-                //Snackbar.make(v, "Item Clicked", Snackbar.LENGTH_SHORT).show();
-            }
+        pa = new PostAdapter(postList, requireActivity().getApplication(), p -> {
+            Intent i = new Intent(requireActivity(), ShowPostActivity.class);
+            i.putExtra("post", p);
+            startActivity(i);
         });
         posts.setLayoutManager(lmp);
         posts.setAdapter(pa);
@@ -96,7 +90,7 @@ public abstract class GenericGalleryFragment extends Fragment {
 
                     // Condition to enable the loading of other news while the user is scrolling the list
                     if (!PVM.isLoading(type)
-                            && !PVM.areAllPosts(type) //avrei qualche dubbio su questa condizione...
+                            && !PVM.areAllPosts(type)
                             && (itemLoaded == visibleItemCount
                                || (itemLoaded <= (pastVisiblesItems))
                                && dy > 0)
@@ -111,10 +105,6 @@ public abstract class GenericGalleryFragment extends Fragment {
             }
         });
     }
-    /*@Override
-    public void onDestroy(){
-        super.onDestroy();
-    }*/
 
     private boolean internetConnection(){
         ConnectivityManager cm =

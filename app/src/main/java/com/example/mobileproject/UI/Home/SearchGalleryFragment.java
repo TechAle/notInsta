@@ -12,16 +12,11 @@ public final class SearchGalleryFragment extends GenericGalleryFragment {
 
     @Override
     protected void fetchAction(View v) {
-    }
-
-    @Override
-    protected void findAction() {
-        PVM.findFoundPosts();
-    }
-
-    void loadPosts(String s) {
-        PVM.setSearchTag(s);
-        PVM.getFoundPosts().observe(getViewLifecycleOwner(), list -> {
+        binding.progressBar.setVisibility(View.VISIBLE);
+        PVM.getActualFoundPosts().observe(getViewLifecycleOwner(), list -> {
+            /*if(list == null){
+                return;
+            }*/
             if (!PVM.isLoading(type)) { //Se non è attiva una chiamata
                 if (PVM.isFirstLoading(type)) { //Se è il primo caricamento -> lista interna vuota o aggiornamento completo
                     PVM.setFirstLoading(type, false);
@@ -33,7 +28,7 @@ public final class SearchGalleryFragment extends GenericGalleryFragment {
                     if (postList.size() < ELEMENTS_LAZY_LOADING) { // Ho meno post di quelli possibili, allora non ne ho altri. Coincide con quelli ottenuti
                         PVM.setAllPosts(type, true);
                     }
-                } else {// ???
+                } else {// Caricamento iniziale
                     postList.clear();
                     postList.addAll(list);
                     pa.notifyItemRangeInserted(0, list.size());
@@ -41,7 +36,7 @@ public final class SearchGalleryFragment extends GenericGalleryFragment {
                         PVM.setAllPosts(type, true);
                     }
                 }
-                //bindings
+                binding.progressBar.setVisibility(View.GONE);
             } else {
                 PVM.setLoading(type, false);
                 int initial_size = postList.size();
@@ -51,7 +46,6 @@ public final class SearchGalleryFragment extends GenericGalleryFragment {
                     }
                 }
                 int itemInserted = 0;
-                //pa.notifyItemRangeRemoved(initial_size, initial_size-1);
                 int sz = list.size();
                 for (int i = initial_size - 1; i < sz; i++) {
                     postList.add(list.get(i));
@@ -69,5 +63,15 @@ public final class SearchGalleryFragment extends GenericGalleryFragment {
                 }
             }
         });
+    }
+
+    @Override
+    protected void findAction() {
+        PVM.findFoundPosts();
+    }
+
+    void loadPosts(String s) {
+        PVM.setSearchTag(s);
+        findAction();
     }
 }

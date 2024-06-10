@@ -3,9 +3,9 @@ package com.example.mobileproject.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
 
-import java.util.List;
+//import java.util.List;
 
 /**
  * Classe di utilità per il salvataggio di coppie chiave-valore non crittate.
@@ -43,12 +43,13 @@ public class DataStoreSingleton {
         editor.putLong(key, value);
         editor.apply();
     }
+    /*
     public void writeStringsData(String sharedPreferencesFileName, String key, List<String> values){
         writeStringData(sharedPreferencesFileName, key, DBConverter.fromList(values));
     }
     public List<String> readStringsData(String sharedPreferencesFileName, String key){
         return DBConverter.toList(readStringData(sharedPreferencesFileName, key));
-    }
+    }*/
     public void deleteAll(String sharedPreferencesFileName) {
         SharedPreferences sharedPref = c.getSharedPreferences(sharedPreferencesFileName,
                 Context.MODE_PRIVATE);

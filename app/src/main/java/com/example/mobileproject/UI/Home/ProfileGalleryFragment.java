@@ -1,6 +1,5 @@
 package com.example.mobileproject.UI.Home;
 
-import android.os.Bundle;
 import android.view.View;
 
 import static com.example.mobileproject.utils.Constants.ELEMENTS_LAZY_LOADING;

@@ -56,22 +56,6 @@ public final class LoginActivity extends AppCompatActivity {
             finish();
             return;
         }
-        //TODO: dare un occhiata qua che non so se è giusto
-        /*try{
-            DataEncryptionUtil u = new DataEncryptionUtil(getApplication());
-            u.readSecretDataOnFile("com.example.mobileproject.encrypted_preferences");
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-            return;
-        } catch (IOException e1){ //non mi sono loggato
-
-        } catch (GeneralSecurityException e2){
-            finish();
-        }/* pseudocode:
-        if(già loggato){
-            vai alla home
-        }
-        */
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

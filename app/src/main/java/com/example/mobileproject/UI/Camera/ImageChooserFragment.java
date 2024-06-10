@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mobileproject.R;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ImageChooserFragment#newInstance} factory method to
@@ -22,8 +21,6 @@ public final class ImageChooserFragment extends Fragment {
 
     private final int SELECT_PICTURE = 200;
     private final int TAKE_PICTURE = 100;
-    private Button cameraButton;
-    private Button galleryButton;
 
     public ImageChooserFragment() {
         // Required empty public constructor
@@ -43,25 +40,20 @@ public final class ImageChooserFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_image_chooser, container, false);
-        cameraButton = view.findViewById(R.id.cameraButton);
-        galleryButton = view.findViewById(R.id.galleryButton);
+        Button cameraButton = view.findViewById(R.id.cameraButton);
+        Button galleryButton = view.findViewById(R.id.galleryButton);
 
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent open_camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                getActivity().startActivityForResult(open_camera, TAKE_PICTURE);
-            }
+        cameraButton.setOnClickListener(view12 -> {
+            Intent open_camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            getActivity().startActivityForResult(open_camera, TAKE_PICTURE);
         });
-        galleryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent();
-                i.setType("image/*");
-                i.setAction(Intent.ACTION_GET_CONTENT);
 
-                getActivity().startActivityForResult(Intent.createChooser(i, "Select Picture"), 200);
-            }
+        galleryButton.setOnClickListener(view1 -> {
+            Intent i = new Intent();
+            i.setType("image/*");
+            i.setAction(Intent.ACTION_GET_CONTENT);
+
+            getActivity().startActivityForResult(Intent.createChooser(i, "Select Picture"), 200);
         });
 
         return view;

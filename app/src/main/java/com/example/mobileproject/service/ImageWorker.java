@@ -3,16 +3,12 @@ package com.example.mobileproject.service;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.concurrent.futures.CallbackToFutureAdapter;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.example.mobileproject.dataLayer.repositories.PostRepository;
-import com.example.mobileproject.dataLayer.repositories.PostResponseCallback;
 import com.example.mobileproject.utils.ServiceLocator;
-import com.google.common.util.concurrent.ListenableFuture;
 
-//TODO: modificare
 public final class ImageWorker extends Worker {
 
     /**
