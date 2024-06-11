@@ -47,7 +47,6 @@ public final class PostDataLocalSource extends GeneralPostDataLocalSource{
         SettableFuture<List<Post>> f = SettableFuture.create();
         PostRoomDatabase.databaseWriteExecutor.execute(() -> {
             List<Post> res = d.getNoSyncPosts();
-            //c.onSuccessSyncLocal(res);
             f.set(res);
         });
         return f;

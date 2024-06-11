@@ -24,6 +24,10 @@ public final class ShowPostActivity extends AppCompatActivity {
         }
         ActivityShowPostBinding binding = ActivityShowPostBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar3);
+        binding.toolbar3.setNavigationOnClickListener(listener -> {
+            finish();
+        });
         Glide.with(getApplicationContext())
                 .load(p.getImage())
                 .into(binding.imageView2);
@@ -32,5 +36,6 @@ public final class ShowPostActivity extends AppCompatActivity {
             binding.likes.setText(String.valueOf(p.getLikes().size()));
         binding.author.setText(p.getAutore());
         binding.publishDate.setText(p.getPubblicazione().toString());
+        getSupportActionBar().setTitle(p.getId());
     }
 }

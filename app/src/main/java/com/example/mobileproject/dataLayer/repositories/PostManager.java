@@ -121,12 +121,13 @@ public final class PostManager implements CallbackPosts {
     @Blocking
     public boolean syncPostsFromLocal(){
         List<Post> pl = dataRep.syncDataFromLocal();
+        boolean result = true;
         if(pl != null) {
-            List<Post> img = imageRep.syncImagesFromLocal(pl);
-            for(Post p : img){
+            result = result && imageRep.syncImagesFromLocal(pl);
+            for(Post p : pl){
                 dataRep.updateLocal(p);
             }
-            return true;
+            return result;
         }
         else return false;
     }

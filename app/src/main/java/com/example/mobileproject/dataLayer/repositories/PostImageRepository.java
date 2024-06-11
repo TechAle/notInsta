@@ -52,22 +52,20 @@ public final class PostImageRepository {
      *
      * @return Lista di successi/fallimenti. Se fallisce il post non viene modificato
      * */
-    public List<Post> syncImagesFromLocal(List<Post> pl){
+    public boolean syncImagesFromLocal(List<Post> pl){
         //gli ID vengono cambiati prima, dovrebbero essere quelli aggiornati
-        List<Post> results = new ArrayList<>();
+        boolean result = true;
         for(Post p : pl){
             Bitmap bmp = loc.getImage(p.getImage());
             try{
                 boolean b = rem.createImage(p.getId(), bmp).get();
-                if(b){
-                    p.setImage(loc.renameImage(p.getImage(), p.getId()));
-                }
+                if(!b) result = false;
             } catch (ExecutionException | InterruptedException e) {
-
+                return false;
             }
-            results.add(p);
         }
-        return results;
+        return result;
+        //Anche se non rinomino i file dovrebbe funzionare lo stesso
     }
     /**
      * Cancellazione delle immagini
