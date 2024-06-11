@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.example.mobileproject.R;
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.databinding.FragmentProfileBinding;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
@@ -43,7 +43,7 @@ public final class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PostRepository pr = ServiceLocator.getInstance().getPostRepo(requireActivity().getApplication());
+        PostManager pr = ServiceLocator.getInstance().getPostRepo(requireActivity().getApplication());
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
 

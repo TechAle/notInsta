@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.dataLayer.repositories.PostResponseCallback;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.utils.FilterUtils;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 
 //TODO: sistemare bug relativi all'applicazione dei filtri
 public final class ProcessedImageViewModel extends ViewModel implements PostResponseCallback{
-    private final PostRepository pr;
+    private final PostManager pr;
 
     // Live Data
     private MutableLiveData<Bitmap> processedImage;
@@ -30,7 +30,7 @@ public final class ProcessedImageViewModel extends ViewModel implements PostResp
     private MutableLiveData<Boolean> isPromotional;
     private final MutableLiveData<Result> creationResponse = new MutableLiveData<>();
 
-    public ProcessedImageViewModel(PostRepository pr){
+    public ProcessedImageViewModel(PostManager pr){
         this.pr = pr;
         pr.setCallback(this);
     }

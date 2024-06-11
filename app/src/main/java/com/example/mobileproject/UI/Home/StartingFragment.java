@@ -10,8 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +17,7 @@ import android.view.ViewGroup;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.UI.Settings.SettingsActivity;
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.databinding.FragmentStartingBinding;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.example.mobileproject.utils.TagsAdapter;
@@ -55,7 +53,7 @@ public final class StartingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PostRepository pr = ServiceLocator.getInstance().getPostRepo(requireActivity().getApplication());
+        PostManager pr = ServiceLocator.getInstance().getPostRepo(requireActivity().getApplication());
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
         } else {

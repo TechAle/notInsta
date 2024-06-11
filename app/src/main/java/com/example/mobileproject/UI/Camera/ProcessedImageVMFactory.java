@@ -4,11 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 
 public final class ProcessedImageVMFactory implements ViewModelProvider.Factory {
-    private final PostRepository pr;
-    public ProcessedImageVMFactory(PostRepository pr) {
+    private final PostManager pr;
+    public ProcessedImageVMFactory(PostManager pr) {
         this.pr = pr;
     }
 

@@ -5,42 +5,36 @@ import android.net.Uri;
 
 import com.example.mobileproject.dataLayer.sources.CallbackPosts;
 import com.example.mobileproject.dataLayer.sources.GeneralAdvSource;
-import com.example.mobileproject.dataLayer.sources.GeneralPostLocalSource;
-import com.example.mobileproject.dataLayer.sources.GeneralPostRemoteSource;
-import com.example.mobileproject.dataLayer.sources.PostWorkerSource;
+import com.example.mobileproject.dataLayer.sources.GeneralWorkerSource;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.models.Post.PostResp;
-import com.example.mobileproject.utils.DBConverter;
 import com.example.mobileproject.utils.Result;
 
 import org.jetbrains.annotations.Blocking;
 
-import java.io.File;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.ArrayList;
 import java.util.List;
 
 //import java.net.URL;
 
-public final class PostRepository implements CallbackPosts {
+public final class PostManager implements CallbackPosts {
 
     //LiveData non presenti("https://developer.android.com/topic/libraries/architecture/livedata#livedata-in-architecture")
     //TODO: maybe a byte[] data type is better than a android.graphics.Bitmap?
     //TODO: maybe a java.net.URL/java.net.URI data type is better than a android.net.Uri?
     private PostResponseCallback c;
-    private final GeneralPostRemoteSource rem;
-    private final GeneralPostLocalSource loc;
+    private final PostDataRepository dataRep;
+    private final PostImageRepository imageRep;
     private final GeneralAdvSource ads;
-    private final PostWorkerSource w;
+    private final GeneralWorkerSource w;
 
-    public PostRepository(GeneralPostRemoteSource rem, GeneralPostLocalSource loc, GeneralAdvSource ads, PostWorkerSource postWorkerSource){
-        this.rem = rem;
-        this.loc = loc;
+    public PostManager(PostDataRepository data, PostImageRepository images, GeneralWorkerSource w, GeneralAdvSource ads){
+        this.dataRep = data;
+        this.imageRep = images;
         this.ads = ads;
-        this.w = postWorkerSource;
-        this.rem.setCallback(this);
-        this.loc.setCallback(this);
+        this.w = w;
+        this.dataRep.setCallback(this);
         this.ads.setCallback(this);
     }
 
@@ -55,7 +49,7 @@ public final class PostRepository implements CallbackPosts {
      * @param page   numero di pagina
      * */
     public void retrievePostsbyAuthor(String idUser, int page){
-        rem.retrievePostsByAuthor(idUser, page);
+        dataRep.retrievePostsByAuthor(idUser, page);
     }
 
     /**
@@ -64,7 +58,7 @@ public final class PostRepository implements CallbackPosts {
      * @param page pagina
      * */
     public void retrieveUserPosts(int page){
-        loc.retrievePosts(page);
+        dataRep.retrieveLocalPosts(page);
     }
 
     /**
@@ -73,7 +67,7 @@ public final class PostRepository implements CallbackPosts {
      * @param page Numero di pagina
      */
     public void retrievePosts(int page){ //Lazy Loading
-        rem.retrievePosts(page);
+        dataRep.retrievePosts(page);
     }
 
     /**
@@ -83,7 +77,7 @@ public final class PostRepository implements CallbackPosts {
      * @param page Numero di pagina
      */
     public void retrievePostsWithTagsLL(String[] tags, int page){
-        rem.retrievePostsWithTagsLL(tags, page);
+        dataRep.retrievePostsWithTags(tags, page);
     }
 
     /**
@@ -93,7 +87,7 @@ public final class PostRepository implements CallbackPosts {
     public void retrieveSponsoredPosts(){
         if ((int) (Math.random() * 3) == 1) {
             ads.getAdvPost();
-        } else rem.retrievePostsSponsor();
+        } else dataRep.retrievePostsSponsor();
     }
 
     /**
@@ -105,12 +99,12 @@ public final class PostRepository implements CallbackPosts {
     public void createPost(Post post, Bitmap bmp) {
         post.setId("???" + System.currentTimeMillis());
         post.setPubblicazione(null);
-        Uri img = loc.createImage(bmp, post.getId());
+        Uri img = imageRep.createImage(bmp, post.getId());
         if(img == null){
             c.onResponseCreation(new Result.Error(""));
         }
         post.setImage(img);
-        loc.insertPost(post);
+        dataRep.insertPost(post);
     }
 
     /**
@@ -126,35 +120,15 @@ public final class PostRepository implements CallbackPosts {
      * */
     @Blocking
     public boolean syncPostsFromLocal(){
-        List<Post> pl;
-        try{
-            pl = loc.retrieveNoSyncPosts().get();
-        } catch (ExecutionException | InterruptedException e){
-            return false;
-        }
-        for(Post p : pl){
-            long now = System.currentTimeMillis();
-            p.setPubblicazione(DBConverter.dateFromTimestamp(now));
-            Future<String> fs = rem.createPost(p);//tanto in remoto non ha l'immagine...
-            Bitmap bmp = loc.getImage(p.getImage());
-            try {
-                String newId = fs.get();
-                if(newId != null){
-                    Future<Boolean> f = rem.createImage(newId, bmp);
-                    Uri newImg = loc.renameImage(p.getImage(), newId);
-                    if(f.get() && newImg != null){
-                        loc.modifyId(p.getId(), newId);
-                        p.setImage(newImg);
-                        loc.updatePost(p);
-                    }
-                    //TODO: else
-                }
-                //se fallisce: non faccio nulla, ritento la prossima volta
-            } catch (ExecutionException | InterruptedException e) {
-                throw new RuntimeException(e);
+        List<Post> pl = dataRep.syncDataFromLocal();
+        if(pl != null) {
+            List<Post> img = imageRep.syncImagesFromLocal(pl);
+            for(Post p : img){
+                dataRep.updateLocal(p);
             }
+            return true;
         }
-        return true;
+        else return false;
     }
     /**
      * Sincronizza tutti i post da remoto a partire da un dato momento. Operazione bloccante
@@ -166,61 +140,34 @@ public final class PostRepository implements CallbackPosts {
     //TODO: le immagini non scaricate per qualunque motivo chi le scarica?
     @Blocking
     public long syncPostsFromRemote(long lastUpdate) throws ExecutionException, InterruptedException {
-        int page = 0;
-        long time = lastUpdate;
-        long now = System.currentTimeMillis();
-        try {
-            List<Post> pl = rem.retrieveUserPostsForSync(page, lastUpdate).get();
-            while (pl.size() != 0) {
-                for (Post p : pl) {
-                    p.setImage(null);
-                }
-                loc.insertPosts(pl);
-                time = pl.get(pl.size() - 1).getData().getTime();
-                for (Post p : pl) {
-                    File f = loc.createEmptyImageFile(p.getId());
-                    if(rem.retrieveImage(p.getId(), f).get()){
-                        p.setImage(Uri.fromFile(f));
-                        loc.updatePost(p);
-                    }
-                    else {
-                        w.startFinishingDownload();
-                    }
-                }
-                page++;
-                pl = rem.retrieveUserPostsForSync(page, lastUpdate).get();
-            }
-        } catch (InterruptedException e){
-            return time;
-            //TODO: come faccio a capire se ha fallito?
+        long result = dataRep.syncDataFromRemote(lastUpdate);
+        List<String> ids = dataRep.getPartialSyncId();
+        List<Uri> newImgs = imageRep.syncImagesFromRemote(ids);
+        assert(ids.size() == newImgs.size());
+        for(int i = 0; i < ids.size(); i++){
+            dataRep.updateImage(ids.get(i), newImgs.get(i));
         }
-        return now;
+        return result;
     }
 
     /**
      * Cancella tutti i dati in locale
      * */
     public void deleteData() {
-        loc.deletePosts();
-        loc.deleteImages();
+        dataRep.deleteLocal();
+        imageRep.deleteLocal();
     }
+    /**
+     * Sincronizzazione immagini
+     *
+     * @return se tutte le immagini sono state sincronizzate
+     * */
     @Blocking
     public boolean syncImages(){
-        List<String> ids;
-        try {
-            ids = loc.retrieveIDsWithNoImage().get();
-        } catch (ExecutionException | InterruptedException e) {
-            return false;
-        }
-        for(String s : ids){
-            File f = loc.createEmptyImageFile(s);
-            try {
-                if(rem.retrieveImage(s, f).get()){
-                    loc.modifyImage(s, Uri.fromFile(f));
-                }
-            } catch (ExecutionException | InterruptedException e) {
+        List<Uri> img = imageRep.syncImagesFromRemote(dataRep.getPartialSyncId());
+        for(Uri u : img){
+            if(u == null)
                 return false;
-            }
         }
         return true;
     }

@@ -12,13 +12,17 @@ import com.example.mobileproject.service.ImageWorker;
 import com.example.mobileproject.service.SyncLTRWorker;
 import com.example.mobileproject.service.SyncRTLWorker;
 
-public final class PostWorkerSource /*extends qualcosa*/{
+public final class PostWorkerSource extends GeneralWorkerSource{
     private final WorkManager wm;
 
     public PostWorkerSource(Context c){
         wm = WorkManager.getInstance(c);
     }
 
+    /**
+     * Lancia il worker per la sincronizzazione dei post da remoto
+     * */
+    @Override
     public void enqueueRemoteRead(){
         Constraints c = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -30,6 +34,10 @@ public final class PostWorkerSource /*extends qualcosa*/{
         wm.enqueueUniqueWork("RemoteReader", ExistingWorkPolicy.KEEP, syncWorkRequest);
     }
 
+    /**
+     * Lancia il worker per la sincronizzazione dei post da locale
+     * */
+    @Override
     public void enqueueRemoteWrite(){
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -41,6 +49,10 @@ public final class PostWorkerSource /*extends qualcosa*/{
         wm.enqueueUniqueWork("LazyWriter", ExistingWorkPolicy.KEEP, syncWorkRequest);
     }
 
+    /**
+     * Lancia il worker per la sincronizzazione delle immagini
+     * */
+    @Override
     public void startFinishingDownload(){
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)

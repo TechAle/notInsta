@@ -1,17 +1,14 @@
 package com.example.mobileproject.dataLayer.sources;
 
-import android.graphics.Bitmap;
-
 import com.example.mobileproject.models.Post.Post;
 
-import java.io.File;
 import java.util.List;
 import java.util.concurrent.Future;
 
 /**
  * Classe astratta per il datasource relativo ai posts
  */
-public abstract class GeneralPostRemoteSource {
+public abstract class GeneralPostDataRemoteSource {
 
     protected CallbackPosts c;
 
@@ -40,9 +37,6 @@ public abstract class GeneralPostRemoteSource {
      * @return
      */
     public abstract Future<String> createPost(Post post);
-    //public abstract void createPosts(List<Post> p);
-//    protected abstract void createDocument(String collectionName, Map<String, Object> documentFields);
-    public abstract Future<Boolean> createImage(/*Uri imageUri, String document, ContentResolver contentResolver,*/ String id, Bitmap bmp);
 
     /**
      * Metodo per prendere tutti i post
@@ -51,8 +45,6 @@ public abstract class GeneralPostRemoteSource {
      */
     public abstract void retrievePosts(int page);
     public abstract void retrievePostsWithTagsLL(String[] tags, int page);
-/*    public abstract void retrievePostsForSync(Date d);
-    public abstract void retrieveUserPostsForSync(int page);*/
 
     /**
      * Metodo per prendere i post dell'utente pubblicati dopo una certa data
@@ -65,6 +57,4 @@ public abstract class GeneralPostRemoteSource {
      * @implNote Utilizza il meccanismo del lazy loading
      */
     public abstract Future<List<Post>> retrieveUserPostsForSync(int page, long lastUpdate);
-    public abstract Future<Bitmap> getImage(String id);
-    public abstract Future<Boolean> retrieveImage(String id, File emptyImageFile);
 }

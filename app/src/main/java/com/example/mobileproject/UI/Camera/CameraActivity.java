@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileproject.R;
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -41,7 +41,7 @@ public final class CameraActivity extends AppCompatActivity {
         
         currentFragment = 0;
         changeFragment();
-        PostRepository pr = ServiceLocator.getInstance().getPostRepo(getApplicationContext());
+        PostManager pr = ServiceLocator.getInstance().getPostRepo(getApplicationContext());
         if(pr == null) return;
         viewModel = new ViewModelProvider(this, new ProcessedImageVMFactory(pr)).get(ProcessedImageViewModel.class);
         recover();

@@ -29,7 +29,7 @@ import com.example.mobileproject.R;
 import com.example.mobileproject.UI.Login.LoginActivity;
 import com.example.mobileproject.UI.Login.UsersVMFactory;
 import com.example.mobileproject.UI.Login.UsersViewModel;
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.databinding.FragmentSettingsBinding;
 import com.example.mobileproject.utils.FragmentUtils;
@@ -53,7 +53,7 @@ public final class SettingsFragment extends Fragment {
         ctrl = NavHostFragment.findNavController(this);
 
         UserRepository ur = ServiceLocator.getInstance().getUserRepo();
-        PostRepository pr = ServiceLocator.getInstance().getPostRepo(this.requireActivity().getApplication());
+        PostManager pr = ServiceLocator.getInstance().getPostRepo(this.requireActivity().getApplication());
         if (ur != null && pr != null) {
             UVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ur, pr)).get(UsersViewModel.class);
         }

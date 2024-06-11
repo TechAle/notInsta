@@ -13,7 +13,7 @@ import android.widget.Button;
 import com.example.mobileproject.R;
 import com.example.mobileproject.UI.Login.UsersVMFactory;
 import com.example.mobileproject.UI.Login.UsersViewModel;
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.utils.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
@@ -37,7 +37,7 @@ public final class ChangeUsernameFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ServiceLocator sl = ServiceLocator.getInstance();
         UserRepository ur = sl.getUserRepo(/*this.requireActivity().getApplication()*/);
-        PostRepository pr = sl.getPostRepo(this.requireActivity().getApplication());
+        PostManager pr = sl.getPostRepo(this.requireActivity().getApplication());
         if (ur != null && pr != null) {
             PVM = new ViewModelProvider(requireActivity(), new UsersVMFactory(ur, pr)).get(UsersViewModel.class);
         }

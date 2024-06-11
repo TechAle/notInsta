@@ -4,14 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
 
 public final class UsersVMFactory implements ViewModelProvider.Factory {
     private final UserRepository ur;
-    private final PostRepository pr;
+    private final PostManager pr;
 
-    public UsersVMFactory(UserRepository repo, PostRepository pr) {
+    public UsersVMFactory(UserRepository repo, PostManager pr) {
         this.ur = repo;
         this.pr = pr;
     }

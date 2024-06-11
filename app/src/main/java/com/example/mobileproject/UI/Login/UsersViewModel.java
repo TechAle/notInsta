@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
 //import com.example.mobileproject.dataLayer.repositories.UserResponseCallback;
 import com.example.mobileproject.models.Users.Users;
@@ -17,12 +17,12 @@ import static com.example.mobileproject.utils.Constants.SHARED_PREFERENCES_FILEN
 //TODO: Usata in più parti, ho il sospetto che vada divisa (non era un ViewModel per activity?)
 public final class UsersViewModel extends ViewModel /*implements UserResponseCallback*/ {
     private final UserRepository repoU;
-    private final PostRepository repoP;
+    private final PostManager repoP;
     private MutableLiveData<Result> users;
     //private final MutableLiveData<Users> user;
     private MutableLiveData<Result> selectedUsers;
     private boolean authenticationError;
-    public UsersViewModel(UserRepository repoU, PostRepository repoP) {
+    public UsersViewModel(UserRepository repoU, PostManager repoP) {
         this.repoU = repoU;
         //repoU.setCallback(this);
         this.repoP = repoP;

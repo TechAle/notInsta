@@ -2,13 +2,17 @@ package com.example.mobileproject.utils;
 
 import android.content.Context;
 
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostDataRepository;
+import com.example.mobileproject.dataLayer.repositories.PostImageRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.dataLayer.sources.AdvertisementSource;
-import com.example.mobileproject.dataLayer.sources.PostRemoteSource;
+import com.example.mobileproject.dataLayer.sources.PostDataRemoteSource;
 import com.example.mobileproject.dataLayer.sources.FirestoreUserRemoteSource;
+import com.example.mobileproject.dataLayer.sources.PostImageLocalSource;
+import com.example.mobileproject.dataLayer.sources.PostImageRemoteSource;
 import com.example.mobileproject.dataLayer.sources.PostRoomDatabase;
-import com.example.mobileproject.dataLayer.sources.PostLocalSource;
+import com.example.mobileproject.dataLayer.sources.PostDataLocalSource;
 import com.example.mobileproject.dataLayer.sources.PostWorkerSource;
 import com.example.mobileproject.service.StoreAPIService;
 
@@ -35,12 +39,19 @@ public class ServiceLocator {
     }
 
 
-    public PostRepository getPostRepo(Context c){
-        return new PostRepository(
-                new PostRemoteSource(),
-                new PostLocalSource(getPostDao(c), c),
-                new AdvertisementSource(),
-                new PostWorkerSource(c)
+    public PostManager getPostRepo(Context c){
+        return new PostManager(
+                new PostDataRepository(
+                        new PostDataRemoteSource(),
+                        new PostDataLocalSource(getPostDao(c))
+                ),
+                new PostImageRepository(
+                        new PostImageRemoteSource(),
+                        new PostImageLocalSource(c)
+                ),
+                new PostWorkerSource(c),
+                new AdvertisementSource()
+
         );
     }
 

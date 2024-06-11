@@ -20,7 +20,7 @@ import android.util.Log;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.UI.Camera.CameraActivity;
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.utils.FragmentUtils;
 import com.example.mobileproject.utils.ServiceLocator;
@@ -35,7 +35,7 @@ public final class HomeActivity extends AppCompatActivity {
 //        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
         ServiceLocator sl = ServiceLocator.getInstance();
-        PostRepository pr = sl.getPostRepo(getApplication());
+        PostManager pr = sl.getPostRepo(getApplication());
         UserRepository ur = sl.getUserRepo();
         if(pr == null || ur == null) {
             Log.wtf("WTF", "WTF");

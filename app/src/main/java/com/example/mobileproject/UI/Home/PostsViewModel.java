@@ -3,7 +3,7 @@ package com.example.mobileproject.UI.Home;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.dataLayer.repositories.PostResponseCallback;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.dataLayer.repositories.UserResponseCallback;
@@ -20,7 +20,7 @@ import java.util.List;
 public final class PostsViewModel extends ViewModel implements UserResponseCallback, PostResponseCallback {
 
     private static final int fragmentNumber = 3; //uguale alla dimensione di FragmentType
-    private final PostRepository repoP;
+    private final PostManager repoP;
     private final UserRepository repoU;
     private String tag;
     private final int[] page;
@@ -39,7 +39,7 @@ public final class PostsViewModel extends ViewModel implements UserResponseCallb
     /**
      * Costruttore della viewModel
      */
-    public PostsViewModel(PostRepository repoP, UserRepository repoU) {
+    public PostsViewModel(PostManager repoP, UserRepository repoU) {
         this.repoP = repoP;
         repoP.setCallback(this);
         this.repoU = repoU;

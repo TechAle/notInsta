@@ -1,15 +1,13 @@
 package com.example.mobileproject.dataLayer.sources;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 
 import com.example.mobileproject.models.Post.Post;
 
-import java.io.File;
 import java.util.List;
 import java.util.concurrent.Future;
 
-public abstract class GeneralPostLocalSource {
+public abstract class GeneralPostDataLocalSource {
 
     protected CallbackPosts c;
 
@@ -24,11 +22,5 @@ public abstract class GeneralPostLocalSource {
     public abstract void modifyId(String oldId, String newId);
     public abstract void updatePost(Post p);
     public abstract void deletePosts();
-    public abstract Bitmap getImage(Uri id);
-    public abstract Uri createImage(Bitmap bmp, String id);
     public abstract void modifyImage(String id, Uri bmp);
-    public abstract void deleteImages();
-    public abstract File createEmptyImageFile();
-    public abstract File createEmptyImageFile(String id);
-    public abstract Uri renameImage(Uri img, String id);
 }

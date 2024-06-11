@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.utils.ServiceLocator;
 
 /**
@@ -26,7 +26,7 @@ public final class SyncLTRWorker extends Worker{
     @NonNull
     @Override
     public Result doWork() {
-        PostRepository pr = ServiceLocator.getInstance().getPostRepo(getApplicationContext());
+        PostManager pr = ServiceLocator.getInstance().getPostRepo(getApplicationContext());
         if(pr.syncPostsFromLocal()){
             return Result.success();
         } else {

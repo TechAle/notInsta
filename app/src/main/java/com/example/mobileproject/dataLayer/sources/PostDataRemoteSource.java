@@ -3,7 +3,6 @@ package com.example.mobileproject.dataLayer.sources;
 import static com.example.mobileproject.utils.Constants.ELEMENTS_LAZY_LOADING;
 import static com.example.mobileproject.utils.Constants.ELEMENTS_SYNC;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
@@ -18,10 +17,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.storage.FirebaseStorage;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -33,16 +29,14 @@ import java.util.concurrent.Future;
 /**
  * Classe per il recupero remoto dei post da Firebase
  */
-public final class PostRemoteSource extends GeneralPostRemoteSource{
+public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
     FirebaseFirestore db;
-    FirebaseStorage storage;
     private DocumentSnapshot lastPost;
     private DocumentSnapshot lastPostSync;
     private DocumentSnapshot lastPostTag;
     private final Map<String, DocumentSnapshot> lastElementPerAuthor;
-    public PostRemoteSource(){
+    public PostDataRemoteSource(){
         db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
         lastElementPerAuthor = new HashMap<>();
     }
     @Override
@@ -191,21 +185,6 @@ public final class PostRemoteSource extends GeneralPostRemoteSource{
         });
     }
     @Override
-    public Future<Boolean> createImage(String id, Bitmap bmp) {
-        return CallbackToFutureAdapter.getFuture(completer -> {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] data = baos.toByteArray();
-            String fileName = id + ".png";
-            storage.getReference("POSTS")
-                    .child(fileName)
-                    .putBytes(data)
-                    .addOnSuccessListener(r -> completer.set(true))
-                    .addOnFailureListener(r -> completer.set(false));
-            return "Image creation";
-        });
-    }
-    @Override
     public void retrievePostsWithTagsLL(String[] tags, int page){
         if(page == 0){
             lastPostTag = null;
@@ -272,24 +251,6 @@ public final class PostRemoteSource extends GeneralPostRemoteSource{
                         }
                     });
             return "Sync posts - Remote";
-        });
-    }
-
-    @Override
-    public Future<Bitmap> getImage(String id) {
-        return null;
-    }
-
-    public Future<Boolean> retrieveImage(String id, File dst){
-        return CallbackToFutureAdapter.getFuture(completer -> {
-            storage.getReference().child("POSTS/" + id + ".png").getFile(dst).addOnCompleteListener(task -> {
-                if(task.isSuccessful()){
-                    completer.set(true);
-                } else {
-                    completer.set(false);
-                }
-            });
-            return "Remote image";
         });
     }
     private Uri getUriFromId(String id){

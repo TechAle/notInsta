@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.mobileproject.R;
 import com.example.mobileproject.UI.ShowPostActivity;
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.databinding.FragmentPostGalleryBinding;
 import com.example.mobileproject.models.Post.Post;
 import com.example.mobileproject.utils.PostAdapter;
@@ -42,7 +42,7 @@ public abstract class GenericGalleryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PostRepository pr = ServiceLocator.getInstance().getPostRepo(requireActivity().getApplication());
+        PostManager pr = ServiceLocator.getInstance().getPostRepo(requireActivity().getApplication());
         if(pr != null){
             PVM = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
 
