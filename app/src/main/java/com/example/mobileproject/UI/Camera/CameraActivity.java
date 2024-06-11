@@ -82,7 +82,6 @@ public final class CameraActivity extends AppCompatActivity {
                     photo = (Bitmap) b.get("data");
                 }
             }
-            //imageView.setImageBitmap(photo);
             viewModel.getProcessedImage().setValue(photo);
             viewModel.getTempImage().setValue(photo);
             viewModel.reset();

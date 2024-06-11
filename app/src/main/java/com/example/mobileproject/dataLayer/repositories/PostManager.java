@@ -138,7 +138,6 @@ public final class PostManager implements CallbackPosts {
      *
      * @return L'ultima marca temporale salvata nel DB
      * */
-    //TODO: le immagini non scaricate per qualunque motivo chi le scarica?
     @Blocking
     public long syncPostsFromRemote(long lastUpdate) throws ExecutionException, InterruptedException {
         long result = dataRep.syncDataFromRemote(lastUpdate);
@@ -205,7 +204,7 @@ public final class PostManager implements CallbackPosts {
         c.onResponseFoundPosts(resultError);
     }
     @Override
-    public void onLocalSaveSuccess(){//prima callback di creazione
+    public void onLocalSaveSuccess(){
         w.enqueueRemoteWrite();
         c.onResponseCreation(new Result.UserEditSuccess());
     }

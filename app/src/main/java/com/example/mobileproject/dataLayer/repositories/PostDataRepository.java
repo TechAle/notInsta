@@ -55,6 +55,11 @@ public final class PostDataRepository implements CallbackPosts {
         return pl;
     }
 
+    /**
+     * Sincronizza i dati in locale
+     *
+     * @return il momento della pubblicazione dell'ultimo post ricevuto, oppure quello attuale
+     * */
     public long syncDataFromRemote(long lastUpdate){
         int page = 0;
         long time = lastUpdate;
@@ -77,6 +82,11 @@ public final class PostDataRepository implements CallbackPosts {
 
     }
 
+    /**
+     * Cerca tutti gli ID dei post con immagine non sincronizzata
+     *
+     * @return Una lista di stringhe rappresentanti gli ID
+     * */
     public List<String> getPartialSyncId(){
         List<String> result;
         try {

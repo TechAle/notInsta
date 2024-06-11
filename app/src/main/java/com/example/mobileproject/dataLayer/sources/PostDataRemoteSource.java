@@ -45,13 +45,13 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
            - se viene chiesta la pagina 0 allora prendo i nuovi dati
            - se viene chiesta un altra pagina allora continuo con gli stessi dati
         */
-        //DocumentReference refUser = db.collection("utenti").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        DocumentReference refUser = db.collection("utenti").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
         if(page == 0){
             lastPost = null;
             //lastPostDate = new Timestamp(253402300799L, 999999999); //Magic number: massimo valore di timestamp consentito
         }
         Query q = db.collection("post")
-                //.whereNotEqualTo("autore", refUser)  //l'utente quando cerca altri post non cerca i propri //TODO: sistemare?
+                .whereNotEqualTo("autore", refUser)  //l'utente quando cerca altri post non cerca i propri
                 .orderBy("data", Query.Direction.DESCENDING);
         if(lastPost != null){
             q = q.startAfter(lastPost);
