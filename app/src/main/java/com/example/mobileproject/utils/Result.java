@@ -3,13 +3,16 @@ package com.example.mobileproject.utils;
 //Qualcosa per rappresentare il risultato a livello di viewmodel
 
 import com.example.mobileproject.models.Post.PostResp;
+import com.example.mobileproject.models.Product;
+import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.models.Users.UsersResp;
+
+import java.util.List;
 
 public abstract class Result {
     private Result() {}
     public boolean successful(){
-        // TODO make superclass, this is ugly
-        return this instanceof PostResponseSuccess || this instanceof UserResponseSuccess || this instanceof UserEditSuccess || this instanceof PostCreationSuccess || this instanceof UserCreationSuccess;
+        return !(this instanceof Error);
     }
 
     public static final class PostResponseSuccess extends Result {
@@ -32,17 +35,17 @@ public abstract class Result {
         }
     }
 
-    public static final class PostCreationSuccess extends Result {
-        private final String id;
-        public PostCreationSuccess(String id) {
-            this.id = id;
+    public static final class UserResponseSuccessUser extends Result {
+        private final Users user;
+        public UserResponseSuccessUser(Users user) {
+            this.user = user;
         }
-        public String getData() {
-            return id;
+        public Users getData() {
+            return user;
         }
     }
 
-    public static final class UserEditSuccess extends Result {
+    public static final class UserEditSuccess extends Result {//Propongo di cambiarla con GenericSuccess
     }
 
     public static final class Error extends Result {
@@ -61,6 +64,16 @@ public abstract class Result {
             this.id = id;
         }
         public String getData() {
+            return this.id;
+        }
+    }
+
+    public static class ProductSuccess extends Result {
+        private final List<Product> id;
+        public ProductSuccess(List<Product> id) {
+            this.id = id;
+        }
+        public List<Product> getData() {
             return this.id;
         }
     }

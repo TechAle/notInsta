@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "926554726870",
+    "firebase_url": "https://notinsta-941ae-default-rtdb.firebaseio.com",
     "project_id": "notinsta-941ae",
     "storage_bucket": "notinsta-941ae.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.mobileproject"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "926554726870-1d1ar8ah0bhlt1cm33v6lbmcb9fq77aq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mobileproject",
+            "certificate_hash": "0cee4f0a3605aceec8699cf396caf994a83566d7"
+          }
+        },
+        {
+          "client_id": "926554726870-rbafb1lfidaisu74bt2nht1srep9lhhg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAOWls_wLwNVWD1J9hliPBR09vYUID5vro"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "926554726870-rbafb1lfidaisu74bt2nht1srep9lhhg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

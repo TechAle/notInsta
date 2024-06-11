@@ -2,6 +2,16 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="action4_navigation">Impostazioni</string>
+    <string name="impostazioni">impostazioni</string>
+    <string name="loginGoogle">Continua con Google</string>
+    <string name="forgotPassword">Password dimenticata?</string>
+    <string name="passwordRepeat">Ripeti password</string>
+    <string name="or">Oppure</string>
+    <string name="error_email">E-mail non valida</string>
+    <string name="error_password">Password non valida</string>
+    <string name="success_signup">Registrazione avvenuta con successo</string>
+    <string name="error_username">Username non valido</string>
+    <string name="success_login">Accesso effettuato con successo</string>
     <string name="changeLanguage">Cambia lingua</string>
     <string name="changePassword">Cambia password</string>
     <string name="changePic">Cambia immagine</string>
@@ -18,4 +28,22 @@
     <string name="password_changed">La password è stata cambiata</string>
     <string name="password_length">La password deve essere lunga almeno 6 caratteri</string>
     <string name="password_different">Le password devono essere diverse</string>
+    <string name="next_button">Avanti</string>
+    <string name="is_promotional_checkbox">Promozionale?</string>
+    <string name="error_user_collision_message">Utente già esistente</string>
+
+    <string name="unexpected_error">Errore inaspettato</string>
+    <string name="error_no_google_account_found_message">Nessun account Google trovato</string>
+    <string name="back">Indietro</string>
+    <string name="pass_special">La password deve contenere almeno un carattere speciale</string>
+    <string name="passwordButton">Invia mail</string>
+    <string name="post_created">Post creato con successo</string>
+    <string name="post_created_local_only">Post creato in locale</string>
+    <string name="post_created_remote_only">Post creato in remoto</string>
+    <string name="post_created_no_remote_image">Il post è stato creato, ma l\'immagine non è stata caricata in remoto</string>
+    <string name="post_not_created">Non è stato possibile creare il post</string>
+    <string name="likes">n° Like:</string>
+    <string name="Author">Autore</string>
+    <string name="publish">Pubblicato il:</string>
+    <string name="research">Cerca</string>
 </resources>

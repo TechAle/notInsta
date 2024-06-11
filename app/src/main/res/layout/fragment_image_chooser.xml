@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.fragments.camera.ImageChooserFragment">
-
-    <!-- TODO: Update blank fragment layout -->
+    tools:context=".UI.Camera.ImageChooserFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
