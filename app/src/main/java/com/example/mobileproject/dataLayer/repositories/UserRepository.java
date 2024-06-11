@@ -1,9 +1,7 @@
 package com.example.mobileproject.dataLayer.repositories;
 
 import android.net.Uri;
-import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mobileproject.dataLayer.sources.CallbackUsers;
@@ -12,22 +10,28 @@ import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.models.Users.UsersResp;
 import com.example.mobileproject.utils.Result;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class UserRepository implements CallbackUsers {
-
+public final class UserRepository implements CallbackUsers {
+    //TODO: remove LiveData ("https://developer.android.com/topic/libraries/architecture/livedata#livedata-in-architecture")
     private final MutableLiveData<Result> users;
-
     private final GeneralUserRemoteSource rem;
 //    private final GeneralUserLocalSource local;
 
+    private UserResponseCallback c;
     private final MutableLiveData<Result> ready;
 
-    public UserRepository(GeneralUserRemoteSource rem){
+    public UserRepository(GeneralUserRemoteSource rem/*, GeneralUserLocalSource local*/){
         this.rem = rem;
         this.rem.setCallback(this);
+/*        this.local = local;
+        this.local.setCallback(this);*/
         users = new MutableLiveData<>();
         ready = new MutableLiveData<>();
+    }
+    public void setCallback(UserResponseCallback c){
+        this.c = c;
     }
 
     //assegnamento in callback
@@ -51,7 +55,9 @@ public class UserRepository implements CallbackUsers {
         rem.editPassword(newPassword);
         return ready;
     }
-
+    public boolean isLogged(){
+        return rem.isLogged();
+    }
 
     @Override
     public void onSuccess() {
@@ -61,7 +67,6 @@ public class UserRepository implements CallbackUsers {
 
     @Override
     public void onSuccess(List<Users> res) {
-
         if (users.getValue() != null && users.getValue().successful()) { //Lazy Loading
             List<Users> l = ((Result.UserResponseSuccess) users.getValue()).getData().getUsersList();
             l.addAll(res);
@@ -74,7 +79,7 @@ public class UserRepository implements CallbackUsers {
     }
 
     @Override
-    public void onFailure(Exception e) {
+    public void onUploadFailure(Exception e) {
         Result.Error resultError = new Result.Error(e.getMessage());
         users.postValue(resultError);
     }
@@ -91,7 +96,6 @@ public class UserRepository implements CallbackUsers {
         return ready;
     }
 
-    @Override
     public MutableLiveData<Result> getUser(String email, String password, boolean isUserRegistered) {
         if (isUserRegistered) {
             signIn(email, password);
@@ -101,38 +105,37 @@ public class UserRepository implements CallbackUsers {
         return users;
     }
 
-    @Override
     public MutableLiveData<Result> getGoogleUser(String idToken) {
         signInWithGoogle(idToken);
         return users;
     }
 
-    @Override
-    public Users getLoggedUser() {
-        return rem.getLoggedUser();
+    /**
+     * Metodo per prendere le informazioni dell'utente loggato.
+     *
+     * @return Users loggato
+     */
+
+    public void getLoggedUser() {
+        rem.getLoggedUser();
     }
 
-    @Override
     public MutableLiveData<Result> logout() {
         rem.logout();
         return users;
     }
 
-    @Override
     public void signUp(String email, String password) {
         rem.signUp(email, password);
     }
 
-    @Override
     public void signIn(String email, String password) {
         rem.signIn(email, password);
     }
 
-    @Override
     public void signInWithGoogle(String token) {
         rem.signInWithGoogle(token);
     }
-
 
     @Override
     public void onSuccessFromAuthentication(Users user) {
@@ -149,6 +152,10 @@ public class UserRepository implements CallbackUsers {
 
     @Override
     public void onSuccessFromRemoteDatabase(Users user) {
+        /*List<Users> l = new ArrayList<>();
+        l.add(user);
+        Result.UserResponseSuccess result = new Result.UserResponseSuccess(new UsersResp(l));
+        c.onResponseUser(result);*/
         Result.UserResponseSuccessUser result = new Result.UserResponseSuccessUser(user);
         users.postValue(result);
     }
@@ -157,6 +164,19 @@ public class UserRepository implements CallbackUsers {
     public void onFailureFromRemoteDatabase(String message) {
         Result.Error result = new Result.Error(message);
         users.postValue(result);
+    }
+    @Override
+    public void onSuccessFromRemoteDatabase2(Users user) {
+        List<Users> l = new ArrayList<>();
+        l.add(user);
+        Result.UserResponseSuccess result = new Result.UserResponseSuccess(new UsersResp(l));
+        c.onResponseUser(result);
+    }
+
+    @Override
+    public void onFailureFromRemoteDatabase2(String message) {
+        Result.Error result = new Result.Error(message);
+        c.onResponseUser(result);
     }
 
     @Override

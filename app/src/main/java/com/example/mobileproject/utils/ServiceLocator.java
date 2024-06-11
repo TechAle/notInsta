@@ -1,11 +1,19 @@
 package com.example.mobileproject.utils;
 
-import android.app.Application;
+import android.content.Context;
 
-import com.example.mobileproject.dataLayer.repositories.PostRepository;
+import com.example.mobileproject.dataLayer.repositories.PostDataRepository;
+import com.example.mobileproject.dataLayer.repositories.PostImageRepository;
+import com.example.mobileproject.dataLayer.repositories.PostManager;
 import com.example.mobileproject.dataLayer.repositories.UserRepository;
-import com.example.mobileproject.dataLayer.sources.FirestorePostRemoteSource;
+import com.example.mobileproject.dataLayer.sources.AdvertisementSource;
+import com.example.mobileproject.dataLayer.sources.PostDataRemoteSource;
 import com.example.mobileproject.dataLayer.sources.FirestoreUserRemoteSource;
+import com.example.mobileproject.dataLayer.sources.PostImageLocalSource;
+import com.example.mobileproject.dataLayer.sources.PostImageRemoteSource;
+import com.example.mobileproject.dataLayer.sources.PostRoomDatabase;
+import com.example.mobileproject.dataLayer.sources.PostDataLocalSource;
+import com.example.mobileproject.dataLayer.sources.PostWorkerSource;
 import com.example.mobileproject.service.StoreAPIService;
 
 import retrofit2.Retrofit;
@@ -26,14 +34,29 @@ public class ServiceLocator {
         return INSTANCE;
     }
 
-    //TODO: vedere la Application
-//    public PostRepository getPostRepo(Application a){
-    public PostRepository getPostRepo(){
-        return new PostRepository(new FirestorePostRemoteSource());
+    public PostRoomDatabase getPostDao(Context c){
+        return PostRoomDatabase.getInstance(c);
     }
 
-    public UserRepository getUserRepo(Application app){
-        return new UserRepository(new FirestoreUserRemoteSource(app));
+
+    public PostManager getPostRepo(Context c){
+        return new PostManager(
+                new PostDataRepository(
+                        new PostDataRemoteSource(),
+                        new PostDataLocalSource(getPostDao(c))
+                ),
+                new PostImageRepository(
+                        new PostImageRemoteSource(),
+                        new PostImageLocalSource(c)
+                ),
+                new PostWorkerSource(c),
+                new AdvertisementSource()
+
+        );
+    }
+
+    public UserRepository getUserRepo(){
+        return new UserRepository(new FirestoreUserRemoteSource());
     }
 
     public StoreAPIService getProductsApiService() {

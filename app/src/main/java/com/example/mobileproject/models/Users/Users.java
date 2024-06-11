@@ -3,17 +3,18 @@ package com.example.mobileproject.models.Users;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
-//@Entity
-public class Users {
+public final class Users {
 
     String email, cognome, nome, username, descrizione, id;
     Date dataNascita;
-    ArrayList<DocumentReference> followers, following;
+    ArrayList<String> followers, following;
     ArrayList<String> tags;
+    URI image;
 
     public Users() {
     }
@@ -26,8 +27,8 @@ public class Users {
         this.username = id;
         this.descrizione = null;
         this.dataNascita = new Date();
-        this.followers = new ArrayList<DocumentReference>();
-        this.following = new ArrayList<DocumentReference>();
+        this.followers = new ArrayList<>();
+        this.following = new ArrayList<>();
         this.tags = new ArrayList<String>();
     }
 
@@ -49,11 +50,15 @@ public class Users {
         this.cognome = (String) m.get("cognome");
         this.nome = (String) m.get("nome");
         this.username = (String) m.get("username");
-        this.following = (ArrayList<DocumentReference>) m.get("following");
-        this.followers = (ArrayList<DocumentReference>) m.get("followers");
+        this.following = (ArrayList<String>) m.get("following");
+        this.followers = (ArrayList<String>) m.get("followers");
         this.tags = (ArrayList<String>) m.get("tags");
-        this.dataNascita = ((Timestamp) m.get("dataNascita")).toDate();
         this.id = id;
+        try{
+            this.dataNascita = ((Timestamp) m.get("dataNascita")).toDate();
+        } catch (NullPointerException e) {
+            this.dataNascita = null;
+        }
     }
 
     public Users getUser() {
@@ -88,15 +93,19 @@ public class Users {
         return dataNascita;
     }
 
-    public ArrayList<DocumentReference> getFollowers() {
+    public ArrayList<String> getFollowers() {
         return followers;
     }
 
-    public ArrayList<DocumentReference> getFollowing() {
+    public ArrayList<String> getFollowing() {
         return following;
     }
 
     public ArrayList<String> getTags() {
         return tags;
+    }
+
+    public URI getImageUri(){
+        return image;
     }
 }

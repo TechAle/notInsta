@@ -13,31 +13,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mobileproject.R;
 import com.example.mobileproject.models.Post.Post;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface OnItemClickListener{
-        void onItemClicked();
+        void onItemClicked(Post p);
     }
 
     private static final int NORMAL_TYPE = 0;
-    private static final int LOADING_TYPE = 0;
+    private static final int LOADING_TYPE = 1;
     private final List<Post> postSet;
-//    private final OnItemClickListener l; //Uncomment to use on clicking image
-    private final Application appl; //per il caricamento con Glide
+    private final OnItemClickListener l;
+    private final Application appl;
 
     public PostAdapter(List<Post> pl, Application a, OnItemClickListener l){
         this.postSet = pl;
         this.appl = a;
-        //this.l = l;
+        this.l = l;
     }
 
     @Override
-    public int getItemViewType(int position){ // lazy loading
+    public int getItemViewType(int position){
         if (postSet.get(position) == null){
             return LOADING_TYPE;
         }
@@ -81,17 +79,13 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             iv = item.findViewById(R.id.post_image_bg);
             item.setOnClickListener(this);
         }
-        //TODO: sistemare il bind
         public void bind(Post p){
-            //Caricamento immagine da URL con Glide
-            //TODO: sistemare riferimento ad Application e cambiare foto di rimpiazzo (se qualcuno vuole)
-            Glide.with(appl).load("POSTS/" + p.getId() + ".png").placeholder(R.drawable.baseline_photo_camera_24).into(iv);
+            Glide.with(appl).load(p.getImage()).placeholder(R.drawable.baseline_photo_camera_24).into(iv);
         }
 
         @Override
         public void onClick(View v) {
-            //TODO: sistemare questa funzione
-            Snackbar.make(v, "Item clicked", BaseTransientBottomBar.LENGTH_SHORT).show();
+            l.onItemClicked(postSet.get(getAdapterPosition()));
         }
     }
     public static class LoadingPostViewHolder extends RecyclerView.ViewHolder {

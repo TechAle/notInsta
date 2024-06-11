@@ -12,6 +12,7 @@ import com.example.mobileproject.R;
 
 import java.util.List;
 
+//TODO: unused
 public class TagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     public interface OnItemClickListener{

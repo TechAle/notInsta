@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.fragments.home.SearchFragment">
+    tools:context=".UI.Home.SearchFragment">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -22,7 +22,6 @@
             android:layout_margin="20dp"
             app:cardBackgroundColor="#999"
             app:cardCornerRadius="50dp">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -58,7 +57,7 @@
             android:layout_height="wrap_content"
             android:minHeight="200dp"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -79,12 +78,13 @@
                 android:layout_height="150dp"
                 android:src="@mipmap/ic_launcher" />
 
-            <Button
-                android:id="@+id/goResults"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Button" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/research" />
 
         <!-- activity_main.xml -->
 
@@ -93,7 +93,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView3"
-        android:name="com.example.mobileproject.UI.fragments.home.PostGalleryFragment"
+        android:name="com.example.mobileproject.UI.Home.SearchGalleryFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
