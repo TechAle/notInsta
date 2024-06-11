@@ -57,9 +57,11 @@ public final class SearchFragment extends Fragment {
             f.loadPosts(binding.inputSearch.getText().toString());
         });
         PVM.getSponsoredPosts().observe(getViewLifecycleOwner(), post -> {
-            Glide.with(this).load(post.getImage()).placeholder(R.drawable.ic_launcher_foreground).into(binding.sponsorImage);
-            binding.sponsorText.setText(post.getAutore());
-            binding.sponsorLayout.setVisibility(View.VISIBLE);
+            if(post != null){
+                Glide.with(this).load(post.getImage()).placeholder(R.drawable.ic_launcher_foreground).into(binding.sponsorImage);
+                binding.sponsorText.setText(post.getAutore());
+                binding.sponsorLayout.setVisibility(View.VISIBLE);
+            }
         });
     }
 }

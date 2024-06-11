@@ -131,4 +131,5 @@
     <string name="publish">Published at:</string>
     <string name="Followers">Followers: %1$d</string>
     <string name="Followee">Followee: %1$d</string>
+    <string name="research">Search</string>
 </resources>

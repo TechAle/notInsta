@@ -12,11 +12,7 @@ public final class SearchGalleryFragment extends GenericGalleryFragment {
 
     @Override
     protected void fetchAction(View v) {
-        binding.progressBar.setVisibility(View.VISIBLE);
         PVM.getActualFoundPosts().observe(getViewLifecycleOwner(), list -> {
-            /*if(list == null){
-                return;
-            }*/
             if (!PVM.isLoading(type)) { //Se non è attiva una chiamata
                 if (PVM.isFirstLoading(type)) { //Se è il primo caricamento -> lista interna vuota o aggiornamento completo
                     PVM.setFirstLoading(type, false);
@@ -72,6 +68,7 @@ public final class SearchGalleryFragment extends GenericGalleryFragment {
 
     void loadPosts(String s) {
         PVM.setSearchTag(s);
+        binding.progressBar.setVisibility(View.VISIBLE);
         findAction();
     }
 }
