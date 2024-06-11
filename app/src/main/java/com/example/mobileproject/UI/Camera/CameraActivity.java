@@ -112,6 +112,10 @@ public final class CameraActivity extends AppCompatActivity {
                         .commit();
                 break;
             case 1:
+                if (photo == null){
+                    currentFragment = 0;
+                    break;
+                }
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentContainerView, ImageViewerFragment.class, null)
                         .commit();
