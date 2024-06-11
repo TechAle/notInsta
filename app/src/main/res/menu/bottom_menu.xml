@@ -17,9 +17,4 @@
         android:enabled="true"
         android:icon="@android:drawable/ic_dialog_alert"
         android:title="@string/action3_navigation" />
-    <item
-        android:id="@+id/settingsFragment"
-        android:enabled="true"
-        android:icon="@android:drawable/ic_menu_manage"
-        android:title="@string/action4_navigation" />
 </menu>

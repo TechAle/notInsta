@@ -5,10 +5,8 @@
     <string name="action3_navigation">User Profile</string>
     <string name="action4_navigation">Settings</string>
     <string name="fotocamera">fotocamera</string>
-    <string name="impostazioni">impostazioni</string>
-    <string name="Insta">!Insta</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="impostazioni">settings</string>
+    <string name="Insta" translatable="false">!Insta</string>
     <string name="loginGoogle">Continue with Google</string>
     <string name="email" translatable="false">E-mail</string>
     <string name="password" translatable="false">Password</string>
@@ -37,8 +35,24 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="changeLanguage">Change language</string>
+    <string name="changePassword">Change password</string>
+    <string name="changePic">Change picture</string>
+    <string name="changePrivacy">Private account</string>
+    <string name="changeUsername">Change username</string>
+    <string name="deleteAccount">Delete account</string>
+    <string name="enableNotifies">Enable notifies</string>
+    <string name="settingsTitle">Settings</string>
+    <string name="showLikes">Show likes</string>
+    <string name="signOut">Sign out</string>
+    <string name="insertNewPassword">Insert new password</string>
 
-    <string name="lorem_ipsum">
+    <string-array name="languages_array">
+        <item>English</item>
+        <item>Italiano</item>
+    </string-array>
+
+    <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris volutpat, dolor id
         interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus dui nec risus. Maecenas non sodales
         nisi, vel dictum dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
@@ -68,7 +82,6 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus vestibulum. Fusce
         dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hue">Hue</string>
     <string name="brightness">Brightness</string>
     <string name="contrast">Contrast</string>
@@ -77,4 +90,46 @@
     <string name="confirm_image_choice_button_text">Ok</string>
     <string name="open_camera_app_button_text">Open Camera</string>
     <string name="open_gallery_button_text">Choose from Gallery</string>
+    <string name="imagePicture">Image picture</string>
+    <string name="changeUsernameText">Insert new username</string>
+    <string name="usernameText">New username</string>
+    <string name="changePasswdTitle">Change password</string>
+    <string name="oldPasswordText">Insert old password</string>
+    <string name="username_changed">Username has been changed</string>
+    <string name="empty" />
+    <string name="password_changed">Password has been changed</string>
+    <string name="password_length">Password lentgh must be at least 6</string>
+    <string name="password_different">Passwords must be different</string>
+    <string name="button_to_post_desc">Next</string>
+    <string name="prev_button">Back</string>
+    <string name="next_button">Next</string>
+    <string name="add_tag_button" translatable="false">+</string>
+    <string name="description_text_hint">Write a description</string>
+    <string name="tag_text_hint">tag</string>
+    <string name="is_promotional_checkbox">Is Promotional?</string>
+
+    <string name="error_retrieving_products">Error in retrieving the products</string>
+
+    <string name="error_user_collision_message">User already exists</string>
+    <string name="check_login_data_message">Dati non validi</string>
+    <string name="error_login_password_message">Credenziali non valide</string>
+    <string name="error_login_user_message">Utente non valido</string>
+    <string name="back">Back</string>
+    <string name="termsConditions">Terms and conditions will be described here.</string>
+    <string name="pass_special">Password must contain at least one special character</string>
+    <string name="passwordButton">Send email</string>
+
+    <string name="post_created">Post successfully created</string>
+    <string name="post_created_local_only">Post created in local</string>
+    <string name="post_created_remote_only">Post created in remote</string>
+    <string name="post_created_no_remote_image">Post created, but image not loaded</string>
+    <string name="post_not_created">Not able to create this post</string>
+    <string name="unexpected_error">Unexpected error</string>
+    <string name="error_no_google_account_found_message">No Google account found</string>
+    <string name="likes">Likes:</string>
+    <string name="Author">Author:</string>
+    <string name="publish">Published at:</string>
+    <string name="Followers">Followers: %1$d</string>
+    <string name="Followee">Followee: %1$d</string>
+    <string name="research">Search</string>
 </resources>

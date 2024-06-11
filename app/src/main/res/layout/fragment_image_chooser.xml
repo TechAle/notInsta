@@ -3,16 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.camera.ImageChooserFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-
-    <Button
-        android:id="@+id/okButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#673AB7"
-        android:text="@string/confirm_image_choice_button_text" />
+    tools:context=".UI.Camera.ImageChooserFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

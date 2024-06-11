@@ -7,22 +7,17 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.mobileproject.fragments.home.ProfileFragment"
+        android:name="com.example.mobileproject.UI.Home.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.mobileproject.fragments.home.SearchFragment"
+        android:name="com.example.mobileproject.UI.Home.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.example.mobileproject.fragments.home.SettingsFragment"
-        android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
-    <fragment
         android:id="@+id/startingFragment"
-        android:name="com.example.mobileproject.fragments.home.StartingFragment"
+        android:name="com.example.mobileproject.UI.Home.StartingFragment"
         android:label="fragment_starting"
         tools:layout="@layout/fragment_starting" />
 </navigation>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_navigation"
+    app:startDestination="@id/settingsFragment">
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.example.mobileproject.UI.Settings.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" />
+    <fragment
+        android:id="@+id/changeUsernameFragment"
+        android:name="com.example.mobileproject.UI.Settings.ChangeUsernameFragment"
+        android:label="fragment_change_username"
+        tools:layout="@layout/fragment_change_username" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.mobileproject.UI.Settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_changeUsernameFragment"
+            app:destination="@id/changeUsernameFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+    </fragment>
+</navigation>

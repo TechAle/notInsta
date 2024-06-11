@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,7 +17,10 @@
         android:theme="@style/Theme.MobileProject"
         tools:targetApi="34">
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".UI.Settings.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UI.Login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,17 +29,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.HomeActivity"
-            android:exported="true">
-        </activity>
+            android:name=".UI.Home.HomeActivity"
+            android:exported="true" />
         <activity
-            android:name=".activities.CameraActivity"
-            android:exported="true">
-        </activity>
+            android:name=".UI.Camera.CameraActivity"
+            android:exported="true" />
         <activity
-            android:name=".activities.SignupActivity"
-            android:exported="true">
-        </activity>
+            android:name=".UI.Login.SignupActivity"
+            android:exported="true" />
+        <activity
+            android:name=".UI.ShowPostActivity"
+            android:exported = "true" />
     </application>
 
 </manifest>
