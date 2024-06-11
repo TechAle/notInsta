@@ -139,6 +139,7 @@ public final class CameraActivity extends AppCompatActivity {
                             .replace(R.id.fragmentContainerView, ImageChooserFragment.class, null)
                             .commit();
                     currentFragment = 0;
+                    finish();
                 });
                 break;
         }
