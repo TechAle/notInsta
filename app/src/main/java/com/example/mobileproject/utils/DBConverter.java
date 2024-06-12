@@ -25,7 +25,7 @@ public class DBConverter {
     }
     @TypeConverter
     public static Uri toUri(String s){
-        return Uri.parse(s);
+        return s == null ? null : Uri.parse(s);
     }
     @TypeConverter
     public static String fromUri(Uri u){

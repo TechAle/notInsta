@@ -132,4 +132,5 @@
     <string name="Followers">Followers: %1$d</string>
     <string name="Followee">Followee: %1$d</string>
     <string name="research">Search</string>
+    <string name="benvenuto">Welcome to !Insta!</string>
 </resources>
