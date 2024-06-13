@@ -58,7 +58,7 @@ public final class CameraActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (data != null){
@@ -100,7 +100,6 @@ public final class CameraActivity extends AppCompatActivity {
     }
 
     // Substitutes the fragment depending on the current state
-    //TODO: Gestire qua un possibile NullPointerException (clicco 'avanti' senza aver selezionato un immagine)
     private void changeFragment() {
         switch (currentFragment){
             case -1:

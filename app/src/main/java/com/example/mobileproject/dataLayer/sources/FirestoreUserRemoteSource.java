@@ -5,10 +5,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-/*
-import com.example.mobileproject.dataLayer.sources.AdvertisementSource;
-import com.example.mobileproject.models.Product;
-import com.example.mobileproject.models.StoreApiResponse;*/
+
 import com.example.mobileproject.models.Users.Users;
 import com.example.mobileproject.service.StoreAPIService;
 import com.example.mobileproject.utils.ServiceLocator;
@@ -24,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -87,20 +85,7 @@ public final class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                     }
                 });
     }
-    /*
-    @Override
-    public void createUser(Users post) {
-        Map<String, Object> documentFields = new HashMap<>();
-        documentFields.put("cognome", post.getCognome());
-        documentFields.put("nome", post.getNome());
-        documentFields.put("dataNascita", post.getDataNascita());
-        documentFields.put("descrizione", post.getDescrizione());
-        documentFields.put("followers", post.getFollowers());
-        documentFields.put("following", post.getFollowing());
-        documentFields.put("tags", post.getTags());
-        documentFields.put("username", post.getUsername());
-        createDocument("utenti", documentFields, c);
-    }*/
+
     @Override
     public void editUsername(String newUsername) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -125,18 +110,7 @@ public final class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user != null) user.updatePassword(newPassword);
     }
-    /*@Override
-    protected void createDocument(String collectionName, Map<String, Object> documentFields) {
-        // Add the new document to our shared collection
-        db.collection(collectionName)
-                .add(documentFields)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                        ci.onUploadSuccess(task.getResult().getId());
-                    else
-                        ci.onUploadFailure(new Exception("Error creating document"));
-                });
-    }*/
+
     private void updateField(String collectionName, String documentId, String fieldToUpdate, Object newValue) {
         // Create a map to represent the field to be updated
         Map<String, Object> updates = new HashMap<>();
@@ -231,10 +205,6 @@ public final class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
         }
     }
 
-    /*public FirebaseUser getLoggedUser(){
-        return firebaseAuth.getCurrentUser();
-    }*/
-
     @Override
     public void getLoggedUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -242,19 +212,44 @@ public final class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
             c.onFailureFromRemoteDatabase2("aaa");
         }
         else {
-            Map<String, Object> documentFields = new HashMap<>();
-            //Stessa cosa
-            db.collection("utenti").document(firebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
+            db.collection("utenti").document(firebaseUser.getUid()).get().addOnCompleteListener(result -> {
+                if(result.isSuccessful()){
+                    DocumentSnapshot documentSnapshot = result.getResult();
                     if (documentSnapshot.exists()) {
                         Map<String, Object> m = documentSnapshot.getData();
                         m.put("immagine", getUriFromId(firebaseAuth.getUid())); //false warning: existence of document tested
-                        m.put("followers", null);//TODO: sistemare
-                        m.put("following", null);//TODO: sistemare
-                        m.put("tags", null);//TODO: sistemare
+                        Object o = m.get("followers");
+                        if(o == null) m.put("followers", null);
+                        else {
+                            List<DocumentReference> tmp = (List<DocumentReference>) o;
+                            List<String> sl = new ArrayList<>();
+                            for(DocumentReference user : tmp){
+                                sl.add(user.getId());
+                            }
+                            m.put("followers", sl);
+                        }
+                        o = m.get("following");
+                        if(o == null) m.put("following", null);
+                        else {
+                            List<DocumentReference> tmp = (List<DocumentReference>) o;
+                            List<String> sl = new ArrayList<>();
+                            for(DocumentReference user : tmp){
+                                sl.add(user.getId());
+                            }
+                            m.put("following", sl);
+                        }
+                        o = m.get("tags");
+                        if(o == null){
+                            m.put("tags", null);
+                        } else {
+                            m.put("tags", (List<String>) o);
+                        }
                         c.onSuccessFromRemoteDatabase2(new Users(m, firebaseAuth.getUid()));
+                    } else {
+                        c.onFailureFromRemoteDatabase2("bbb");
                     }
+                } else {
+                    c.onFailureFromRemoteDatabase2("ccc");
                 }
             });
         }

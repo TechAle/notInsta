@@ -72,7 +72,7 @@ public final class Post implements Parcelable {
     public Post(Map<String, Object> m, @NonNull String id) {
         this.descrizione = (String) m.get("descrizione");
         this.pubblicazione = (Date) m.get("data");
-        this.autore = (String) m.get("autore"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
+        this.autore = (String) m.get("autore");
         this.tags = (ArrayList<String>) m.get("tags");
         this.likes = (ArrayList<String>) m.get("likes");
         this.id = id;

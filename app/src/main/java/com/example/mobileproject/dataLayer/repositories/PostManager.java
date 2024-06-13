@@ -16,13 +16,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.ArrayList;
 import java.util.List;
 
-//import java.net.URL;
-
 public final class PostManager implements CallbackPosts {
-
-    //LiveData non presenti("https://developer.android.com/topic/libraries/architecture/livedata#livedata-in-architecture")
-    //TODO: maybe a byte[] data type is better than a android.graphics.Bitmap?
-    //TODO: maybe a java.net.URL/java.net.URI data type is better than a android.net.Uri?
     private PostResponseCallback c;
     private final PostDataRepository dataRep;
     private final PostImageRepository imageRep;
@@ -83,7 +77,6 @@ public final class PostManager implements CallbackPosts {
     /**
      * Prende un solo post sponsorizzato
      */
-    //TODO: controllare, mi sa che ho sbagliato qualcosa...
     public void retrieveSponsoredPosts(){
         if ((int) (Math.random() * 3) == 1) {
             ads.getAdvPost();

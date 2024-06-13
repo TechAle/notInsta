@@ -118,14 +118,14 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
                             sponsors.add(p);
                         }
                         if (sponsors.size() > 0) {
-                            c.onSuccessAdv(sponsors.get((int) (Math.random() * sponsors.size())));//TODO: Controllare
+                            c.onSuccessAdv(sponsors.get((int) (Math.random() * sponsors.size())));
                         }
                     }
                     else c.onFailureAdv(new Exception("No sponsor"));
                 });
     }
     @Override
-    public void retrievePostsByAuthor(@NonNull String idUser, int page){//TODO: ma invece di mettere l'id, non si potrebbe mettere lo username?
+    public void retrievePostsByAuthor(@NonNull String idUser, int page){
         DocumentReference refUser = db.collection("utenti").document(idUser);
         if(page == 0){
             lastElementPerAuthor.put(idUser, null);
