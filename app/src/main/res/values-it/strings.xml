@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">!Insta</string>
     <string name="action4_navigation">Impostazioni</string>
     <string name="impostazioni">impostazioni</string>
     <string name="loginGoogle">Continua con Google</string>

@@ -5,16 +5,16 @@
     <item
         android:id="@+id/startingFragment"
         android:enabled="true"
-        android:icon="@android:drawable/ic_dialog_info"
+        android:icon="@android:drawable/ic_dialog_email"
         android:title="@string/action1_navigation" />
     <item
         android:id="@+id/searchFragment"
         android:enabled="true"
-        android:icon="@android:drawable/ic_dialog_email"
+        android:icon="@android:drawable/ic_menu_search"
         android:title="@string/action2_navigation" />
     <item
         android:id="@+id/profileFragment"
         android:enabled="true"
-        android:icon="@android:drawable/ic_dialog_alert"
+        android:icon="@drawable/baseline_account_circle_24"
         android:title="@string/action3_navigation" />
 </menu>
