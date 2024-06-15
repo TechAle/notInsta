@@ -143,6 +143,7 @@ public final class LoginFragment extends Fragment {
         binding.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                binding.progressBar2.setVisibility(View.VISIBLE);
                 String email = inputEmail.getEditText().getText().toString().trim();
                 String password = inputPassword.getEditText().getText().toString().trim();
 
@@ -178,11 +179,8 @@ public final class LoginFragment extends Fragment {
                                         Users user = ((Result.UserResponseSuccessUser) result).getData();
                                         saveLoginData(email, password, user.getId());
                                         UVM.setAuthenticationError(false);
-                                        Snackbar.make(requireActivity().findViewById(android.R.id.content),
-                                                "Loggato EMAIL",
-                                                Snackbar.LENGTH_SHORT).show();
+                                        binding.progressBar2.setVisibility(View.GONE);
                                         startActivity(new Intent(requireActivity(), HomeActivity.class));
-                                        requireActivity().finish();
                                     } else {
                                         UVM.setAuthenticationError(true);
                                         Snackbar.make(requireActivity().findViewById(android.R.id.content),
@@ -196,6 +194,7 @@ public final class LoginFragment extends Fragment {
                 } else {
                     Snackbar.make(requireActivity().findViewById(android.R.id.content),
                             R.string.check_login_data_message, Snackbar.LENGTH_SHORT).show();
+                    binding.progressBar2.setVisibility(View.GONE);
                 }
             }
         });
