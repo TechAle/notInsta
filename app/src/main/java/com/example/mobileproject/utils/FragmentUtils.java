@@ -17,10 +17,10 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.Locale;
 
+@Deprecated
 public class FragmentUtils {
     // Function to update the text of a view based on its ID
-    // Function to update the text of a view based on its ID
-    public static void updateTextById(View parentView, int viewId, String newText) {
+    /*public static void updateTextById(View parentView, int viewId, String newText) {
         View view = parentView.findViewById(viewId);
 
         if (view instanceof TextView) {
@@ -43,7 +43,8 @@ public class FragmentUtils {
                 Glide.with(parentView).load(URLImage).into(imageView);
             }
         });
-    }
+    }*/
+    //TODO: Is this a data layer function?
 
     public static void loadLanguage(String lang, FragmentActivity activity, Resources res) {
         if (!lang.equals(Locale.getDefault().getLanguage())) {
@@ -61,11 +62,11 @@ public class FragmentUtils {
             activity.recreate();
         }
     }
-
+/*
     public static void loadImage(String image, View view, int sponsorImage) {
         ImageView imageView = view.findViewById(sponsorImage);
         Glide.with(view)
                 .load(image)
                 .into(imageView);
-    }
+    }*/
 }

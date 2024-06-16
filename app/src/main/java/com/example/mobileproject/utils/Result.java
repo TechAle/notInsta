@@ -12,8 +12,7 @@ import java.util.List;
 public abstract class Result {
     private Result() {}
     public boolean successful(){
-        // TODO make superclass, this is ugly
-        return this instanceof PostResponseSuccess || this instanceof UserResponseSuccessUser || this instanceof UserResponseSuccess || this instanceof UserEditSuccess || this instanceof PostCreationSuccess || this instanceof UserCreationSuccess || this instanceof ProductSuccess;
+        return !(this instanceof Error);
     }
 
     public static final class PostResponseSuccess extends Result {
@@ -46,17 +45,7 @@ public abstract class Result {
         }
     }
 
-    public static final class PostCreationSuccess extends Result {
-        private final String id;
-        public PostCreationSuccess(String id) {
-            this.id = id;
-        }
-        public String getData() {
-            return id;
-        }
-    }
-
-    public static final class UserEditSuccess extends Result {
+    public static final class UserEditSuccess extends Result {//Propongo di cambiarla con GenericSuccess
     }
 
     public static final class Error extends Result {

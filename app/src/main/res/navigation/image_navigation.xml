@@ -6,6 +6,6 @@
 
     <fragment
         android:id="@+id/imageViewerFragment"
-        android:name="com.example.mobileproject.UI.fragments.camera.ImageViewerFragment"
+        android:name="com.example.mobileproject.UI.Camera.ImageViewerFragment"
         android:label="ImageViewerFragment" />
 </navigation>

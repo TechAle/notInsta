@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">Mobile Project</string>
+    <string name="app_name">!Insta</string>
     <string name="action1_navigation">Home</string>
     <string name="action2_navigation">Search</string>
     <string name="action3_navigation">User Profile</string>
     <string name="action4_navigation">Settings</string>
     <string name="fotocamera">fotocamera</string>
-    <string name="impostazioni">impostazioni</string>
-    <string name="Insta">!Insta</string>
+    <string name="impostazioni">settings</string>
+    <string name="Insta" translatable="false">!Insta</string>
     <string name="loginGoogle">Continue with Google</string>
     <string name="email" translatable="false">E-mail</string>
     <string name="password" translatable="false">Password</string>
@@ -52,7 +52,7 @@
         <item>Italiano</item>
     </string-array>
 
-    <!--<string name="lorem_ipsum">
+    <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris volutpat, dolor id
         interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus dui nec risus. Maecenas non sodales
         nisi, vel dictum dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
@@ -81,7 +81,7 @@
         maximus ullamcorper sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus vestibulum. Fusce
         dictum libero quis erat maximus, vitae volutpat diam dignissim.
-    </string>-->
+    </string>
     <string name="hue">Hue</string>
     <string name="brightness">Brightness</string>
     <string name="contrast">Contrast</string>
@@ -103,25 +103,34 @@
     <string name="button_to_post_desc">Next</string>
     <string name="prev_button">Back</string>
     <string name="next_button">Next</string>
-    <string name="add_tag_button">+</string>
+    <string name="add_tag_button" translatable="false">+</string>
     <string name="description_text_hint">Write a description</string>
     <string name="tag_text_hint">tag</string>
     <string name="is_promotional_checkbox">Is Promotional?</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="error_retrieving_products">Error in retrieving the products</string>
 
     <string name="error_user_collision_message">User already exists</string>
-    <string name="unexpected_error">Errore inaspettato</string>
     <string name="check_login_data_message">Dati non validi</string>
     <string name="error_login_password_message">Credenziali non valide</string>
     <string name="error_login_user_message">Utente non valido</string>
-    <string name="error_no_google_account_found_message">Nessun account Google trovato</string>
     <string name="back">Back</string>
     <string name="termsConditions">Terms and conditions will be described here.</string>
     <string name="pass_special">Password must contain at least one special character</string>
-
-
     <string name="passwordButton">Send email</string>
+
+    <string name="post_created">Post successfully created</string>
+    <string name="post_created_local_only">Post created in local</string>
+    <string name="post_created_remote_only">Post created in remote</string>
+    <string name="post_created_no_remote_image">Post created, but image not loaded</string>
+    <string name="post_not_created">Not able to create this post</string>
+    <string name="unexpected_error">Unexpected error</string>
+    <string name="error_no_google_account_found_message">No Google account found</string>
+    <string name="likes">Likes:</string>
+    <string name="Author">Author:</string>
+    <string name="publish">Published at:</string>
+    <string name="Followers">Followers: %1$d</string>
+    <string name="Followee">Followee: %1$d</string>
+    <string name="research">Search</string>
+    <string name="benvenuto">Welcome to !Insta!</string>
 </resources>
