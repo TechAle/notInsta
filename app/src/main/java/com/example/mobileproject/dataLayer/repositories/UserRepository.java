@@ -1,5 +1,6 @@
 package com.example.mobileproject.dataLayer.repositories;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.lifecycle.MutableLiveData;
@@ -188,21 +189,12 @@ public final class UserRepository implements CallbackUsers {
         rem.deleteAccount();
     }
 
-    public void changeImage(Uri selectedImageUri) {
-        rem.changeImage(selectedImageUri);
+    public void changeImage(Bitmap selectedImage) {
+        rem.changeImage(selectedImage);
     }
 
     @Override
     public void passwordReset(String email) {
         rem.passwordReset(email);
     }
-/*
-    public LiveData<Users> getCurrentUser(){
-        local.retrieveCurrentUser();
-        return User;
-    }
-
-    public void onLocalSuccess(){
-        this.
-    }*/
 }

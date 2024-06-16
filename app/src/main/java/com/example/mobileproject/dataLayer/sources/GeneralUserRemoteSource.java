@@ -1,5 +1,6 @@
 package com.example.mobileproject.dataLayer.sources;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import com.example.mobileproject.models.Users.Users;
@@ -15,7 +16,7 @@ public abstract class GeneralUserRemoteSource {
     public abstract void createUser(Users post);
     public abstract void editUsername(String newUsername);
     public abstract void editPassword(String newPassword);
-    public abstract void changeImage(Uri selectedImageUri);
+    public abstract void changeImage(Bitmap selectedImageUri);
     public abstract void getLoggedUser();
     public abstract void logout();
     public abstract void signUp(String email, String password);

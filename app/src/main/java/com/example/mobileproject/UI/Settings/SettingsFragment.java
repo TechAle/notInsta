@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -34,6 +36,10 @@ import com.example.mobileproject.dataLayer.repositories.UserRepository;
 import com.example.mobileproject.databinding.FragmentSettingsBinding;
 import com.example.mobileproject.utils.FragmentUtils;
 import com.example.mobileproject.utils.ServiceLocator;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -138,7 +144,18 @@ public final class SettingsFragment extends Fragment {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
-            UVM.changeImage(selectedImageUri);
+            if(selectedImageUri != null){
+                InputStream inputStream;
+                Bitmap photo;
+                try {
+                    inputStream = requireActivity().getContentResolver().openInputStream(selectedImageUri);
+                    photo = BitmapFactory.decodeStream(inputStream);
+                    inputStream.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                UVM.changeImage(photo);
+            }
         }
     }
 }

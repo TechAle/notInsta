@@ -1,5 +1,6 @@
 package com.example.mobileproject.dataLayer.sources;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -184,24 +186,23 @@ public final class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                 });
     }
     @Override
-    public void changeImage(Uri uri) {
+    public void changeImage(Bitmap uri) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
-
-        if (user != null) {
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(user.getDisplayName())
-                    .setPhotoUri(uri)
-                    .build();
-
-            user.updateProfile(profileUpdates)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d("TAG", "User profile updated.");
-                            }
+        if(user != null){
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            uri.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+            String fileName = user.getUid() + ".png";
+            storage.getReference("PFP")
+                    .child(fileName)
+                    .putBytes(data)
+                    .addOnCompleteListener(result -> {
+                        if(result.isSuccessful()){
+                            Log.d("TAG", "User profile updated.");
                         }
                     });
+        } else {
+            throw new RuntimeException();
         }
     }
 
@@ -217,7 +218,7 @@ public final class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
                     DocumentSnapshot documentSnapshot = result.getResult();
                     if (documentSnapshot.exists()) {
                         Map<String, Object> m = documentSnapshot.getData();
-                        m.put("immagine", getUriFromId(firebaseAuth.getUid())); //false warning: existence of document tested
+                        m.put("immagine", getUriFromId(firebaseUser.getUid())); //false warning: existence of document tested
                         Object o = m.get("followers");
                         if(o == null) m.put("followers", null);
                         else {

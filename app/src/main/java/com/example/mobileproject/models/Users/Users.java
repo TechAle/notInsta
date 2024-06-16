@@ -1,9 +1,9 @@
 package com.example.mobileproject.models.Users;
 
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentReference;
 
-import java.net.URI;
+import android.net.Uri;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -14,7 +14,7 @@ public final class Users {
     Date dataNascita;
     ArrayList<String> followers, following;
     ArrayList<String> tags;
-    URI image;
+    Uri image;
 
     public Users() {
     }
@@ -29,7 +29,7 @@ public final class Users {
         this.dataNascita = new Date();
         this.followers = new ArrayList<>();
         this.following = new ArrayList<>();
-        this.tags = new ArrayList<String>();
+        this.tags = new ArrayList<>();
     }
 
     public Users(String email, String cognome, String nome, String username, String descrizione, Date dataNascita, ArrayList<String> tags) {
@@ -59,6 +59,7 @@ public final class Users {
         } catch (NullPointerException e) {
             this.dataNascita = null;
         }
+        this.image = (Uri) m.get("immagine");
     }
 
     public Users getUser() {
@@ -105,7 +106,7 @@ public final class Users {
         return tags;
     }
 
-    public URI getImageUri(){
+    public Uri getImageUri(){
         return image;
     }
 }

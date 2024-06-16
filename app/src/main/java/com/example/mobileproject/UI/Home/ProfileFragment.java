@@ -65,7 +65,7 @@ public final class ProfileFragment extends Fragment {
             binding.descrizione.setText(user.getDescrizione());
             binding.seguaci.setText(String.format(getResources().getString(R.string.Followers), user.getFollowers() == null ? 0 : user.getFollowers().size()));
             binding.seguiti.setText(String.format(getResources().getString(R.string.Followee), user.getFollowing() == null ? 0 : user.getFollowing().size()));
-            Glide.with(this).load(user.getImageUri()).into(binding.pfp);
+            Glide.with(this).load(user.getImageUri()).placeholder(R.drawable.baseline_account_circle_24).into(binding.pfp);
         });
     }
 

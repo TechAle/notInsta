@@ -1,5 +1,6 @@
 package com.example.mobileproject.UI.Login;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
@@ -15,19 +16,16 @@ import com.example.mobileproject.utils.Result;
 import static com.example.mobileproject.utils.Constants.SHARED_PREFERENCES_FILENAME;
 
 //TODO: Usata in più parti, ho il sospetto che vada divisa (non era un ViewModel per activity?)
-public final class UsersViewModel extends ViewModel /*implements UserResponseCallback*/ {
+public final class UsersViewModel extends ViewModel {
     private final UserRepository repoU;
     private final PostManager repoP;
     private MutableLiveData<Result> users;
-    //private final MutableLiveData<Users> user;
     private MutableLiveData<Result> selectedUsers;
     private boolean authenticationError;
     public UsersViewModel(UserRepository repoU, PostManager repoP) {
         this.repoU = repoU;
-        //repoU.setCallback(this);
         this.repoP = repoP;
         authenticationError = false;
-        //user = new MutableLiveData<>();
     }
     //getters & setters
     public MutableLiveData<Result> getUsers(){
@@ -98,15 +96,10 @@ public final class UsersViewModel extends ViewModel /*implements UserResponseCal
     public void deleteAccount() {
         repoU.deleteAccount();
     }
-    public void changeImage(Uri selectedImageUri) {
-        repoU.changeImage(selectedImageUri);
+    public void changeImage(Bitmap selectedImage) {
+        repoU.changeImage(selectedImage);
     }
-
     public boolean isLogged(){
         return repoU.isLogged();
     }
-    /*@Override
-    public void onResponseUser(Result r) {
-
-    }*/
 }
