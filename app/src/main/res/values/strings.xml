@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">!Insta</string>
-    <string name="action1_navigation">Home</string>
+    <string name="action1_navigation" translatable="false">Home</string>
     <string name="action2_navigation">Search</string>
     <string name="action3_navigation">User Profile</string>
     <string name="action4_navigation">Settings</string>
-    <string name="fotocamera">fotocamera</string>
-    <string name="impostazioni">settings</string>
+    <string name="fotocamera">Camera</string>
+    <string name="impostazioni">Settings</string>
     <string name="Insta" translatable="false">!Insta</string>
     <string name="loginGoogle">Continue with Google</string>
     <string name="email" translatable="false">E-mail</string>
@@ -14,7 +14,7 @@
     <string name="username">Username</string>
     <string name="passwordRepeat">Repeat password</string>
     <string name="or">Or</string>
-    <string name="login">Login</string>
+    <string name="login" translatable="false">Login</string>
     <string name="signup">Sign up</string>
     <string name="terms1">By continuing you agree to our</string>
     <string name="terms2">Terms and Conditions</string>
@@ -25,11 +25,11 @@
     <string name="error_login">Login failed</string>
     <string name="success_signup">Sign up was successful</string>
     <string name="error_username">Username not valid</string>
-    <string name="logout">Log out</string>
+    <string name="logout" translatable="false">Log out</string>
     <string name="greetings">"Hi "</string>
     <string name="success_logout">Log out successful</string>
     <string name="success_login">Log in successful</string>
-    <string name="title_activity_image_filter">ImageFilterActivity</string>
+    <string name="title_activity_image_filter" translatable="false">ImageFilterActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -82,12 +82,12 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus vestibulum. Fusce
         dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-    <string name="hue">Hue</string>
+    <string name="hue" translatable="false">Hue</string>
     <string name="brightness">Brightness</string>
     <string name="contrast">Contrast</string>
     <string name="saturation">Saturation</string>
     <string name="pixelate">Pixelate</string>
-    <string name="confirm_image_choice_button_text">Ok</string>
+    <string name="confirm_image_choice_button_text" translatable="false">Ok</string>
     <string name="open_camera_app_button_text">Open Camera</string>
     <string name="open_gallery_button_text">Choose from Gallery</string>
     <string name="imagePicture">Image picture</string>
@@ -96,7 +96,6 @@
     <string name="changePasswdTitle">Change password</string>
     <string name="oldPasswordText">Insert old password</string>
     <string name="username_changed">Username has been changed</string>
-    <string name="empty" />
     <string name="password_changed">Password has been changed</string>
     <string name="password_length">Password lentgh must be at least 6</string>
     <string name="password_different">Passwords must be different</string>
@@ -105,15 +104,14 @@
     <string name="next_button">Next</string>
     <string name="add_tag_button" translatable="false">+</string>
     <string name="description_text_hint">Write a description</string>
-    <string name="tag_text_hint">tag</string>
+    <string name="tag_text_hint" translatable="false">Tag</string>
     <string name="is_promotional_checkbox">Is Promotional?</string>
 
     <string name="error_retrieving_products">Error in retrieving the products</string>
 
     <string name="error_user_collision_message">User already exists</string>
-    <string name="check_login_data_message">Dati non validi</string>
-    <string name="error_login_password_message">Credenziali non valide</string>
-    <string name="error_login_user_message">Utente non valido</string>
+    <string name="error_login_password_message">Invalid credentials</string>
+    <string name="error_login_user_message">User not valid</string>
     <string name="back">Back</string>
     <string name="termsConditions">Terms and conditions will be described here.</string>
     <string name="pass_special">Password must contain at least one special character</string>
@@ -129,8 +127,9 @@
     <string name="likes">Likes:</string>
     <string name="Author">Author:</string>
     <string name="publish">Published at:</string>
-    <string name="Followers">Followers: %1$d</string>
-    <string name="Followee">Followee: %1$d</string>
+    <string name="Followers" translatable="false">Followers: %1$d</string>
+    <string name="Followee" translatable="false">Followee: %1$d</string>
     <string name="research">Search</string>
     <string name="benvenuto">Welcome to !Insta!</string>
+    <string name="check_login_data_message">Data not valid</string>
 </resources>

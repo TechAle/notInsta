@@ -88,7 +88,7 @@ public final class ChangePasswordFragment extends Fragment {
                             getString(R.string.password_different),
                             Snackbar.LENGTH_SHORT).show();
                 } else if (newPassword.length() < 6) {
-                    inputOldPassword.setError(getString(R.string.empty));
+                    inputOldPassword.setError("");
                     inputNewPassword.setError(getString(R.string.password_length));
 
                     Snackbar.make(
@@ -106,10 +106,10 @@ public final class ChangePasswordFragment extends Fragment {
                 } else {
 
                     PVM.editPassword(newPassword).observe(getViewLifecycleOwner(), output -> {
-                        inputOldPassword.setError(getString(R.string.empty));
-                        inputNewPassword.setError(getString(R.string.empty));
-                        inputNewPassword.getEditText().setText(getText(R.string.empty));
-                        inputOldPassword.getEditText().setText(getText(R.string.empty));
+                        inputOldPassword.setError("");
+                        inputNewPassword.setError("");
+                        inputNewPassword.getEditText().setText("");
+                        inputOldPassword.getEditText().setText("");
 
                         if (output.successful()) {
                             Snackbar.make(

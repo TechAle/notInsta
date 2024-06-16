@@ -70,8 +70,8 @@ public final class ChangeUsernameFragment extends Fragment {
                                     getView().findViewById(R.id.layout),
                                     getString(R.string.username_changed),
                                     Snackbar.LENGTH_SHORT).show();
-                            inputUsername.setError(getString(R.string.empty));
-                            inputUsername.getEditText().setText(getText(R.string.empty));
+                            inputUsername.setError("");
+                            inputUsername.getEditText().setText("");
                         } else {
                             inputUsername.setError("Username not avaible");
                         }
