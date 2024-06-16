@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -71,7 +72,7 @@ public final class Post implements Parcelable {
     public Post(Map<String, Object> m, @NonNull String id) {
         this.descrizione = (String) m.get("descrizione");
         this.pubblicazione = (Date) m.get("data");
-        this.autore = (String) m.get("autore"); //TODO: qui non credo che vada bene l'id dell'autore, sarebbe più consono il suo username...
+        this.autore = (String) m.get("autore");
         this.tags = (ArrayList<String>) m.get("tags");
         this.likes = (ArrayList<String>) m.get("likes");
         this.id = id;
@@ -80,13 +81,15 @@ public final class Post implements Parcelable {
     }
 
     private Post(Parcel in) {
-        id = in.readString();
+        id = Objects.requireNonNull(in.readString());
         autore = in.readString();
         descrizione = in.readString();
         tags = in.createStringArrayList();
         likes = in.createStringArrayList();
         image = in.readParcelable(Uri.class.getClassLoader());
-        pubblicazione = new Date(in.readLong());
+        long date = in.readLong();
+        if(date == 0) pubblicazione = null;
+        else pubblicazione = new Date(date);
         promozionale = in.readByte() != 0;
     }
 
@@ -111,7 +114,6 @@ public final class Post implements Parcelable {
     public void setImage(Uri image) {
         this.image = image;
     }
-    // TODO make for null better management
     public Uri getImage() {
         return image;
     }
@@ -163,12 +165,14 @@ public final class Post implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(autore);
+        if(autore == null) dest.writeString("Tu");
+        else dest.writeString(autore);
         dest.writeString(descrizione);
         dest.writeStringList(tags);
         dest.writeStringList(likes);
         dest.writeParcelable(image, flags);
-        dest.writeLong(pubblicazione.getTime());
+        if(pubblicazione == null) dest.writeLong(0);
+        else dest.writeLong(pubblicazione.getTime());
         dest.writeByte((byte) (promozionale ? 1 : 0));
     }
 }

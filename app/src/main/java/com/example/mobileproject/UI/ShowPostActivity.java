@@ -9,8 +9,6 @@ import com.bumptech.glide.Glide;
 import com.example.mobileproject.databinding.ActivityShowPostBinding;
 import com.example.mobileproject.models.Post.Post;
 
-import java.text.SimpleDateFormat;
-
 public final class ShowPostActivity extends AppCompatActivity {
     private Post p;
 
@@ -24,6 +22,10 @@ public final class ShowPostActivity extends AppCompatActivity {
         }
         ActivityShowPostBinding binding = ActivityShowPostBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar3);
+        binding.toolbar3.setNavigationOnClickListener(listener -> {
+            finish();
+        });
         Glide.with(getApplicationContext())
                 .load(p.getImage())
                 .into(binding.imageView2);
@@ -32,5 +34,6 @@ public final class ShowPostActivity extends AppCompatActivity {
             binding.likes.setText(String.valueOf(p.getLikes().size()));
         binding.author.setText(p.getAutore());
         binding.publishDate.setText(p.getPubblicazione().toString());
+        getSupportActionBar().setTitle(p.getId()); //false warning: toolbar setted
     }
 }

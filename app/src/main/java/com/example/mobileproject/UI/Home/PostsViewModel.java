@@ -186,7 +186,7 @@ public final class PostsViewModel extends ViewModel implements UserResponseCallb
             }
             livedata.postValue(newList);
         } else {
-            //TODO gestione errore
+            allPosts[0] = true; //fermo le chiamate
         }
     }
     @Override
@@ -203,7 +203,7 @@ public final class PostsViewModel extends ViewModel implements UserResponseCallb
             }
             livedata.postValue(newList);
         } else {
-            //TODO: gestione errore
+            allPosts[1] = true;
         }
     }
     @Override
@@ -220,7 +220,7 @@ public final class PostsViewModel extends ViewModel implements UserResponseCallb
             }
             livedata.postValue(newList);
         } else {
-            //TODO: gestione errore
+            allPosts[2] = true;
         }
     }
     @Override

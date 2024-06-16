@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mobile Project</string>
+    <string name="app_name">!Insta</string>
     <string name="action1_navigation">Home</string>
     <string name="action2_navigation">Search</string>
     <string name="action3_navigation">User Profile</string>
@@ -132,4 +132,5 @@
     <string name="Followers">Followers: %1$d</string>
     <string name="Followee">Followee: %1$d</string>
     <string name="research">Search</string>
+    <string name="benvenuto">Welcome to !Insta!</string>
 </resources>

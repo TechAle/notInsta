@@ -123,6 +123,8 @@ public final class SettingsFragment extends Fragment {
             UVM.signOut(requireActivity().getApplicationContext());
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             intent.putExtra((String) getText(R.string.success_logout), getText(R.string.success_logout));
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             requireActivity().finish();
         });

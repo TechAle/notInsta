@@ -60,7 +60,7 @@ public final class StartingFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     "Unexpected Error", Snackbar.LENGTH_SHORT).show();
         }
-        //TODO: Sostituire questi metodi stub
+        /*
         arrayTags = new ArrayList<>();
         arrayTags.add("Tag di prova");
         arrayTags.add("Tag 2");
@@ -70,6 +70,7 @@ public final class StartingFragment extends Fragment {
         arrayTags.add("Tag 6");
         arrayTags.add("Tag 7");
         arrayTags.add("Impariamo a usare Github");
+        */
     }
     @Override
     public View onCreateView(

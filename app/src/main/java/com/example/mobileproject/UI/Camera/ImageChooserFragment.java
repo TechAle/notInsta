@@ -53,7 +53,7 @@ public final class ImageChooserFragment extends Fragment {
             i.setType("image/*");
             i.setAction(Intent.ACTION_GET_CONTENT);
 
-            getActivity().startActivityForResult(Intent.createChooser(i, "Select Picture"), 200);
+            getActivity().startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE);
         });
 
         return view;

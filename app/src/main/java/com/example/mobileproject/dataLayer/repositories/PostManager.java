@@ -16,13 +16,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.ArrayList;
 import java.util.List;
 
-//import java.net.URL;
-
 public final class PostManager implements CallbackPosts {
-
-    //LiveData non presenti("https://developer.android.com/topic/libraries/architecture/livedata#livedata-in-architecture")
-    //TODO: maybe a byte[] data type is better than a android.graphics.Bitmap?
-    //TODO: maybe a java.net.URL/java.net.URI data type is better than a android.net.Uri?
     private PostResponseCallback c;
     private final PostDataRepository dataRep;
     private final PostImageRepository imageRep;
@@ -83,7 +77,6 @@ public final class PostManager implements CallbackPosts {
     /**
      * Prende un solo post sponsorizzato
      */
-    //TODO: controllare, mi sa che ho sbagliato qualcosa...
     public void retrieveSponsoredPosts(){
         if ((int) (Math.random() * 3) == 1) {
             ads.getAdvPost();
@@ -121,12 +114,13 @@ public final class PostManager implements CallbackPosts {
     @Blocking
     public boolean syncPostsFromLocal(){
         List<Post> pl = dataRep.syncDataFromLocal();
+        boolean result = true;
         if(pl != null) {
-            List<Post> img = imageRep.syncImagesFromLocal(pl);
-            for(Post p : img){
+            result = result && imageRep.syncImagesFromLocal(pl);
+            for(Post p : pl){
                 dataRep.updateLocal(p);
             }
-            return true;
+            return result;
         }
         else return false;
     }
@@ -137,7 +131,6 @@ public final class PostManager implements CallbackPosts {
      *
      * @return L'ultima marca temporale salvata nel DB
      * */
-    //TODO: le immagini non scaricate per qualunque motivo chi le scarica?
     @Blocking
     public long syncPostsFromRemote(long lastUpdate) throws ExecutionException, InterruptedException {
         long result = dataRep.syncDataFromRemote(lastUpdate);
@@ -204,7 +197,7 @@ public final class PostManager implements CallbackPosts {
         c.onResponseFoundPosts(resultError);
     }
     @Override
-    public void onLocalSaveSuccess(){//prima callback di creazione
+    public void onLocalSaveSuccess(){
         w.enqueueRemoteWrite();
         c.onResponseCreation(new Result.UserEditSuccess());
     }

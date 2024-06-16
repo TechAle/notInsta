@@ -53,7 +53,6 @@ public final class LoginActivity extends AppCompatActivity {
                 .get(UsersViewModel.class);
         if(UVM.isLogged()){
             startActivity(new Intent(this, HomeActivity.class));
-            finish();
             return;
         }
         binding = ActivityLoginBinding.inflate(getLayoutInflater());

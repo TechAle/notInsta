@@ -5,22 +5,15 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-//import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-//import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.mobileproject.R;
 import com.example.mobileproject.databinding.FragmentSearchBinding;
-/*import com.example.mobileproject.models.Post.PostResp;
-import com.example.mobileproject.utils.Result;
-import com.example.mobileproject.models.Post.Post;
-
-import java.util.List;*/
 
 /**
  * A simple {@link Fragment} subclass.
