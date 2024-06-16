@@ -110,6 +110,10 @@ public final class CameraActivity extends AppCompatActivity {
                         .commit();
                 break;
             case 1:
+                if (photo == null){
+                    currentFragment = 0;
+                    break;
+                }
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentContainerView, ImageViewerFragment.class, null)
                         .commit();
@@ -133,6 +137,7 @@ public final class CameraActivity extends AppCompatActivity {
                             .replace(R.id.fragmentContainerView, ImageChooserFragment.class, null)
                             .commit();
                     currentFragment = 0;
+                    finish();
                 });
                 break;
         }

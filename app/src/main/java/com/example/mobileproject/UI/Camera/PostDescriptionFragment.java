@@ -108,6 +108,7 @@ public final class PostDescriptionFragment extends Fragment {
 
     private void addTagButton(View view, String text) {
         if (!text.equals("") && !tags.keySet().contains(text)){
+            text = text.replaceAll("\n", " ");
             Button newTag = new Button(view.getContext());
             newTag.setText(text);
             linearLayout.addView(newTag);
