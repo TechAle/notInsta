@@ -7,17 +7,17 @@
     <fragment
         android:id="@+id/changePasswordFragment"
         android:name="com.example.mobileproject.UI.Settings.ChangePasswordFragment"
-        android:label="fragment_change_password"
+        android:label="@string/changePassword"
         tools:layout="@layout/fragment_change_password" />
     <fragment
         android:id="@+id/changeUsernameFragment"
         android:name="com.example.mobileproject.UI.Settings.ChangeUsernameFragment"
-        android:label="fragment_change_username"
+        android:label="@string/changeUsername"
         tools:layout="@layout/fragment_change_username" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.mobileproject.UI.Settings.SettingsFragment"
-        android:label="fragment_settings"
+        android:label="@string/impostazioni"
         tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_settingsFragment_to_changeUsernameFragment"

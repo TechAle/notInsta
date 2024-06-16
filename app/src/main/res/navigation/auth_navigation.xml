@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.mobileproject.UI.Login.LoginFragment"
-        android:label="fragment_login"
+        android:label="@string/login"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
@@ -24,7 +24,7 @@
     <fragment
         android:id="@+id/signupFragment"
         android:name="com.example.mobileproject.UI.Login.SignupFragment"
-        android:label="fragment_signup"
+        android:label="@string/signup"
         tools:layout="@layout/fragment_signup">
         <action
             android:id="@+id/action_signupFragment_to_termsConditionsFragment"
@@ -33,11 +33,11 @@
     <fragment
         android:id="@+id/termsConditionsFragment"
         android:name="com.example.mobileproject.UI.Login.TermsConditionsFragment"
-        android:label="fragment_terms_conditions"
+        android:label="@string/termsConditions"
         tools:layout="@layout/fragment_terms_conditions" />
     <fragment
         android:id="@+id/passwordResetFragment"
         android:name="com.example.mobileproject.UI.Login.PasswordResetFragment"
-        android:label="fragment_password_reset"
+        android:label="@string/forgotPassword"
         tools:layout="@layout/fragment_password_reset" />
 </navigation>

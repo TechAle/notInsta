@@ -48,6 +48,9 @@ public final class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setTitle(getString(R.string.login));
+
         ServiceLocator sl = ServiceLocator.getInstance();
         UVM = new ViewModelProvider(this, new UsersVMFactory(sl.getUserRepo(), sl.getPostRepo(getApplicationContext())))
                 .get(UsersViewModel.class);
