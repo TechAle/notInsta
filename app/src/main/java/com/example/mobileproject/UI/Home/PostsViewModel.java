@@ -193,6 +193,10 @@ public final class PostsViewModel extends ViewModel implements UserResponseCallb
     public void onResponseFoundPosts(Result r) {
         if(r.successful()){
             MutableLiveData<List<Post>> livedata = posts.get(1);
+            if(livedata == null){
+                posts.set(1, new MutableLiveData<>());
+                livedata = posts.get(1);
+            }
             List<Post> oldList = livedata.getValue();
             List<Post> newList;
             if(oldList == null){

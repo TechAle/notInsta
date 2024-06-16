@@ -157,9 +157,9 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
                             results.add(p);
                             lastElementPerAuthor.replace((String) m.get("autore"), i);
                         }
-                        c.onSuccessO(results);
+                        c.onSuccessF(results);
                     } else {
-                        c.onFailureO(task.getException());
+                        c.onFailureF(task.getException());
                     }
                 });
     }

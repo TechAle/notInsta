@@ -13,6 +13,12 @@ public final class SearchGalleryFragment extends GenericGalleryFragment {
     @Override
     protected void fetchAction(View v) {
         PVM.getActualFoundPosts().observe(getViewLifecycleOwner(), list -> {
+            if(list == null){
+                int prevSize = postList.size();
+                postList.clear();
+                pa.notifyItemRangeRemoved(0, prevSize);
+                return;
+            }
             if (!PVM.isLoading(type)) { //Se non è attiva una chiamata
                 if (PVM.isFirstLoading(type)) { //Se è il primo caricamento -> lista interna vuota o aggiornamento completo
                     PVM.setFirstLoading(type, false);
