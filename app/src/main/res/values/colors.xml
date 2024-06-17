@@ -7,7 +7,13 @@
     <color name="wwnw">#FFFFDDDD</color>
     <color name="lightblack">#FF191919</color>
     <color name="darkred">#FFDA0000</color>
-    <!--<color name="darkred">#FFA80000</color>-->
+    <color name="darkred_old">#FFA80000</color>
     <color name="lightgrey">#FF878787</color>
-    <color name="primaryDarkThemeColor">#FFFF8888</color>
+    <color name="primaryDarkThemeColor">#FFC72C41</color>
+    <color name="myPurple">#FF2D142C</color>
+    <color name="mylightPurple">#FF510A32</color>
+    <color name="bo1">#FF6F5B7E</color>
+    <color name="bo2">#FFF2727F</color>
+    <color name="bo3">#FFFBB194</color>
+    <!--FF8888-->
 </resources>

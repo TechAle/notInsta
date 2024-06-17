@@ -2,12 +2,14 @@
     <style
         name="Base.Theme.MobileProject"
         parent="Theme.Material3.DayNight.NoActionBar">
-
         <item name="colorPrimary">@color/primaryDarkThemeColor</item>
-        <item name="colorOnPrimary">@color/black</item>
-        <item name="colorPrimaryDark">@color/lightblack</item>
-        <item name="colorPrimaryContainer">@color/darkred</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/mylightPurple</item>
+        <item name="colorPrimaryContainer">@color/primaryDarkThemeColor</item>
+        <item name="colorSecondaryContainer">@color/myPurple</item>
+        <item name="colorSurfaceContainer">@color/myPurple</item>
         <item name="android:windowBackground">@color/lightblack</item>
-        <item name="bottomNavigationStyle">@style/Widget.Material3.BottomAppBar</item>
+        <item name="colorOnSecondaryContainer">@color/primaryDarkThemeColor</item>
+        <item name="android:navigationBarColor">@color/mylightPurple</item>
     </style>
 </resources>
