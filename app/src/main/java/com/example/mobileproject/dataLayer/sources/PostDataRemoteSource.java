@@ -48,7 +48,6 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
         DocumentReference refUser = db.collection("utenti").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
         if(page == 0){
             lastPost = null;
-            //lastPostDate = new Timestamp(253402300799L, 999999999); //Magic number: massimo valore di timestamp consentito
         }
         Query q = db.collection("post")
                 .whereNotEqualTo("autore", refUser)  //l'utente quando cerca altri post non cerca i propri
@@ -62,18 +61,6 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
                     if(task.isSuccessful()){
                         List<Post> results = new ArrayList<>();
                         for(QueryDocumentSnapshot i : task.getResult()){
-                            /*DocumentReference ref = i.getDocumentReference("autore");
-                            Boolean b = i.getBoolean("promozionale");
-                            Timestamp t = i.getTimestamp("data");
-                            Object o = i.get("tags");
-                            Post p2 = new Post(i.getId(),
-                                    ref == null ? null : ref.getId(),
-                                    i.getString("descrizione"),
-                                    t == null ? null : t.toDate(),
-                                    o instanceof ArrayList<?> ? (ArrayList<String>) o : null,
-                                    //new ArrayList<>(),
-                                    i.contains("tags") ? i.getBoolean("tags") : null,
-                                    getUriFromId(i.getId()));*/
                             Map<String, Object> m = i.getData();
                             m.put("immagine", getUriFromId(i.getId()));
                             m.replace("autore", ((DocumentReference) m.get("autore")).getId());

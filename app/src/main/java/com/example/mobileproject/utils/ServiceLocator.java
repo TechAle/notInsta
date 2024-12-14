@@ -19,7 +19,7 @@ import com.example.mobileproject.service.StoreAPIService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ServiceLocator {
+public final class ServiceLocator {
     private static volatile ServiceLocator INSTANCE = null;
     private ServiceLocator(){}
 

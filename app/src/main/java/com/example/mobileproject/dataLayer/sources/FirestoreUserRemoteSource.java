@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,13 +43,12 @@ public final class FirestoreUserRemoteSource extends GeneralUserRemoteSource{
     //private Application app;
     StoreAPIService storeAPIService;
 
-    public FirestoreUserRemoteSource(/*Application app*/){
+    public FirestoreUserRemoteSource(){
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         storeAPIService = ServiceLocator.getInstance().getProductsApiService();
-        //this.app = app;
     }
     @Override
     public void retrieveUsers(){

@@ -43,7 +43,7 @@ android {
 
 dependencies {
 
-    //TODO: se qualcuno ha voglia lo aggiorni alla 2.8.1
+    //TODO: se qualcuno ha voglia lo aggiorni
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     val fragmentVersion = "1.7.1"
