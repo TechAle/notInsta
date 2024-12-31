@@ -33,7 +33,7 @@ public final class AdvertisementSource extends GeneralAdvSource {
                 if (response.body() != null && response.isSuccessful()) {
                     List<Product> productList = response.body();
                     int pos = (int) (Math.random()*productList.size());
-                    Post tmp = new Post(null, productList.get(pos).getTitle(),null, null, null, true, Uri.parse(productList.get(pos).getImage()));
+                    Post tmp = new Post("?$%&!#!", productList.get(pos).getTitle(),null, null, null, true, Uri.parse(productList.get(pos).getImage()));
                     c.onSuccessAdv(tmp);
                 } else {
                     c.onFailureAdv(new Exception("Null pointer"));

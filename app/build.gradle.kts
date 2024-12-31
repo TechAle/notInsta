@@ -46,7 +46,8 @@ dependencies {
     //TODO: se qualcuno ha voglia lo aggiorni
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
-    val fragmentVersion = "1.7.1"
+    val fragmentVersion = "1.8.5"
+    //aggiornare se compilato per la versione 35 di android
     val workVersion = "2.9.0"
 
     // Java language implementation
@@ -56,14 +57,14 @@ dependencies {
 
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.navigation:navigation-ui:2.7.7")
-    implementation("androidx.navigation:navigation-fragment:2.7.7")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
+    implementation("androidx.navigation:navigation-ui:2.8.5")
+    implementation("androidx.navigation:navigation-fragment:2.8.5")
     implementation("androidx.gridlayout:gridlayout:1.0.0")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
@@ -75,7 +76,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
 
     // Also add the dependency for the Google Play services library and specify its version
-    implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
 
     // Room
     implementation("androidx.room:room-runtime:2.6.1")

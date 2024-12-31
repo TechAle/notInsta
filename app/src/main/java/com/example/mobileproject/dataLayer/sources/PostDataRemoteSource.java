@@ -5,6 +5,8 @@ import static com.example.mobileproject.utils.Constants.ELEMENTS_SYNC;
 
 import android.net.Uri;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.concurrent.futures.CallbackToFutureAdapter;
 
@@ -27,7 +29,8 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
- * Classe per il recupero remoto dei post da Firebase
+ * Classe per il recupero remoto dei post da Firebase. Se non diversamente specificato, ogni metodo
+ * recupera post dal database remoto.
  */
 public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
     FirebaseFirestore db;
@@ -39,13 +42,18 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
         db = FirebaseFirestore.getInstance();
         lastElementPerAuthor = new HashMap<>();
     }
+
+    /**
+     * Recupera post non creati dall'utente. Il numero di post recuperati è definito nella costante
+     * ELEMENTS_LAZY_LOADING.
+     *
+     * @param page il numero di pagina. Se zero, allora carica dal primo elemento, altrimenti
+     *             continua dall'ultimo elemento caricato
+     * */
     @Override
     public void retrievePosts(int page){
-        /*in genere:
-           - se viene chiesta la pagina 0 allora prendo i nuovi dati
-           - se viene chiesta un altra pagina allora continuo con gli stessi dati
-        */
-        DocumentReference refUser = db.collection("utenti").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        DocumentReference refUser = db.collection("utenti")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
         if(page == 0){
             lastPost = null;
         }
@@ -61,17 +69,20 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
                     if(task.isSuccessful()){
                         List<Post> results = new ArrayList<>();
                         for(QueryDocumentSnapshot i : task.getResult()){
-                            Map<String, Object> m = i.getData();
-                            m.put("immagine", getUriFromId(i.getId()));
-                            m.replace("autore", ((DocumentReference) m.get("autore")).getId());
-                            m.put("data", ((Timestamp) m.get("data")).toDate());
-                            List<DocumentReference> l = ((List<DocumentReference>)m.get("likes"));
+                            List<DocumentReference> l = ((List<DocumentReference>)i.get("likes"));
                             List<String> likes = new ArrayList<>();
-                            for(DocumentReference d : l){
-                                likes.add(d.getId());
-                            }
-                            m.put("likes", likes);
-                            Post p = new Post(m, i.getId());
+                            if(l != null) {
+                                for (DocumentReference d : l) {
+                                    likes.add(d.getId());
+                                }
+                            } else Log.e("INPUT", "Some problems on retrieving likes, PostDataRemoteSource:71");
+                            Post p = new Post(i.getId(),
+                                    ((DocumentReference) i.get("autore")).getId(),
+                                    (String) i.get("descrizione"),
+                                    ((Timestamp) i.get("data")).toDate(),
+                                    (ArrayList<String>) i.get("tags"),
+                                    (Boolean) i.get("promozionale"), getUriFromId(i.getId()));
+                            p.setLikes(likes);
                             results.add(p);
                             lastPost = i;
                         }
@@ -82,6 +93,12 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
                     }
                 });
     }
+
+    /**
+     * Recupera post sponsorizzati
+     *
+     * @implNote Non viene utilizzato alcun parametro per la pagina perchè non richiesto.
+     * */
     @Override
     public void retrievePostsSponsor() {
         db.collection("post")
@@ -91,26 +108,36 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
                     ArrayList<Post> sponsors = new ArrayList<>();
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot i : task.getResult()) {
-                            Map<String, Object> m = i.getData();
-                            m.replace("autore", ((DocumentReference) m.get("autore")).getId());
-                            m.put("immagine", getUriFromId(i.getId()));
-                            m.replace("data", ((Timestamp) m.get("data")).toDate());
-                            List<DocumentReference> l = ((List<DocumentReference>)m.get("likes"));
+                            List<DocumentReference> l = ((List<DocumentReference>)i.get("likes"));
                             List<String> likes = new ArrayList<>();
-                            for(DocumentReference d : l){
-                                likes.add(d.getId());
-                            }
-                            m.put("likes", likes);
-                            Post p = new Post(m, i.getId());
+                            if (l != null){
+                                for(DocumentReference d : l){
+                                    likes.add(d.getId());
+                                }
+                            } else Log.e("INPUT", "Some problems on retrieving likes, PostDataRemoteSource:116");
+                            Post p = new Post(i.getId(),
+                                    ((DocumentReference) i.get("autore")).getId(),
+                                    (String) i.get("descrizione"),
+                                    ((Timestamp) i.get("data")).toDate(),
+                                    (ArrayList<String>) i.get("tags"),
+                                    (Boolean) i.get("promozionale"), getUriFromId(i.getId()));
+                            p.setLikes(likes);
                             sponsors.add(p);
                         }
                         if (sponsors.size() > 0) {
                             c.onSuccessAdv(sponsors.get((int) (Math.random() * sponsors.size())));
-                        }
+                        } //TODO: else?
                     }
                     else c.onFailureAdv(new Exception("No sponsor"));
                 });
     }
+
+    /**
+     * Recupera post di un determinato utente
+     *
+     * @param page numero di pagina
+     * @param idUser l'ID di un utente di cui si vuole recuperarne i post
+     * */
     @Override
     public void retrievePostsByAuthor(@NonNull String idUser, int page){
         DocumentReference refUser = db.collection("utenti").document(idUser);
@@ -130,19 +157,22 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
                     if(task.isSuccessful()){
                         List<Post> results = new ArrayList<>();
                         for (QueryDocumentSnapshot i : task.getResult()) {
-                            Map<String, Object> m = i.getData();
-                            m.put("immagine", getUriFromId(i.getId()));
-                            m.replace("autore", ((DocumentReference) m.get("autore")).getId());
-                            m.replace("data", ((Timestamp) m.get("data")).toDate());
-                            List<DocumentReference> l = ((List<DocumentReference>)m.get("likes"));
+                            List<DocumentReference> l = ((List<DocumentReference>)i.get("likes"));
                             List<String> likes = new ArrayList<>();
-                            for(DocumentReference dr : l){
-                                likes.add(dr.getId());
-                            }
-                            m.put("likes", likes);
-                            Post p = new Post(m, i.getId());
+                            if (l != null) {
+                                for (DocumentReference dr : l) {
+                                    likes.add(dr.getId());
+                                }
+                            } else Log.e("INPUT", "Some problems on retrieving likes, PostDataRemoteSource:160");
+                            Post p = new Post(i.getId(),
+                                    ((DocumentReference) i.get("autore")).getId(),
+                                    (String) i.get("descrizione"),
+                                    ((Timestamp) i.get("data")).toDate(),
+                                    (ArrayList<String>) i.get("tags"),
+                                    (Boolean) i.get("promozionale"), getUriFromId(i.getId()));
+                            p.setLikes(likes);
                             results.add(p);
-                            lastElementPerAuthor.replace((String) m.get("autore"), i);
+                            lastElementPerAuthor.replace((String) i.get("autore"), i);
                         }
                         c.onSuccessF(results);
                     } else {
@@ -150,6 +180,13 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
                     }
                 });
     }
+    /**
+     * Metodo asincrono per la creazione di un post sul database remoto.
+     *
+     * @param post Il post da creare
+     *
+     * @return Oggetto "Future"
+     * */
     @Override
     public Future<String> createPost(Post post) {
         Map<String, Object> documentFields = new HashMap<>();
@@ -171,6 +208,12 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
             return "Post creation";
         });
     }
+    /**
+     * Recupera post con almeno un tag tra quelli indicati
+     *
+     * @param page numero di pagina
+     * @param tags insieme dei tag da cercare
+     * */
     @Override
     public void retrievePostsWithTagsLL(String[] tags, int page){
         if(page == 0){
@@ -188,11 +231,21 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
                 if(task.isSuccessful()){
                     List<Post> results = new ArrayList<>();
                     for(QueryDocumentSnapshot i : task.getResult()){
-                        Map<String, Object> m = i.getData();
-                        m.put("immagine", getUriFromId(i.getId()));
-                        m.replace("autore", ((DocumentReference) m.get("autore")).getId());
-                        m.replace("data", ((Timestamp) m.get("data")).toDate());
-                        Post p = new Post(m, i.getId());
+                        List<DocumentReference> l = ((List<DocumentReference>)i.get("likes"));
+                        List<String> likes = new ArrayList<>();
+                        if (l != null) {
+                            for (DocumentReference dr : l) {
+                                likes.add(dr.getId());
+                            }
+                        } else Log.e("INPUT", "Some problems on retrieving likes, PostDataRemoteSource:160");
+                        Post p = new Post(i.getId(),
+                                ((DocumentReference) i.get("autore")).getId(),
+                                (String) i.get("descrizione"),
+                                ((Timestamp) i.get("data")).toDate(),
+                                (ArrayList<String>) i.get("tags"),
+                                (Boolean) i.get("promozionale"),
+                                getUriFromId(i.getId()));
+                        p.setLikes(likes);
                         results.add(p);
                         lastPostTag = i;
                     }
@@ -224,11 +277,20 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
                         if(task.isSuccessful()){
                             List<Post> results = new ArrayList<>();
                             for(QueryDocumentSnapshot i : task.getResult()){
-                                Map<String, Object> m = i.getData();
-                                m.put("immagine", getUriFromId(i.getId()));
-                                m.replace("autore", ((DocumentReference) m.get("autore")).getId());
-                                m.replace("data", ((Timestamp) m.get("data")).toDate());
-                                Post p = new Post(m, i.getId());
+                                List<DocumentReference> l = ((List<DocumentReference>)i.get("likes"));
+                                List<String> likes = new ArrayList<>();
+                                if (l != null) {
+                                    for (DocumentReference dr : l) {
+                                        likes.add(dr.getId());
+                                    }
+                                } else Log.e("INPUT", "Some problems on retrieving likes, PostDataRemoteSource:160");
+                                Post p = new Post(i.getId(),
+                                        ((DocumentReference) i.get("autore")).getId(),
+                                        (String) i.get("descrizione"),
+                                        ((Timestamp) i.get("data")).toDate(),
+                                        (ArrayList<String>) i.get("tags"),
+                                        (Boolean) i.get("promozionale"),
+                                        getUriFromId(i.getId()));
                                 results.add(p);
                                 lastPostSync = i;
                             }
@@ -240,6 +302,13 @@ public final class PostDataRemoteSource extends GeneralPostDataRemoteSource {
             return "Sync posts - Remote";
         });
     }
+    /**
+     * Metodo di convenienza per ottenere la URI dell'immagine di un post
+     *
+     * @param id identificatore del post
+     *
+     * @return Uri dell'immagine del post corrispondente
+     * */
     private Uri getUriFromId(String id){
         return Uri.parse("https://firebasestorage.googleapis.com/v0/b/notinsta-941ae.appspot.com/o/POSTS%2F" + id + ".png?alt=media");
     }

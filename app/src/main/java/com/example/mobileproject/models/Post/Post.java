@@ -9,7 +9,6 @@ import com.example.mobileproject.utils.DBConverter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -17,12 +16,11 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+/**
+ * POJO che rappresenta i posts. Usato anche dal database locale.
+ * */
 @Entity (tableName = "posts")
 @TypeConverters(DBConverter.class)
-
-/**
- * Classe che rappresenta i posts
- */
 public final class Post implements Parcelable {
     @PrimaryKey
     @NonNull
@@ -50,36 +48,27 @@ public final class Post implements Parcelable {
         this.promozionale = p.promozionale;
         this.image = p.image;
     }
-    public Post(@NonNull String id, String autore, String descrizione, Date pubblicazione, List<String> tags, boolean promozionale, Uri imageURI) {
+    public Post(@NonNull String id, String autore, String descrizione, Date pubblicazione,
+                List<String> tags, boolean promozionale, Uri imageURI) {
         this.id = id;
         this.autore = autore;
         this.descrizione = descrizione;
         this.pubblicazione = pubblicazione;
-        this.tags = tags;
+        this.tags = new ArrayList<>(tags);
         this.likes = new ArrayList<>();
         this.promozionale = promozionale;
         this.image = imageURI;
     }
-    public Post(String autore, String descrizione, @Deprecated Date pubblicazione, List<String> tags, boolean promo) {
+    public Post(String autore, String descrizione, @Deprecated Date pubblicazione,
+                List<String> tags, boolean promo) {
         this.id = "???";
         this.autore = autore;
         this.descrizione = descrizione;
         this.pubblicazione = null;
-        this.tags = tags;
+        this.tags = new ArrayList<>(tags);
         this.likes = new ArrayList<>();
         this.promozionale = promo;
     }
-    public Post(Map<String, Object> m, @NonNull String id) {
-        this.descrizione = (String) m.get("descrizione");
-        this.pubblicazione = (Date) m.get("data");
-        this.autore = (String) m.get("autore");
-        this.tags = (ArrayList<String>) m.get("tags");
-        this.likes = (ArrayList<String>) m.get("likes");
-        this.id = id;
-        this.promozionale = (Boolean) m.get("promozionale");
-        this.image = (Uri) m.get("immagine");
-    }
-
     private Post(Parcel in) {
         id = Objects.requireNonNull(in.readString());
         autore = in.readString();
@@ -117,12 +106,13 @@ public final class Post implements Parcelable {
     public Uri getImage() {
         return image;
     }
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
     public List<String> getTags() {
         return tags == null ? null : new ArrayList<>(tags);
     }
+    @NonNull
     public String getId() {
         return id;
     }
