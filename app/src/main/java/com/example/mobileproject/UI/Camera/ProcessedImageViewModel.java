@@ -13,8 +13,6 @@ import com.example.mobileproject.utils.FilterUtils;
 import com.example.mobileproject.utils.Result;
 
 import java.util.Arrays;
-
-//TODO: sistemare bug relativi all'applicazione dei filtri
 public final class ProcessedImageViewModel extends ViewModel implements PostResponseCallback{
     private final PostManager pr;
 

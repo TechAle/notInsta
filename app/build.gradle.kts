@@ -83,7 +83,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.6.1")
 
     //Credential Manager
-    //implementation("androidx.credentials:credentials:1.5.0-alpha01")
+    implementation("androidx.credentials:credentials:1.5.0-beta01")
 
     //WorkManager
     implementation("androidx.work:work-runtime:$workVersion")

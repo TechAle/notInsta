@@ -1,6 +1,7 @@
 package com.example.mobileproject.UI.Login;
 
 import android.content.Intent;
+import android.credentials.CredentialManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -71,6 +72,7 @@ public final class LoginFragment extends Fragment {
         ctrl = NavHostFragment.findNavController(this);
 
         UVM = new ViewModelProvider(requireActivity()).get(UsersViewModel.class);
+        //CredentialManager cm =
 
         dataEncryptionUtil = new DataEncryptionUtil(requireActivity().getApplication());
 
@@ -128,7 +130,7 @@ public final class LoginFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         return binding.getRoot();
